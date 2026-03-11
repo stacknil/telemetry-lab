@@ -1,0 +1,46 @@
+input_path: data/raw/sample_events.jsonl
+output_dir: data/processed
+
+time:
+  timestamp_col: timestamp
+  window_size_seconds: 60
+  step_size_seconds: 10
+
+features:
+  count_event_types:
+    - login_fail
+    - login_success
+    - config_change
+    - malware_alert
+    - policy_denied
+  error_statuses:
+    - fail
+    - blocked
+  severity_levels:
+    - high
+    - critical
+
+rules:
+  high_error_rate:
+    threshold: 0.30
+    severity: medium
+  login_fail_burst:
+    threshold: 8
+    severity: high
+  high_severity_spike:
+    threshold: 3
+    severity: high
+  persistent_high_error:
+    threshold: 0.25
+    consecutive_windows: 2
+    severity: medium
+  source_spread_spike:
+    absolute_threshold: 10
+    multiplier: 1.3
+    severity: medium
+  rare_event_repeat:
+    threshold: 2
+    event_types:
+      - malware_alert
+      - policy_denied
+    severity: high

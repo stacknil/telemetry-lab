@@ -1,0 +1,54 @@
+alert_time,rule_name,severity,window_start,window_end,message
+2026-03-10T10:01:10Z,high_error_rate,medium,2026-03-10T10:00:10Z,2026-03-10T10:01:10Z,error_rate 0.60 exceeded 0.30
+2026-03-10T10:01:10Z,persistent_high_error,medium,2026-03-10T10:00:10Z,2026-03-10T10:01:10Z,error_rate stayed above 0.25 for 2 windows
+2026-03-10T10:01:20Z,high_error_rate,medium,2026-03-10T10:00:20Z,2026-03-10T10:01:20Z,error_rate 0.77 exceeded 0.30
+2026-03-10T10:01:20Z,login_fail_burst,high,2026-03-10T10:00:20Z,2026-03-10T10:01:20Z,"login_fail_count reached 10, threshold is 8"
+2026-03-10T10:01:20Z,persistent_high_error,medium,2026-03-10T10:00:20Z,2026-03-10T10:01:20Z,error_rate stayed above 0.25 for 2 windows
+2026-03-10T10:01:20Z,source_spread_spike,medium,2026-03-10T10:00:20Z,2026-03-10T10:01:20Z,unique_sources rose from 8 to 11 (1.38x)
+2026-03-10T10:01:30Z,high_error_rate,medium,2026-03-10T10:00:30Z,2026-03-10T10:01:30Z,error_rate 0.83 exceeded 0.30
+2026-03-10T10:01:30Z,login_fail_burst,high,2026-03-10T10:00:30Z,2026-03-10T10:01:30Z,"login_fail_count reached 10, threshold is 8"
+2026-03-10T10:01:30Z,persistent_high_error,medium,2026-03-10T10:00:30Z,2026-03-10T10:01:30Z,error_rate stayed above 0.25 for 2 windows
+2026-03-10T10:01:40Z,high_error_rate,medium,2026-03-10T10:00:40Z,2026-03-10T10:01:40Z,error_rate 0.93 exceeded 0.30
+2026-03-10T10:01:40Z,login_fail_burst,high,2026-03-10T10:00:40Z,2026-03-10T10:01:40Z,"login_fail_count reached 12, threshold is 8"
+2026-03-10T10:01:40Z,persistent_high_error,medium,2026-03-10T10:00:40Z,2026-03-10T10:01:40Z,error_rate stayed above 0.25 for 2 windows
+2026-03-10T10:01:50Z,high_error_rate,medium,2026-03-10T10:00:50Z,2026-03-10T10:01:50Z,error_rate 0.93 exceeded 0.30
+2026-03-10T10:01:50Z,login_fail_burst,high,2026-03-10T10:00:50Z,2026-03-10T10:01:50Z,"login_fail_count reached 12, threshold is 8"
+2026-03-10T10:01:50Z,persistent_high_error,medium,2026-03-10T10:00:50Z,2026-03-10T10:01:50Z,error_rate stayed above 0.25 for 2 windows
+2026-03-10T10:02:00Z,high_error_rate,medium,2026-03-10T10:01:00Z,2026-03-10T10:02:00Z,error_rate 0.87 exceeded 0.30
+2026-03-10T10:02:00Z,login_fail_burst,high,2026-03-10T10:01:00Z,2026-03-10T10:02:00Z,"login_fail_count reached 12, threshold is 8"
+2026-03-10T10:02:00Z,persistent_high_error,medium,2026-03-10T10:01:00Z,2026-03-10T10:02:00Z,error_rate stayed above 0.25 for 2 windows
+2026-03-10T10:02:10Z,high_error_rate,medium,2026-03-10T10:01:10Z,2026-03-10T10:02:10Z,error_rate 0.86 exceeded 0.30
+2026-03-10T10:02:10Z,login_fail_burst,high,2026-03-10T10:01:10Z,2026-03-10T10:02:10Z,"login_fail_count reached 11, threshold is 8"
+2026-03-10T10:02:10Z,persistent_high_error,medium,2026-03-10T10:01:10Z,2026-03-10T10:02:10Z,error_rate stayed above 0.25 for 2 windows
+2026-03-10T10:02:20Z,high_error_rate,medium,2026-03-10T10:01:20Z,2026-03-10T10:02:20Z,error_rate 0.83 exceeded 0.30
+2026-03-10T10:02:20Z,high_severity_spike,high,2026-03-10T10:01:20Z,2026-03-10T10:02:20Z,high_severity_count reached 3
+2026-03-10T10:02:20Z,login_fail_burst,high,2026-03-10T10:01:20Z,2026-03-10T10:02:20Z,"login_fail_count reached 8, threshold is 8"
+2026-03-10T10:02:20Z,persistent_high_error,medium,2026-03-10T10:01:20Z,2026-03-10T10:02:20Z,error_rate stayed above 0.25 for 2 windows
+2026-03-10T10:02:30Z,high_error_rate,medium,2026-03-10T10:01:30Z,2026-03-10T10:02:30Z,error_rate 0.83 exceeded 0.30
+2026-03-10T10:02:30Z,high_severity_spike,high,2026-03-10T10:01:30Z,2026-03-10T10:02:30Z,high_severity_count reached 5
+2026-03-10T10:02:30Z,persistent_high_error,medium,2026-03-10T10:01:30Z,2026-03-10T10:02:30Z,error_rate stayed above 0.25 for 2 windows
+2026-03-10T10:02:30Z,rare_event_repeat_malware_alert,high,2026-03-10T10:01:30Z,2026-03-10T10:02:30Z,malware_alert repeated 3 times in one window
+2026-03-10T10:02:40Z,high_error_rate,medium,2026-03-10T10:01:40Z,2026-03-10T10:02:40Z,error_rate 0.64 exceeded 0.30
+2026-03-10T10:02:40Z,high_severity_spike,high,2026-03-10T10:01:40Z,2026-03-10T10:02:40Z,high_severity_count reached 4
+2026-03-10T10:02:40Z,persistent_high_error,medium,2026-03-10T10:01:40Z,2026-03-10T10:02:40Z,error_rate stayed above 0.25 for 2 windows
+2026-03-10T10:02:40Z,rare_event_repeat_malware_alert,high,2026-03-10T10:01:40Z,2026-03-10T10:02:40Z,malware_alert repeated 3 times in one window
+2026-03-10T10:02:50Z,high_error_rate,medium,2026-03-10T10:01:50Z,2026-03-10T10:02:50Z,error_rate 0.67 exceeded 0.30
+2026-03-10T10:02:50Z,high_severity_spike,high,2026-03-10T10:01:50Z,2026-03-10T10:02:50Z,high_severity_count reached 4
+2026-03-10T10:02:50Z,persistent_high_error,medium,2026-03-10T10:01:50Z,2026-03-10T10:02:50Z,error_rate stayed above 0.25 for 2 windows
+2026-03-10T10:02:50Z,rare_event_repeat_malware_alert,high,2026-03-10T10:01:50Z,2026-03-10T10:02:50Z,malware_alert repeated 3 times in one window
+2026-03-10T10:03:00Z,high_error_rate,medium,2026-03-10T10:02:00Z,2026-03-10T10:03:00Z,error_rate 0.82 exceeded 0.30
+2026-03-10T10:03:00Z,high_severity_spike,high,2026-03-10T10:02:00Z,2026-03-10T10:03:00Z,high_severity_count reached 3
+2026-03-10T10:03:00Z,persistent_high_error,medium,2026-03-10T10:02:00Z,2026-03-10T10:03:00Z,error_rate stayed above 0.25 for 2 windows
+2026-03-10T10:03:00Z,rare_event_repeat_malware_alert,high,2026-03-10T10:02:00Z,2026-03-10T10:03:00Z,malware_alert repeated 3 times in one window
+2026-03-10T10:03:10Z,high_error_rate,medium,2026-03-10T10:02:10Z,2026-03-10T10:03:10Z,error_rate 0.70 exceeded 0.30
+2026-03-10T10:03:10Z,high_severity_spike,high,2026-03-10T10:02:10Z,2026-03-10T10:03:10Z,high_severity_count reached 3
+2026-03-10T10:03:10Z,persistent_high_error,medium,2026-03-10T10:02:10Z,2026-03-10T10:03:10Z,error_rate stayed above 0.25 for 2 windows
+2026-03-10T10:03:10Z,rare_event_repeat_malware_alert,high,2026-03-10T10:02:10Z,2026-03-10T10:03:10Z,malware_alert repeated 3 times in one window
+2026-03-10T10:03:20Z,high_error_rate,medium,2026-03-10T10:02:20Z,2026-03-10T10:03:20Z,error_rate 0.56 exceeded 0.30
+2026-03-10T10:03:20Z,high_severity_spike,high,2026-03-10T10:02:20Z,2026-03-10T10:03:20Z,high_severity_count reached 3
+2026-03-10T10:03:20Z,persistent_high_error,medium,2026-03-10T10:02:20Z,2026-03-10T10:03:20Z,error_rate stayed above 0.25 for 2 windows
+2026-03-10T10:03:20Z,rare_event_repeat_malware_alert,high,2026-03-10T10:02:20Z,2026-03-10T10:03:20Z,malware_alert repeated 2 times in one window
+2026-03-10T10:03:30Z,high_error_rate,medium,2026-03-10T10:02:30Z,2026-03-10T10:03:30Z,error_rate 0.38 exceeded 0.30
+2026-03-10T10:03:30Z,persistent_high_error,medium,2026-03-10T10:02:30Z,2026-03-10T10:03:30Z,error_rate stayed above 0.25 for 2 windows
+2026-03-10T10:03:40Z,high_error_rate,medium,2026-03-10T10:02:40Z,2026-03-10T10:03:40Z,error_rate 0.43 exceeded 0.30
+2026-03-10T10:03:40Z,persistent_high_error,medium,2026-03-10T10:02:40Z,2026-03-10T10:03:40Z,error_rate stayed above 0.25 for 2 windows
