@@ -24,11 +24,22 @@ The sample config reads `data/raw/sample_events.jsonl` and regenerates outputs i
 
 ## Current behavior
 
-- Input: JSONL event stream with required fields `timestamp`, `event_type`, `source`, `target`, `status`
-- Windowing: 60 second sliding windows with 10 second step
-- Features: event count, error count, error rate, unique source and target counts, high severity count, plus selected event-type counts
-- Rules: high error rate, login fail burst, high severity spike, persistent high error, source spread spike, and repeated rare events
-- Visualization: event count timeline, error rate timeline, and alert timeline
+Default sample input:
+
+- JSONL event stream under `data/raw/sample_events.jsonl`
+
+Runtime input support:
+
+- `.jsonl` (default sample/demo format)
+- `.csv` (also supported by the loader)
+
+Required fields:
+
+- `timestamp`
+- `event_type`
+- `source`
+- `target`
+- `status`
 
 With the bundled sample data, the default run currently produces:
 
