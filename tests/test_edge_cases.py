@@ -198,6 +198,45 @@ def test_normalize_events_sorts_out_of_order_timestamps_before_windowing() -> No
     assert list(features["latest_count"]) == [0, 1]
 
 
+def test_mixed_timezone_offsets_normalize_to_correct_order_and_window_counts() -> None:
+    events = pd.DataFrame(
+        [
+            _event("2026-03-10T10:00:00Z", event_type="z_event", source="user_z", target="svc"),
+            _event(
+                "2026-03-10T05:00:05-05:00",
+                event_type="offset_event",
+                source="user_offset",
+                target="svc",
+            ),
+            _event("2026-03-10T10:00:10Z", event_type="later_event", source="user_later", target="svc"),
+        ]
+    )
+
+    normalized = normalize_events(events)
+    windows = build_windows(
+        normalized,
+        timestamp_col="timestamp",
+        window_size_seconds=10,
+        step_size_seconds=5,
+    )
+    features = compute_window_features(
+        normalized,
+        windows,
+        count_event_types=["z_event", "offset_event", "later_event"],
+    )
+
+    assert list(normalized["timestamp"]) == [
+        pd.Timestamp("2026-03-10T10:00:00Z"),
+        pd.Timestamp("2026-03-10T10:00:05Z"),
+        pd.Timestamp("2026-03-10T10:00:10Z"),
+    ]
+    assert list(normalized["event_type"]) == ["z_event", "offset_event", "later_event"]
+    assert list(features["event_count"]) == [2, 2, 1]
+    assert list(features["z_event_count"]) == [1, 0, 0]
+    assert list(features["offset_event_count"]) == [1, 1, 0]
+    assert list(features["later_event_count"]) == [0, 1, 1]
+
+
 def test_normalize_events_raises_on_invalid_timestamp() -> None:
     events = pd.DataFrame(
         [
