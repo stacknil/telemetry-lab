@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections import Counter
 
 import pandas as pd
+import pytest
 
 from telemetry_window_demo.features import compute_window_features
 from telemetry_window_demo.preprocess import normalize_events
@@ -195,6 +196,24 @@ def test_normalize_events_sorts_out_of_order_timestamps_before_windowing() -> No
     assert list(features["earliest_count"]) == [1, 0]
     assert list(features["middle_count"]) == [1, 0]
     assert list(features["latest_count"]) == [0, 1]
+
+
+def test_normalize_events_raises_on_invalid_timestamp() -> None:
+    events = pd.DataFrame(
+        [
+            _event("2026-03-10T10:00:00Z", event_type="ok_event", source="user_a", target="svc"),
+            _event(
+                "not-a-real-timestamp",
+                event_type="bad_event",
+                source="user_b",
+                target="svc",
+                status="fail",
+            ),
+        ]
+    )
+
+    with pytest.raises(ValueError, match="invalid timestamps"):
+        normalize_events(events)
 
 
 def test_threshold_equality_is_explicit_for_strict_vs_inclusive_rules() -> None:
