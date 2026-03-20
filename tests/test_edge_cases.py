@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from collections import Counter
+
 import pandas as pd
 
 from telemetry_window_demo.features import compute_window_features
@@ -247,9 +249,12 @@ def test_threshold_equality_is_explicit_for_strict_vs_inclusive_rules() -> None:
 
     alerts = apply_rules(features, config)
 
-    assert set(alerts["rule_name"]) == {
-        "high_severity_spike",
-        "login_fail_burst",
-        "rare_event_repeat_malware_alert",
-        "source_spread_spike",
-    }
+    rule_counts = Counter(alerts["rule_name"])
+    assert rule_counts == Counter(
+        {
+            "high_severity_spike": 1,
+            "login_fail_burst": 1,
+            "rare_event_repeat_malware_alert": 1,
+            "source_spread_spike": 1,
+        }
+    )
