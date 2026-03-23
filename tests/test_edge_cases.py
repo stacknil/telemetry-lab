@@ -237,7 +237,7 @@ def test_mixed_timezone_offsets_normalize_to_correct_order_and_window_counts() -
     assert list(features["later_event_count"]) == [0, 1, 1]
 
 
-def test_mixed_naive_and_aware_timestamps_raise_invalid_timestamp_error() -> None:
+def test_naive_timestamps_normalize_to_utc_and_window_consistently() -> None:
     events = pd.DataFrame(
         [
             _event(
@@ -247,13 +247,13 @@ def test_mixed_naive_and_aware_timestamps_raise_invalid_timestamp_error() -> Non
                 target="svc",
             ),
             _event(
-                "2026-03-10T05:00:05-05:00",
-                event_type="offset_event",
-                source="user_offset",
+                "2026-03-10 10:00:05",
+                event_type="second_naive_event",
+                source="user_second",
                 target="svc",
             ),
             _event(
-                "2026-03-10T10:00:10Z",
+                "2026-03-10 10:00:10",
                 event_type="later_event",
                 source="user_later",
                 target="svc",
@@ -261,8 +261,33 @@ def test_mixed_naive_and_aware_timestamps_raise_invalid_timestamp_error() -> Non
         ]
     )
 
-    with pytest.raises(ValueError, match="invalid timestamps"):
-        normalize_events(events)
+    normalized = normalize_events(events)
+    windows = build_windows(
+        normalized,
+        timestamp_col="timestamp",
+        window_size_seconds=10,
+        step_size_seconds=5,
+    )
+    features = compute_window_features(
+        normalized,
+        windows,
+        count_event_types=["naive_event", "second_naive_event", "later_event"],
+    )
+
+    assert list(normalized["timestamp"]) == [
+        pd.Timestamp("2026-03-10T10:00:00Z"),
+        pd.Timestamp("2026-03-10T10:00:05Z"),
+        pd.Timestamp("2026-03-10T10:00:10Z"),
+    ]
+    assert list(normalized["event_type"]) == [
+        "naive_event",
+        "second_naive_event",
+        "later_event",
+    ]
+    assert list(features["event_count"]) == [2, 2, 1]
+    assert list(features["naive_event_count"]) == [1, 0, 0]
+    assert list(features["second_naive_event_count"]) == [1, 1, 0]
+    assert list(features["later_event_count"]) == [0, 1, 1]
 
 
 def test_normalize_events_raises_on_invalid_timestamp() -> None:
