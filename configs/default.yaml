@@ -21,6 +21,7 @@ features:
     - critical
 
 rules:
+  cooldown_seconds: 60
   high_error_rate:
     threshold: 0.30
     severity: medium

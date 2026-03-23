@@ -24,6 +24,7 @@ def apply_rules(
         return pd.DataFrame(columns=ALERT_COLUMNS)
 
     config = rules_config or {}
+    cooldown_seconds = int(config.get("cooldown_seconds", 0))
     alerts: list[dict[str, object]] = []
 
     alerts.extend(_high_error_rate_alerts(features, config.get("high_error_rate", {})))
@@ -46,7 +47,8 @@ def apply_rules(
         return pd.DataFrame(columns=ALERT_COLUMNS)
 
     alerts_frame = pd.DataFrame(alerts, columns=ALERT_COLUMNS)
-    return alerts_frame.sort_values(["alert_time", "rule_name"]).reset_index(drop=True)
+    alerts_frame = alerts_frame.sort_values(["alert_time", "rule_name"]).reset_index(drop=True)
+    return _apply_alert_cooldown(alerts_frame, cooldown_seconds)
 
 
 def _row_alert(
@@ -63,6 +65,34 @@ def _row_alert(
         "window_end": row["window_end"],
         "message": message,
     }
+
+
+def _apply_alert_cooldown(
+    alerts: pd.DataFrame,
+    cooldown_seconds: int,
+) -> pd.DataFrame:
+    if alerts.empty or cooldown_seconds <= 0:
+        return alerts.reset_index(drop=True)
+
+    last_kept_at: dict[str, pd.Timestamp] = {}
+    kept_rows: list[int] = []
+
+    for index, row in alerts.iterrows():
+        rule_name = str(row["rule_name"])
+        alert_time = pd.Timestamp(row["alert_time"])
+        last_alert_time = last_kept_at.get(rule_name)
+
+        if last_alert_time is None:
+            kept_rows.append(index)
+            last_kept_at[rule_name] = alert_time
+            continue
+
+        elapsed = (alert_time - last_alert_time).total_seconds()
+        if elapsed >= cooldown_seconds:
+            kept_rows.append(index)
+            last_kept_at[rule_name] = alert_time
+
+    return alerts.loc[kept_rows, ALERT_COLUMNS].reset_index(drop=True)
 
 
 def _high_error_rate_alerts(
