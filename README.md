@@ -33,7 +33,7 @@ Runtime input support:
 - `.jsonl` (default sample/demo format)
 - `.csv` (also supported by the loader)
 
-Required fields:
+Required fields for both formats on every row/record:
 
 - `timestamp`
 - `event_type`

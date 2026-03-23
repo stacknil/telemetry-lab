@@ -47,20 +47,27 @@ def load_events(path: str | Path) -> pd.DataFrame:
                     record = json.loads(raw)
                 except json.JSONDecodeError as exc:
                     raise ValueError(
-                        f"Invalid JSONL at line {line_number} in {input_path}"
+                        f"Invalid JSONL in {input_path} at line {line_number}: {exc.msg}"
                     ) from exc
                 if not isinstance(record, dict):
                     raise ValueError(
-                        f"Expected object records in JSONL, got {type(record)!r}"
+                        f"Invalid JSONL in {input_path} at line {line_number}: expected an object record"
                     )
                 records.append(record)
         events = pd.DataFrame.from_records(records)
     elif suffix == ".csv":
-        events = pd.read_csv(input_path)
+        try:
+            events = pd.read_csv(input_path)
+        except (
+            pd.errors.EmptyDataError,
+            pd.errors.ParserError,
+            UnicodeDecodeError,
+        ) as exc:
+            raise ValueError(f"Invalid CSV in {input_path}: {exc}") from exc
     else:
         raise ValueError("Unsupported input format. Use .jsonl or .csv.")
 
-    validate_event_frame(events)
+    validate_event_frame(events, source=str(input_path))
     return events
 
 
