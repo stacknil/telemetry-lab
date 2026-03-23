@@ -35,6 +35,21 @@ def test_load_events_from_csv(tmp_path) -> None:
     assert frame.loc[0, "event_type"] == "login_success"
 
 
+def test_load_events_from_csv_preserves_na_like_required_values(tmp_path) -> None:
+    path = tmp_path / "events.csv"
+    path.write_text(
+        "timestamp,event_type,source,target,status\n"
+        "2026-03-10T10:00:00Z,login_success,user_a,NA,ok\n"
+        "2026-03-10T10:00:10Z,login_fail,user_b,null,fail\n",
+        encoding="utf-8",
+    )
+
+    frame = load_events(path)
+
+    assert len(frame) == 2
+    assert list(frame["target"]) == ["NA", "null"]
+
+
 @pytest.mark.parametrize(
     ("filename", "content"),
     [

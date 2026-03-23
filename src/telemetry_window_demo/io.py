@@ -57,7 +57,7 @@ def load_events(path: str | Path) -> pd.DataFrame:
         events = pd.DataFrame.from_records(records)
     elif suffix == ".csv":
         try:
-            events = pd.read_csv(input_path)
+            events = pd.read_csv(input_path, keep_default_na=False)
         except (
             pd.errors.EmptyDataError,
             pd.errors.ParserError,
