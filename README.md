@@ -1,5 +1,7 @@
 # telemetry-lab
 
+[![CI](https://github.com/stacknil/telemetry-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/stacknil/telemetry-lab/actions/workflows/ci.yml)
+
 Small prototypes for telemetry analytics, monitoring, and detection-oriented signal processing.
 
 ## Current demo
