@@ -34,7 +34,7 @@ def test_default_pipeline_reproduces_sample_outputs(tmp_path, capsys) -> None:
     expected_alerts = load_alert_table(expected_output_dir / "alerts.csv")
 
     assert len(generated_features) == 24
-    assert len(generated_alerts) == 53
+    assert len(generated_alerts) == 12
     pd.testing.assert_frame_equal(generated_features, expected_features)
     pd.testing.assert_frame_equal(generated_alerts, expected_alerts)
 
@@ -47,4 +47,4 @@ def test_default_pipeline_reproduces_sample_outputs(tmp_path, capsys) -> None:
 
     stdout = capsys.readouterr().out
     assert "[OK] Loaded 41 events" in stdout
-    assert "[OK] Triggered 53 alerts" in stdout
+    assert "[OK] Triggered 12 alerts" in stdout

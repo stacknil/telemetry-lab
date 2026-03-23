@@ -47,7 +47,9 @@ With the bundled sample data, the default run currently produces:
 
 - `41` normalized events
 - `24` windows
-- `53` alerts
+- `12` alerts after applying a `60` second per-rule cooldown
+
+The default config suppresses repeated alerts with the same `rule_name` until `60` seconds have elapsed since that rule's last emitted alert. Different rules can still alert on the same window.
 
 ## Outputs
 
