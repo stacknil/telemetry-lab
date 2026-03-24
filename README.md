@@ -47,9 +47,9 @@ With the bundled sample data, the default run currently produces:
 
 - `41` normalized events
 - `24` windows
-- `12` alerts after applying a `60` second per-rule cooldown
+- `12` alerts after applying a `60` second cooldown
 
-The default config suppresses repeated alerts with the same `rule_name` until `60` seconds have elapsed since that rule's last emitted alert. Different rules can still alert on the same window.
+The default config suppresses repeated alerts by cooldown key. The key is `rule_name` plus an entity scope when the rule input includes `entity`, `source`, `target`, or `host`; otherwise it falls back to `rule_name` alone. Different cooldown keys can still alert on the same window.
 
 ## Outputs
 
