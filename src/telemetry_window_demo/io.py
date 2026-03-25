@@ -99,6 +99,16 @@ def write_table(frame: pd.DataFrame, path: str | Path) -> Path:
     return output_path
 
 
+def write_json(payload: dict[str, Any], path: str | Path) -> Path:
+    output_path = Path(path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(
+        json.dumps(payload, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    return output_path
+
+
 def format_timestamp(value: Any) -> str:
     if pd.isna(value):
         return ""

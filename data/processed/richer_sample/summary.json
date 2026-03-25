@@ -1,0 +1,33 @@
+{
+  "input_path": "data/raw/richer_sample_events.jsonl",
+  "output_dir": "data/processed/richer_sample",
+  "normalized_event_count": 28,
+  "window_count": 24,
+  "feature_row_count": 24,
+  "alert_count": 8,
+  "triggered_rule_names": [
+    "high_error_rate",
+    "high_severity_spike",
+    "login_fail_burst",
+    "persistent_high_error",
+    "rare_event_repeat_malware_alert",
+    "rare_event_repeat_policy_denied"
+  ],
+  "triggered_rule_counts": {
+    "high_error_rate": 2,
+    "high_severity_spike": 1,
+    "login_fail_burst": 1,
+    "persistent_high_error": 2,
+    "rare_event_repeat_malware_alert": 1,
+    "rare_event_repeat_policy_denied": 1
+  },
+  "cooldown_seconds": 120,
+  "generated_artifacts": [
+    "data/processed/richer_sample/features.csv",
+    "data/processed/richer_sample/alerts.csv",
+    "data/processed/richer_sample/summary.json",
+    "data/processed/richer_sample/event_count_timeline.png",
+    "data/processed/richer_sample/error_rate_timeline.png",
+    "data/processed/richer_sample/alerts_timeline.png"
+  ]
+}

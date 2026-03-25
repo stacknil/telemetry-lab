@@ -1,0 +1,33 @@
+{
+  "input_path": "data/raw/sample_events.jsonl",
+  "output_dir": "data/processed",
+  "normalized_event_count": 41,
+  "window_count": 24,
+  "feature_row_count": 24,
+  "alert_count": 12,
+  "triggered_rule_names": [
+    "high_error_rate",
+    "high_severity_spike",
+    "login_fail_burst",
+    "persistent_high_error",
+    "rare_event_repeat_malware_alert",
+    "source_spread_spike"
+  ],
+  "triggered_rule_counts": {
+    "high_error_rate": 3,
+    "high_severity_spike": 2,
+    "login_fail_burst": 2,
+    "persistent_high_error": 3,
+    "rare_event_repeat_malware_alert": 1,
+    "source_spread_spike": 1
+  },
+  "cooldown_seconds": 60,
+  "generated_artifacts": [
+    "data/processed/features.csv",
+    "data/processed/alerts.csv",
+    "data/processed/summary.json",
+    "data/processed/event_count_timeline.png",
+    "data/processed/error_rate_timeline.png",
+    "data/processed/alerts_timeline.png"
+  ]
+}

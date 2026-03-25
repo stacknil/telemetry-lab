@@ -12,6 +12,7 @@ from .io import (
     load_events,
     load_feature_table,
     resolve_config_path,
+    write_json,
     write_table,
 )
 from .preprocess import normalize_events
@@ -84,10 +85,26 @@ def run_command(args: argparse.Namespace) -> None:
         count_event_types=feature_config.get("count_event_types"),
     )
     alerts = apply_rules(features, config.get("rules"))
+    cooldown_seconds = int(config.get("rules", {}).get("cooldown_seconds", 0))
 
     feature_path = write_table(features, output_dir / "features.csv")
     alert_path = write_table(alerts, output_dir / "alerts.csv")
     plot_paths = plot_outputs(features, alerts, output_dir)
+    summary_path = output_dir / "summary.json"
+    summary = _build_run_summary(
+        input_path=input_path,
+        output_dir=output_dir,
+        normalized=normalized,
+        windows=windows,
+        features=features,
+        alerts=alerts,
+        cooldown_seconds=cooldown_seconds,
+        feature_path=feature_path,
+        alert_path=alert_path,
+        summary_path=summary_path,
+        plot_paths=plot_paths,
+    )
+    write_json(summary, summary_path)
 
     print(f"[OK] Loaded {len(normalized)} events")
     print(f"[OK] Generated {len(features)} windows")
@@ -130,6 +147,48 @@ def _display_path(path: Path) -> str:
         return resolved.relative_to(cwd).as_posix()
     except ValueError:
         return resolved.as_posix()
+
+
+def _build_run_summary(
+    input_path: Path,
+    output_dir: Path,
+    normalized: Any,
+    windows: list[Any],
+    features: Any,
+    alerts: Any,
+    cooldown_seconds: int,
+    feature_path: Path,
+    alert_path: Path,
+    summary_path: Path,
+    plot_paths: list[Path],
+) -> dict[str, object]:
+    if alerts.empty:
+        rule_counts: dict[str, int] = {}
+    else:
+        rule_counts = {
+            str(rule_name): int(count)
+            for rule_name, count in alerts["rule_name"].value_counts().sort_index().items()
+        }
+
+    artifact_paths = [
+        feature_path,
+        alert_path,
+        summary_path,
+        *plot_paths,
+    ]
+
+    return {
+        "input_path": _display_path(input_path),
+        "output_dir": _display_path(output_dir),
+        "normalized_event_count": int(len(normalized)),
+        "window_count": int(len(windows)),
+        "feature_row_count": int(len(features)),
+        "alert_count": int(len(alerts)),
+        "triggered_rule_names": sorted(rule_counts),
+        "triggered_rule_counts": rule_counts,
+        "cooldown_seconds": int(cooldown_seconds),
+        "generated_artifacts": [_display_path(path) for path in artifact_paths],
+    }
 
 
 if __name__ == "__main__":
