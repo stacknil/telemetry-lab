@@ -2,6 +2,8 @@
 
 [![CI](https://github.com/stacknil/telemetry-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/stacknil/telemetry-lab/actions/workflows/ci.yml)
 
+Latest release: [v0.3.0](https://github.com/stacknil/telemetry-lab/releases/tag/v0.3.0) adds more precise cooldown scoping, a richer bundled scenario pack, and machine-readable run summaries for reusable local demos.
+
 Small prototypes for telemetry analytics, monitoring, and detection-oriented signal processing.
 
 ## Current demo
