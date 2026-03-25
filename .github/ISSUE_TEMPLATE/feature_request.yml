@@ -1,0 +1,28 @@
+name: Feature request
+description: Suggest a small improvement or next demo for the repository
+title: "[Feature]: "
+body:
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What would you like to add or improve?
+      description: Keep it concrete and close to the repository's current scope.
+      placeholder: Add a host-centric investigation demo that reuses the current sample outputs.
+    validations:
+      required: true
+
+  - type: textarea
+    id: why
+    attributes:
+      label: Why does it help?
+      description: Explain how this improves the demo, docs, or portfolio narrative.
+      placeholder: It would make the rule outputs easier to connect to an analyst workflow.
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope guardrails
+      description: Call out anything this request should not turn into.
+      placeholder: Keep it file-based; no hosted dashboard or alert-routing work.

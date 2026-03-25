@@ -2,72 +2,25 @@
 
 [![CI](https://github.com/stacknil/telemetry-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/stacknil/telemetry-lab/actions/workflows/ci.yml)
 
-Latest release: [v0.3.0](https://github.com/stacknil/telemetry-lab/releases/tag/v0.3.0) adds more precise cooldown scoping, a richer bundled scenario pack, and machine-readable run summaries for reusable local demos.
+Small portfolio prototypes for telemetry analytics, monitoring, and detection-oriented signal processing.
 
-Small prototypes for telemetry analytics, monitoring, and detection-oriented signal processing.
+## What This Repo Is
 
-## Current demo
+`telemetry-window-demo` is a local Python CLI that turns timestamped event streams into:
 
-`telemetry-window-demo` turns timestamped event streams into sliding-window telemetry features, simple rule-based alerts, and operator-friendly CSV and PNG outputs.
+- sliding-window feature tables
+- cooldown-reduced rule-based alerts
+- PNG timeline plots
+- machine-readable run summaries
 
-## MVP workflow
-
-1. Install the package and its minimal dependencies:
-
-   ```bash
-   python -m pip install -e .
-   ```
-
-2. Run the bundled sample pipeline end-to-end:
-
-   ```bash
-   python -m telemetry_window_demo.cli run --config configs/default.yaml
-   ```
-
-The sample config reads `data/raw/sample_events.jsonl` and regenerates outputs in `data/processed/`.
-
-For a richer scenario pack that is easier to walk through in demos:
+## Quick Run
 
 ```bash
-python -m telemetry_window_demo.cli run --config configs/richer_sample.yaml
+python -m pip install -e .
+python -m telemetry_window_demo.cli run --config configs/default.yaml
 ```
 
-That scenario pack reads `data/raw/richer_sample_events.jsonl` and writes outputs to `data/processed/richer_sample/`.
-It currently produces `28` normalized events, `24` windows, and `8` alerts.
-Both sample paths also emit a compact `summary.json` alongside the CSV and PNG outputs.
-
-## Current behavior
-
-Default sample input:
-
-- JSONL event stream under `data/raw/sample_events.jsonl`
-
-Runtime input support:
-
-- `.jsonl` (default sample/demo format)
-- `.csv` (also supported by the loader)
-
-Required fields for both formats on every row/record:
-
-- `timestamp`
-- `event_type`
-- `source`
-- `target`
-- `status`
-
-With the bundled sample data, the default run currently produces:
-
-- `41` normalized events
-- `24` windows
-- `12` alerts after applying a `60` second cooldown
-
-The default config suppresses repeated alerts by cooldown key. The key is `rule_name` plus an entity scope when the rule input includes `entity`, `source`, `target`, or `host`; otherwise it falls back to `rule_name` alone. Different cooldown keys can still alert on the same window.
-
-The richer scenario pack uses a longer `120` second cooldown so the output stays compact enough to inspect as four phases: normal background activity, a login-failure burst, a high-risk configuration change with follow-on policy denials, and a rare malware-alert repeat sequence.
-
-## Outputs
-
-Running the default command regenerates:
+That command reads `data/raw/sample_events.jsonl` and regenerates:
 
 - `data/processed/features.csv`
 - `data/processed/alerts.csv`
@@ -76,7 +29,70 @@ Running the default command regenerates:
 - `data/processed/error_rate_timeline.png`
 - `data/processed/alerts_timeline.png`
 
-The summary artifact includes the input path, output directory, normalized event count, window count, feature row count, alert count, triggered rule names and counts, cooldown setting, and generated artifact paths.
+With the bundled default sample, the current repo state produces:
+
+- `41` normalized events
+- `24` windows
+- `12` alerts after a `60` second cooldown
+
+Why it is worth a quick look:
+
+- it shows a full telemetry path from raw events to operator-facing outputs
+- the sample inputs and outputs are reproducible in-repo
+- a second bundled scenario gives a slightly richer walkthrough without changing the basic CLI flow
+
+![Default alert timeline](data/processed/alerts_timeline.png)
+
+## Demo Variants
+
+Default sample:
+
+- config: [`configs/default.yaml`](configs/default.yaml)
+- input: `data/raw/sample_events.jsonl`
+- outputs: `data/processed/`
+- current summary: `41` events, `24` windows, `12` alerts, `summary.json` included
+
+Richer sample:
+
+- config: [`configs/richer_sample.yaml`](configs/richer_sample.yaml)
+- input: `data/raw/richer_sample_events.jsonl`
+- outputs: `data/processed/richer_sample/`
+- current summary: `28` events, `24` windows, `8` alerts, `summary.json` included
+
+## Input Support
+
+Runtime input support:
+
+- `.jsonl`
+- `.csv`
+
+Required fields for both formats on every row or record:
+
+- `timestamp`
+- `event_type`
+- `source`
+- `target`
+- `status`
+
+Cooldown behavior:
+
+- repeated alerts are keyed by `(rule_name, scope)`
+- scope prefers the first available entity-like field in this order: `entity`, `source`, `target`, `host`
+- when no entity-like field is present, cooldown falls back to per-`rule_name` behavior
+
+## Repo Guide
+
+- [`docs/sample-output.md`](docs/sample-output.md) summarizes the committed sample artifacts
+- [`docs/roadmap.md`](docs/roadmap.md) sketches the next demo directions
+- [`data/processed/summary.json`](data/processed/summary.json) captures the default run in machine-readable form
+- [`data/processed/richer_sample/summary.json`](data/processed/richer_sample/summary.json) captures the richer scenario pack
+- [`tests/`](tests/) keeps regression coverage close to the CLI behavior and windowing logic
+
+## Next Demo Directions
+
+- strengthen JSONL and CSV validation so ingestion failures are clearer
+- keep reducing repeated alert noise while preserving simple rule-based behavior
+- keep sample-output docs and public repo presentation aligned with the checked-in demo state
 
 ## Scope
 

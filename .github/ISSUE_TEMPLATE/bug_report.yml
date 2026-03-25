@@ -1,0 +1,37 @@
+name: Bug report
+description: Report a reproducible problem in the repository's current behavior
+title: "[Bug]: "
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: What happened?
+      description: Describe the problem in one or two clear sentences.
+      placeholder: The default sample run writes alerts.csv, but summary.json is missing.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: How do we reproduce it?
+      description: Include the exact command, config, input path, and any relevant output.
+      placeholder: |
+        1. Run `python -m telemetry_window_demo.cli run --config configs/default.yaml`
+        2. Inspect `data/processed/`
+        3. Observe ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+      placeholder: summary.json should be written alongside the CSV outputs.
+
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, Python version, and anything else relevant.
+      placeholder: Windows 11, Python 3.12
