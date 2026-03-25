@@ -32,6 +32,7 @@ python -m telemetry_window_demo.cli run --config configs/richer_sample.yaml
 
 That scenario pack reads `data/raw/richer_sample_events.jsonl` and writes outputs to `data/processed/richer_sample/`.
 It currently produces `28` normalized events, `24` windows, and `8` alerts.
+Both sample paths also emit a compact `summary.json` alongside the CSV and PNG outputs.
 
 ## Current behavior
 
@@ -68,9 +69,12 @@ Running the default command regenerates:
 
 - `data/processed/features.csv`
 - `data/processed/alerts.csv`
+- `data/processed/summary.json`
 - `data/processed/event_count_timeline.png`
 - `data/processed/error_rate_timeline.png`
 - `data/processed/alerts_timeline.png`
+
+The summary artifact includes the input path, output directory, normalized event count, window count, feature row count, alert count, triggered rule names and counts, cooldown setting, and generated artifact paths.
 
 ## Scope
 
