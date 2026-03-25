@@ -63,6 +63,7 @@ def run_command(args: argparse.Namespace) -> None:
     config = load_config(config_path)
     time_config = config.get("time", {})
     feature_config = config.get("features", {})
+    rules_config = config.get("rules") or {}
     input_path = resolve_config_path(config_path, config["input_path"])
     output_dir = resolve_config_path(config_path, config.get("output_dir", "data/processed"))
 
@@ -84,8 +85,8 @@ def run_command(args: argparse.Namespace) -> None:
         windows,
         count_event_types=feature_config.get("count_event_types"),
     )
-    alerts = apply_rules(features, config.get("rules"))
-    cooldown_seconds = int(config.get("rules", {}).get("cooldown_seconds", 0))
+    alerts = apply_rules(features, rules_config)
+    cooldown_seconds = int(rules_config.get("cooldown_seconds", 0))
 
     feature_path = write_table(features, output_dir / "features.csv")
     alert_path = write_table(alerts, output_dir / "alerts.csv")

@@ -139,3 +139,42 @@ def test_richer_sample_pipeline_reproduces_sample_outputs(tmp_path, capsys) -> N
     stdout = capsys.readouterr().out
     assert "[OK] Loaded 28 events" in stdout
     assert "[OK] Triggered 8 alerts" in stdout
+
+
+def test_pipeline_writes_summary_when_rules_are_null(tmp_path, capsys) -> None:
+    repo_root = Path(__file__).resolve().parents[1]
+    config_path = repo_root / "configs" / "default.yaml"
+    generated_output_dir = tmp_path / "null_rules"
+
+    config = load_config(config_path)
+    config["input_path"] = str((repo_root / "data" / "raw" / "sample_events.jsonl").resolve())
+    config["output_dir"] = str(generated_output_dir.resolve())
+    config["rules"] = None
+
+    temp_config_path = tmp_path / "null_rules.yaml"
+    temp_config_path.write_text(
+        yaml.safe_dump(config, sort_keys=False),
+        encoding="utf-8",
+    )
+
+    run_command(Namespace(config=str(temp_config_path)))
+
+    generated_alerts = load_alert_table(generated_output_dir / "alerts.csv")
+    generated_summary = _load_summary(generated_output_dir / "summary.json")
+
+    assert generated_summary["cooldown_seconds"] == 0
+    assert generated_summary["alert_count"] == len(generated_alerts)
+    assert Path(generated_summary["input_path"]).name == "sample_events.jsonl"
+    assert Path(generated_summary["output_dir"]).name == "null_rules"
+    assert _artifact_names(generated_summary) == {
+        "features.csv",
+        "alerts.csv",
+        "summary.json",
+        "event_count_timeline.png",
+        "error_rate_timeline.png",
+        "alerts_timeline.png",
+    }
+    assert (generated_output_dir / "summary.json").exists()
+
+    stdout = capsys.readouterr().out
+    assert "[OK] Loaded 41 events" in stdout
