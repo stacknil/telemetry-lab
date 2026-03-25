@@ -24,6 +24,15 @@ Small prototypes for telemetry analytics, monitoring, and detection-oriented sig
 
 The sample config reads `data/raw/sample_events.jsonl` and regenerates outputs in `data/processed/`.
 
+For a richer scenario pack that is easier to walk through in demos:
+
+```bash
+python -m telemetry_window_demo.cli run --config configs/richer_sample.yaml
+```
+
+That scenario pack reads `data/raw/richer_sample_events.jsonl` and writes outputs to `data/processed/richer_sample/`.
+It currently produces `28` normalized events, `24` windows, and `8` alerts.
+
 ## Current behavior
 
 Default sample input:
@@ -50,6 +59,8 @@ With the bundled sample data, the default run currently produces:
 - `12` alerts after applying a `60` second cooldown
 
 The default config suppresses repeated alerts by cooldown key. The key is `rule_name` plus an entity scope when the rule input includes `entity`, `source`, `target`, or `host`; otherwise it falls back to `rule_name` alone. Different cooldown keys can still alert on the same window.
+
+The richer scenario pack uses a longer `120` second cooldown so the output stays compact enough to inspect as four phases: normal background activity, a login-failure burst, a high-risk configuration change with follow-on policy denials, and a rare malware-alert repeat sequence.
 
 ## Outputs
 
