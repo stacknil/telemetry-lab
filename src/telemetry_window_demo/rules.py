@@ -14,6 +14,7 @@ ALERT_COLUMNS = (
     "window_end",
     "message",
 )
+COOLDOWN_SCOPE_COLUMNS = ("entity", "source", "target", "host")
 
 
 def apply_rules(
@@ -46,7 +47,7 @@ def apply_rules(
     if not alerts:
         return pd.DataFrame(columns=ALERT_COLUMNS)
 
-    alerts_frame = pd.DataFrame(alerts, columns=ALERT_COLUMNS)
+    alerts_frame = pd.DataFrame(alerts)
     alerts_frame = alerts_frame.sort_values(["alert_time", "rule_name"]).reset_index(drop=True)
     return _apply_alert_cooldown(alerts_frame, cooldown_seconds)
 
@@ -56,6 +57,7 @@ def _row_alert(
     rule_name: str,
     severity: str,
     message: str,
+    cooldown_scope: str | None = None,
 ) -> dict[str, object]:
     return {
         "alert_time": row["window_end"],
@@ -64,7 +66,32 @@ def _row_alert(
         "window_start": row["window_start"],
         "window_end": row["window_end"],
         "message": message,
+        "cooldown_scope": _resolve_cooldown_scope(row, cooldown_scope),
     }
+
+
+def _resolve_cooldown_scope(
+    row: pd.Series,
+    explicit_scope: str | None = None,
+) -> str | None:
+    if explicit_scope is not None:
+        value = explicit_scope.strip()
+        if value:
+            return value
+
+    for column in COOLDOWN_SCOPE_COLUMNS:
+        if column not in row.index:
+            continue
+
+        value = row[column]
+        if pd.isna(value):
+            continue
+
+        value_text = str(value).strip()
+        if value_text:
+            return f"{column}={value_text}"
+
+    return None
 
 
 def _apply_alert_cooldown(
@@ -72,25 +99,33 @@ def _apply_alert_cooldown(
     cooldown_seconds: int,
 ) -> pd.DataFrame:
     if alerts.empty or cooldown_seconds <= 0:
-        return alerts.reset_index(drop=True)
+        return alerts.loc[:, ALERT_COLUMNS].reset_index(drop=True)
 
-    last_kept_at: dict[str, pd.Timestamp] = {}
+    last_kept_at: dict[tuple[str, str | None], pd.Timestamp] = {}
     kept_rows: list[int] = []
 
     for index, row in alerts.iterrows():
         rule_name = str(row["rule_name"])
         alert_time = pd.Timestamp(row["alert_time"])
-        last_alert_time = last_kept_at.get(rule_name)
+        scope_value = row.get("cooldown_scope")
+        if pd.isna(scope_value):
+            scope = None
+        else:
+            scope_text = str(scope_value).strip()
+            scope = scope_text or None
+
+        cooldown_key = (rule_name, scope)
+        last_alert_time = last_kept_at.get(cooldown_key)
 
         if last_alert_time is None:
             kept_rows.append(index)
-            last_kept_at[rule_name] = alert_time
+            last_kept_at[cooldown_key] = alert_time
             continue
 
         elapsed = (alert_time - last_alert_time).total_seconds()
         if elapsed >= cooldown_seconds:
             kept_rows.append(index)
-            last_kept_at[rule_name] = alert_time
+            last_kept_at[cooldown_key] = alert_time
 
     return alerts.loc[kept_rows, ALERT_COLUMNS].reset_index(drop=True)
 
