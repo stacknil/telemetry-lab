@@ -1,0 +1,59 @@
+case_grouping:
+  gap_minutes: 15
+  context_minutes: 2
+
+rules:
+  - rule_id: AUTH-001
+    name: repeated_failed_logins
+    type: auth_fail_burst
+    severity: medium
+    family: auth
+    threshold: 4
+    lookback_minutes: 5
+    attack:
+      tactic: Credential Access
+      technique_id: T1110
+      technique_name: Brute Force
+
+  - rule_id: AUTH-002
+    name: successful_login_after_failures
+    type: auth_success_after_failures
+    severity: high
+    family: auth
+    failure_threshold: 3
+    lookback_minutes: 10
+    attack:
+      tactic: Credential Access
+      technique_id: T1078
+      technique_name: Valid Accounts
+
+  - rule_id: WEB-001
+    name: sensitive_path_scan
+    type: web_sensitive_path_scan
+    severity: medium
+    family: web
+    threshold: 3
+    lookback_minutes: 5
+    risky_paths:
+      - /admin
+      - /wp-admin
+      - /.env
+    attack:
+      tactic: Reconnaissance
+      technique_id: T1595
+      technique_name: Active Scanning
+
+  - rule_id: PROC-001
+    name: encoded_powershell_execution
+    type: process_encoded_command
+    severity: high
+    family: process
+    indicators:
+      - -enc
+      - frombase64string
+      - invoke-expression
+      - iex(
+    attack:
+      tactic: Execution
+      technique_id: T1059.001
+      technique_name: PowerShell

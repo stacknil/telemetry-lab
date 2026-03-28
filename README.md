@@ -4,6 +4,16 @@
 
 Small portfolio prototypes for telemetry analytics, monitoring, and detection-oriented signal processing.
 
+## Demos
+
+- [telemetry-window-demo](#telemetry-window-demo)
+- [ai-assisted-detection-demo](demos/ai-assisted-detection-demo/README.md)
+
+| Demo | Input | Deterministic core | LLM role | Main artifacts | Guardrails / non-goals |
+| --- | --- | --- | --- | --- | --- |
+| [telemetry-window-demo](#telemetry-window-demo) | JSONL / CSV events | Windows<br>Features<br>Alert thresholds | None | `features.csv`<br>`alerts.csv`<br>`summary.json`<br>3 PNG plots | MVP only<br>No realtime<br>No case management |
+| [ai-assisted-detection-demo](demos/ai-assisted-detection-demo/README.md) | JSONL auth / web / process | Normalize<br>Rules<br>Grouping<br>ATT&CK mapping | JSON-only case drafting | `rule_hits.json`<br>`case_bundles.json`<br>`case_summaries.json`<br>`case_report.md`<br>`audit_traces.jsonl` | Human verification required<br>No autonomous response<br>No final verdict |
+
 ## What This Repo Is
 
 `telemetry-window-demo` is a local Python CLI that turns timestamped event streams into:

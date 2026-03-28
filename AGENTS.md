@@ -4,25 +4,21 @@
 
 - Inspect existing files before editing.
 - Make minimal coherent changes.
-- Prioritize an end-to-end runnable MVP over polish.
+- Prefer small, reviewable pull requests.
+- Prioritize correctness, reproducibility, and README accuracy over polish.
 - Do not present the repo as production-ready.
-- Run tests after code changes.
 
-## Project focus
+## Build and test
 
-- Timestamped event streams
-- Sliding-window aggregation
-- Telemetry features
-- Simple rule-based alerts
-- Reproducible outputs from sample data
+- Install: `python -m pip install -e .`
+- Test: `pytest`
+- Demo run: `python -m telemetry_window_demo.cli run --config configs/default.yaml`
 
 ## Review guidelines
 
-- Treat README and documentation mismatches against actual CLI/runtime behavior as high-priority findings.
-- Check all input-format claims against the real loader implementation.
-- Treat missing edge-case tests as important review findings when behavior depends on time parsing, window boundaries, or alert thresholds.
-- Prefer correcting documentation to match real behavior unless the code path is accidental or deprecated.
+- Treat README or docs mismatches against actual CLI/runtime behavior as important findings.
+- Check input-format claims against the real loader implementation.
+- Treat missing edge-case tests as important findings when behavior depends on time parsing, window boundaries, or alert thresholds.
 - Flag alerting logic that is obviously too noisy for the bundled sample dataset.
-- Prefer small, scoped fixes over broad refactors during PR review.
-- Do not request production-grade features in a portfolio prototype unless the PR explicitly aims to add them.
-- When reviewing plots, outputs, and examples, verify that referenced files and commands actually exist.
+- Prefer small, scoped fixes over broad refactors during review.
+- Verify that referenced commands, files, and output artifacts actually exist.

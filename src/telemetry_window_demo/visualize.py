@@ -2,8 +2,11 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import matplotlib.pyplot as plt
+import matplotlib
 import pandas as pd
+
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
 
 
 def plot_outputs(
@@ -125,4 +128,3 @@ def _plot_alert_timeline(alerts: pd.DataFrame, output_path: Path) -> Path:
     figure.savefig(output_path, dpi=160)
     plt.close(figure)
     return output_path
-
