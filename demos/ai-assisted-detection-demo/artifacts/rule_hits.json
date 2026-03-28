@@ -1,0 +1,138 @@
+[
+  {
+    "hit_id": "AUTH-001-2026-03-27T09:01:55Z",
+    "rule_id": "AUTH-001",
+    "rule_name": "repeated_failed_logins",
+    "severity": "medium",
+    "event_family": "auth",
+    "detected_at": "2026-03-27T09:01:55Z",
+    "event_ids": [
+      "auth-001",
+      "auth-002",
+      "auth-003",
+      "auth-004"
+    ],
+    "entity_keys": [
+      "host:vpn-gw-01",
+      "principal:ops_admin",
+      "src_ip:198.51.100.24"
+    ],
+    "summary": "4 failed logins for ops_admin from 198.51.100.24 within 5 minutes.",
+    "evidence_highlights": [
+      "4 auth failures observed for ops_admin from 198.51.100.24."
+    ],
+    "attack_mapping": {
+      "tactic": "Credential Access",
+      "technique_id": "T1110",
+      "technique_name": "Brute Force"
+    }
+  },
+  {
+    "hit_id": "AUTH-002-2026-03-27T09:02:20Z",
+    "rule_id": "AUTH-002",
+    "rule_name": "successful_login_after_failures",
+    "severity": "high",
+    "event_family": "auth",
+    "detected_at": "2026-03-27T09:02:20Z",
+    "event_ids": [
+      "auth-001",
+      "auth-002",
+      "auth-003",
+      "auth-004",
+      "auth-005"
+    ],
+    "entity_keys": [
+      "host:vpn-gw-01",
+      "principal:ops_admin",
+      "src_ip:198.51.100.24"
+    ],
+    "summary": "Successful login for ops_admin followed 4 recent failures from 198.51.100.24.",
+    "evidence_highlights": [
+      "Successful authentication occurred after 4 recent failures for ops_admin."
+    ],
+    "attack_mapping": {
+      "tactic": "Credential Access",
+      "technique_id": "T1078",
+      "technique_name": "Valid Accounts"
+    }
+  },
+  {
+    "hit_id": "WEB-001-2026-03-27T09:11:10Z",
+    "rule_id": "WEB-001",
+    "rule_name": "sensitive_path_scan",
+    "severity": "medium",
+    "event_family": "web",
+    "detected_at": "2026-03-27T09:11:10Z",
+    "event_ids": [
+      "web-001",
+      "web-002",
+      "web-004"
+    ],
+    "entity_keys": [
+      "host:portal-01",
+      "src_ip:203.0.113.77",
+      "target:/.env",
+      "target:/admin",
+      "target:/wp-admin"
+    ],
+    "summary": "3 requests for sensitive paths from 203.0.113.77 against portal-01.",
+    "evidence_highlights": [
+      "Sensitive paths requested: /.env, /admin, /wp-admin."
+    ],
+    "attack_mapping": {
+      "tactic": "Reconnaissance",
+      "technique_id": "T1595",
+      "technique_name": "Active Scanning"
+    }
+  },
+  {
+    "hit_id": "PROC-001-2026-03-27T09:20:00Z",
+    "rule_id": "PROC-001",
+    "rule_name": "encoded_powershell_execution",
+    "severity": "high",
+    "event_family": "process",
+    "detected_at": "2026-03-27T09:20:00Z",
+    "event_ids": [
+      "proc-001"
+    ],
+    "entity_keys": [
+      "host:wkstn-07",
+      "principal:lab_user",
+      "target:powershell.exe"
+    ],
+    "summary": "Encoded or obfuscated PowerShell execution observed on wkstn-07 for user lab_user.",
+    "evidence_highlights": [
+      "Command line on wkstn-07 matched encoded PowerShell indicators."
+    ],
+    "attack_mapping": {
+      "tactic": "Execution",
+      "technique_id": "T1059.001",
+      "technique_name": "PowerShell"
+    }
+  },
+  {
+    "hit_id": "PROC-001-2026-03-27T09:20:20Z",
+    "rule_id": "PROC-001",
+    "rule_name": "encoded_powershell_execution",
+    "severity": "high",
+    "event_family": "process",
+    "detected_at": "2026-03-27T09:20:20Z",
+    "event_ids": [
+      "proc-002"
+    ],
+    "entity_keys": [
+      "host:wkstn-07",
+      "principal:lab_user",
+      "target:powershell.exe"
+    ],
+    "summary": "Encoded or obfuscated PowerShell execution observed on wkstn-07 for user lab_user.",
+    "evidence_highlights": [
+      "Command line on wkstn-07 matched encoded PowerShell indicators."
+    ],
+    "attack_mapping": {
+      "tactic": "Execution",
+      "technique_id": "T1059.001",
+      "technique_name": "PowerShell"
+    }
+  }
+]

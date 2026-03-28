@@ -55,6 +55,16 @@ def build_parser() -> argparse.ArgumentParser:
     )
     plot_parser.set_defaults(func=plot_command)
 
+    run_ai_demo_parser = subparsers.add_parser(
+        "run-ai-demo",
+        help="Run the constrained AI-assisted detection demo with JSON-only summarization.",
+    )
+    run_ai_demo_parser.add_argument(
+        "--demo-root",
+        help="Path to demos/ai-assisted-detection-demo.",
+    )
+    run_ai_demo_parser.set_defaults(func=run_ai_demo_command)
+
     return parser
 
 
@@ -134,11 +144,33 @@ def summarize_command(args: argparse.Namespace) -> None:
 
 def plot_command(args: argparse.Namespace) -> None:
     features = load_feature_table(args.features)
-    alerts = load_alert_table(args.alerts) if args.alerts else load_alert_table(Path(args.features).with_name("alerts.csv"))
+    alerts = (
+        load_alert_table(args.alerts)
+        if args.alerts
+        else load_alert_table(Path(args.features).with_name("alerts.csv"))
+    )
     plot_paths = plot_outputs(features, alerts, args.output_dir)
     print(f"[OK] Saved plots to {_display_path(Path(args.output_dir).resolve())}")
     for plot_path in plot_paths:
         print(f"     - {plot_path.name}")
+
+
+def run_ai_demo_command(args: argparse.Namespace) -> None:
+    from .ai_assisted_detection_demo import default_demo_root, run_demo
+
+    demo_root = Path(args.demo_root).resolve() if args.demo_root else default_demo_root()
+    result = run_demo(demo_root=demo_root)
+
+    print(f"[OK] Loaded {result['raw_event_count']} raw events")
+    print(f"[OK] Normalized {result['normalized_event_count']} events")
+    print(f"[OK] Triggered {result['rule_hit_count']} rule hits")
+    print(f"[OK] Built {result['case_count']} cases")
+    print(f"[OK] Validated {result['summary_count']} JSON summaries")
+    print(f"[OK] Rejected {result['rejected_summary_count']} summaries")
+    print(f"[OK] Wrote {result['audit_record_count']} audit records")
+    print(f"[OK] Saved artifacts to {_display_path(result['artifacts_dir'])}")
+    for name, path in result["artifacts"].items():
+        print(f"     - {name}: {_display_path(path)}")
 
 
 def _display_path(path: Path) -> str:

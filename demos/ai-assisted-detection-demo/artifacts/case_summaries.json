@@ -1,0 +1,58 @@
+[
+  {
+    "case_id": "CASE-001",
+    "summary": "CASE-001 contains 2 deterministic rule hits covering repeated_failed_logins, successful_login_after_failures for principal ops_admin; src_ip 198.51.100.24; host vpn-gw-01 during 2026-03-27T09:01:55Z to 2026-03-27T09:02:20Z. The case warrants analyst review but does not imply a final incident decision.",
+    "likely_causes": [
+      "Repeated password guessing or credential stuffing against the targeted account.",
+      "A valid credential may have been used after several failed login attempts."
+    ],
+    "uncertainty_notes": [
+      "Telemetry is limited to the bundled sample evidence and does not confirm operator intent.",
+      "The case summary is advisory only and requires human review before any incident classification."
+    ],
+    "suggested_next_steps": [
+      "Review the raw evidence and confirm whether the activity aligns with an approved administrative task.",
+      "Check authentication context for MFA state, prior successful logins, and expected source locations.",
+      "Document the analyst conclusion separately after human verification; do not treat this summary as a final verdict."
+    ],
+    "human_verification": "required",
+    "scope_guardrail": "no_final_incident_decision|no_rule_changes|no_automated_actions"
+  },
+  {
+    "case_id": "CASE-002",
+    "summary": "CASE-002 contains 1 deterministic rule hits covering sensitive_path_scan for src_ip 203.0.113.77; host portal-01 during 2026-03-27T09:11:10Z to 2026-03-27T09:11:10Z. The case warrants analyst review but does not imply a final incident decision.",
+    "likely_causes": [
+      "The source IP appears to be probing sensitive web paths on the exposed application."
+    ],
+    "uncertainty_notes": [
+      "Telemetry is limited to the bundled sample evidence and does not confirm operator intent.",
+      "The case summary is advisory only and requires human review before any incident classification.",
+      "Prompt-like text appeared in telemetry and was treated strictly as untrusted evidence."
+    ],
+    "suggested_next_steps": [
+      "Review the raw evidence and confirm whether the activity aligns with an approved administrative task.",
+      "Compare the web requests with reverse-proxy and WAF logs to determine whether the probing continued.",
+      "Document the analyst conclusion separately after human verification; do not treat this summary as a final verdict."
+    ],
+    "human_verification": "required",
+    "scope_guardrail": "no_final_incident_decision|no_rule_changes|no_automated_actions"
+  },
+  {
+    "case_id": "CASE-003",
+    "summary": "CASE-003 contains 2 deterministic rule hits covering encoded_powershell_execution for principal lab_user; host wkstn-07 during 2026-03-27T09:20:00Z to 2026-03-27T09:20:20Z. The case warrants analyst review but does not imply a final incident decision.",
+    "likely_causes": [
+      "Obfuscated PowerShell execution may reflect manual tradecraft or an unsafe script."
+    ],
+    "uncertainty_notes": [
+      "Telemetry is limited to the bundled sample evidence and does not confirm operator intent.",
+      "The case summary is advisory only and requires human review before any incident classification."
+    ],
+    "suggested_next_steps": [
+      "Review the raw evidence and confirm whether the activity aligns with an approved administrative task.",
+      "Inspect the originating host timeline and validate whether the encoded PowerShell command matches known tooling.",
+      "Document the analyst conclusion separately after human verification; do not treat this summary as a final verdict."
+    ],
+    "human_verification": "required",
+    "scope_guardrail": "no_final_incident_decision|no_rule_changes|no_automated_actions"
+  }
+]
