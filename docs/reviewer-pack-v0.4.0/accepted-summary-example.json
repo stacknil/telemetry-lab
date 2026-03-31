@@ -1,0 +1,12 @@
+{
+  "artifact_kind": "accepted_summary_example",
+  "source_note": "Sanitized excerpt from committed demo artifacts.",
+  "case_id": "CASE-001",
+  "human_verification": "required",
+  "scope_guardrail": "no_final_incident_decision|no_rule_changes|no_automated_actions",
+  "audit_record": {
+    "schema_version": "ai-assisted-detection-audit/v1",
+    "validation_status": "accepted",
+    "rejection_reason": null
+  }
+}

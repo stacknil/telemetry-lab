@@ -1,0 +1,26 @@
+{
+  "artifact_kind": "degraded_coverage_example",
+  "source_note": "Representative sanitized example aligned with rule-metadata validation tests. This is not a current default-run artifact.",
+  "run_integrity": {
+    "accepted_rules": [
+      "AUTH-002",
+      "PROC-001",
+      "WEB-001"
+    ],
+    "rejected_rules": [
+      "AUTH-001"
+    ],
+    "coverage_degraded": "yes",
+    "rejection_reasons": [
+      "rule_metadata_validation_failed"
+    ]
+  },
+  "audit_record": {
+    "case_id": null,
+    "rule_ids": [
+      "AUTH-001"
+    ],
+    "validation_status": "rejected",
+    "rejection_reason": "rule_metadata_validation_failed"
+  }
+}
