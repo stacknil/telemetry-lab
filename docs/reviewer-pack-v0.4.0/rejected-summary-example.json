@@ -1,0 +1,12 @@
+{
+  "artifact_kind": "rejected_summary_example",
+  "source_note": "Representative sanitized example aligned with rejection-path tests. This is not a current default-run artifact.",
+  "case_id": "CASE-EX-REJECTED",
+  "summary_status": "rejected",
+  "rejection_reason": "case_id_mismatch",
+  "audit_record": {
+    "schema_version": "ai-assisted-detection-audit/v1",
+    "validation_status": "rejected",
+    "rejection_reason": "case_id_mismatch"
+  }
+}

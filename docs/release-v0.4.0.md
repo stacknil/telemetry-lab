@@ -41,6 +41,7 @@ The repository now presents a two-demo structure:
   - rejected summary path
   - degraded coverage path
 - Added an explicit lifecycle contract and audit schema version in the design documentation
+- Added a small sanitized reviewer pack guide in [docs/ai-assisted-detection-reviewer-pack.md](ai-assisted-detection-reviewer-pack.md)
 
 ## Why this milestone matters
 

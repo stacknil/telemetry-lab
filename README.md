@@ -18,12 +18,15 @@ Latest milestone: [v0.4.0 — second demo and portfolio integration](https://git
 
 ## What This Repo Is
 
-`telemetry-window-demo` is a local Python CLI that turns timestamped event streams into:
+`telemetry-lab` is a small portfolio repository for telemetry analytics and constrained detection-oriented workflows. It is organized as two local, file-based demos that are reproducible from committed sample data and intentionally scoped for public review rather than production use.
 
-- sliding-window feature tables
-- cooldown-reduced rule-based alerts
-- PNG timeline plots
-- machine-readable run summaries
+### telemetry-window-demo
+
+`telemetry-window-demo` turns timestamped event streams into sliding-window feature tables, cooldown-reduced rule-based alerts, PNG timeline plots, and machine-readable run summaries.
+
+### ai-assisted-detection-demo
+
+`ai-assisted-detection-demo` uses deterministic normalization, detection, case grouping, and ATT&CK mapping, then limits the LLM to JSON-only case summarization. Human verification is required, there is no autonomous response, and the demo does not produce a final incident verdict.
 
 ## Quick Run
 
