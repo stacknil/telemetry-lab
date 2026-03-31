@@ -18,6 +18,8 @@ The goal is to show a credible bridge between deterministic telemetry analytics 
 
 This is not an autonomous SOC. It is a constrained drafting pipeline that keeps rule logic, ATT&CK mapping, case grouping, and evidence handling deterministic.
 
+For a no-run reviewer pack, see [docs/ai-assisted-detection-examples.md](../../docs/ai-assisted-detection-examples.md).
+
 ## Pipeline
 
 1. ingest sample auth, web, and process events from JSONL
