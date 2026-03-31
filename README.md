@@ -4,6 +4,8 @@
 
 Small portfolio prototypes for telemetry analytics, monitoring, and detection-oriented signal processing.
 
+Latest milestone: [v0.4.0 — second demo and portfolio integration](https://github.com/stacknil/telemetry-lab/releases/latest). See [release notes](docs/release-v0.4.0.md).
+
 ## Demos
 
 - [telemetry-window-demo](#telemetry-window-demo)
