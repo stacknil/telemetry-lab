@@ -65,6 +65,16 @@ def build_parser() -> argparse.ArgumentParser:
     )
     run_ai_demo_parser.set_defaults(func=run_ai_demo_command)
 
+    run_rule_dedup_demo_parser = subparsers.add_parser(
+        "run-rule-dedup-demo",
+        help="Run the rule evaluation and dedup demo with suppression explanations.",
+    )
+    run_rule_dedup_demo_parser.add_argument(
+        "--demo-root",
+        help="Path to demos/rule-evaluation-and-dedup-demo.",
+    )
+    run_rule_dedup_demo_parser.set_defaults(func=run_rule_dedup_demo_command)
+
     return parser
 
 
@@ -168,6 +178,21 @@ def run_ai_demo_command(args: argparse.Namespace) -> None:
     print(f"[OK] Validated {result['summary_count']} JSON summaries")
     print(f"[OK] Rejected {result['rejected_summary_count']} summaries")
     print(f"[OK] Wrote {result['audit_record_count']} audit records")
+    print(f"[OK] Saved artifacts to {_display_path(result['artifacts_dir'])}")
+    for name, path in result["artifacts"].items():
+        print(f"     - {name}: {_display_path(path)}")
+
+
+def run_rule_dedup_demo_command(args: argparse.Namespace) -> None:
+    from .rule_evaluation_and_dedup_demo import default_demo_root, run_demo
+
+    demo_root = Path(args.demo_root).resolve() if args.demo_root else default_demo_root()
+    result = run_demo(demo_root=demo_root)
+
+    print(f"[OK] Loaded {result['raw_hit_count']} raw rule hits")
+    print(f"[OK] Retained {result['retained_alert_count']} alerts")
+    print(f"[OK] Suppressed {result['suppressed_hit_count']} repeated hits")
+    print(f"[OK] Evaluated {result['group_count']} rule/scope groups")
     print(f"[OK] Saved artifacts to {_display_path(result['artifacts_dir'])}")
     for name, path in result["artifacts"].items():
         print(f"     - {name}: {_display_path(path)}")

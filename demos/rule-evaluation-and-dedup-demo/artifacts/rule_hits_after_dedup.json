@@ -1,0 +1,190 @@
+[
+  {
+    "hit_id": "RH-001",
+    "rule_name": "login_fail_burst",
+    "severity": "high",
+    "alert_time": "2026-03-18T10:01:00Z",
+    "window_start": "2026-03-18T10:00:00Z",
+    "window_end": "2026-03-18T10:01:00Z",
+    "message": "login_fail_count reached 8, threshold is 8",
+    "entity": "account:alice",
+    "source": "vpn-gateway-01",
+    "target": null,
+    "host": null,
+    "cooldown_scope": "entity=account:alice",
+    "scope_source": "entity",
+    "cooldown_key": "login_fail_burst|entity=account:alice",
+    "retained_because": "kept as the first hit for `login_fail_burst / entity=account:alice`.",
+    "group_position": 1,
+    "group_size": 3,
+    "suppressed_hit_ids": [
+      "RH-002"
+    ],
+    "suppression_reasons": [
+      "suppressed because it matched the same cooldown key as retained hit `RH-001` only 40 seconds later, inside the 180 second cooldown."
+    ],
+    "suppressed_count": 1,
+    "represented_hit_ids": [
+      "RH-001",
+      "RH-002"
+    ],
+    "represented_raw_hit_count": 2,
+    "group_raw_hit_count": 3,
+    "group_retained_alert_count": 2
+  },
+  {
+    "hit_id": "RH-004",
+    "rule_name": "login_fail_burst",
+    "severity": "high",
+    "alert_time": "2026-03-18T10:01:20Z",
+    "window_start": "2026-03-18T10:00:20Z",
+    "window_end": "2026-03-18T10:01:20Z",
+    "message": "login_fail_count reached 8, threshold is 8",
+    "entity": "account:bob",
+    "source": "vpn-gateway-02",
+    "target": null,
+    "host": null,
+    "cooldown_scope": "entity=account:bob",
+    "scope_source": "entity",
+    "cooldown_key": "login_fail_burst|entity=account:bob",
+    "retained_because": "kept as the first hit for `login_fail_burst / entity=account:bob`.",
+    "group_position": 1,
+    "group_size": 2,
+    "suppressed_hit_ids": [
+      "RH-005"
+    ],
+    "suppression_reasons": [
+      "suppressed because it matched the same cooldown key as retained hit `RH-004` only 40 seconds later, inside the 180 second cooldown."
+    ],
+    "suppressed_count": 1,
+    "represented_hit_ids": [
+      "RH-004",
+      "RH-005"
+    ],
+    "represented_raw_hit_count": 2,
+    "group_raw_hit_count": 2,
+    "group_retained_alert_count": 1
+  },
+  {
+    "hit_id": "RH-003",
+    "rule_name": "login_fail_burst",
+    "severity": "high",
+    "alert_time": "2026-03-18T10:04:30Z",
+    "window_start": "2026-03-18T10:03:30Z",
+    "window_end": "2026-03-18T10:04:30Z",
+    "message": "login_fail_count reached 8, threshold is 8",
+    "entity": "account:alice",
+    "source": "vpn-gateway-01",
+    "target": null,
+    "host": null,
+    "cooldown_scope": "entity=account:alice",
+    "scope_source": "entity",
+    "cooldown_key": "login_fail_burst|entity=account:alice",
+    "retained_because": "kept because 210 seconds elapsed since retained hit `RH-001`, which meets the 180 second cooldown.",
+    "group_position": 3,
+    "group_size": 3,
+    "suppressed_hit_ids": [],
+    "suppression_reasons": [],
+    "suppressed_count": 0,
+    "represented_hit_ids": [
+      "RH-003"
+    ],
+    "represented_raw_hit_count": 1,
+    "group_raw_hit_count": 3,
+    "group_retained_alert_count": 2
+  },
+  {
+    "hit_id": "RH-006",
+    "rule_name": "high_error_rate",
+    "severity": "medium",
+    "alert_time": "2026-03-18T10:05:00Z",
+    "window_start": "2026-03-18T10:04:00Z",
+    "window_end": "2026-03-18T10:05:00Z",
+    "message": "error_rate 0.46 exceeded 0.30",
+    "entity": null,
+    "source": "api-01",
+    "target": null,
+    "host": null,
+    "cooldown_scope": "source=api-01",
+    "scope_source": "source",
+    "cooldown_key": "high_error_rate|source=api-01",
+    "retained_because": "kept as the first hit for `high_error_rate / source=api-01`.",
+    "group_position": 1,
+    "group_size": 3,
+    "suppressed_hit_ids": [
+      "RH-007"
+    ],
+    "suppression_reasons": [
+      "suppressed because it matched the same cooldown key as retained hit `RH-006` only 70 seconds later, inside the 180 second cooldown."
+    ],
+    "suppressed_count": 1,
+    "represented_hit_ids": [
+      "RH-006",
+      "RH-007"
+    ],
+    "represented_raw_hit_count": 2,
+    "group_raw_hit_count": 3,
+    "group_retained_alert_count": 2
+  },
+  {
+    "hit_id": "RH-009",
+    "rule_name": "rare_event_repeat_malware_alert",
+    "severity": "high",
+    "alert_time": "2026-03-18T10:07:00Z",
+    "window_start": "2026-03-18T10:06:00Z",
+    "window_end": "2026-03-18T10:07:00Z",
+    "message": "malware_alert repeated 2 times in one window",
+    "entity": null,
+    "source": null,
+    "target": null,
+    "host": null,
+    "cooldown_scope": null,
+    "scope_source": "unscoped",
+    "cooldown_key": "rare_event_repeat_malware_alert|unscoped",
+    "retained_because": "kept as the first hit for `rare_event_repeat_malware_alert / unscoped`.",
+    "group_position": 1,
+    "group_size": 2,
+    "suppressed_hit_ids": [
+      "RH-010"
+    ],
+    "suppression_reasons": [
+      "suppressed because it matched the same cooldown key as retained hit `RH-009` only 60 seconds later, inside the 180 second cooldown."
+    ],
+    "suppressed_count": 1,
+    "represented_hit_ids": [
+      "RH-009",
+      "RH-010"
+    ],
+    "represented_raw_hit_count": 2,
+    "group_raw_hit_count": 2,
+    "group_retained_alert_count": 1
+  },
+  {
+    "hit_id": "RH-008",
+    "rule_name": "high_error_rate",
+    "severity": "medium",
+    "alert_time": "2026-03-18T10:08:30Z",
+    "window_start": "2026-03-18T10:07:30Z",
+    "window_end": "2026-03-18T10:08:30Z",
+    "message": "error_rate 0.44 exceeded 0.30",
+    "entity": null,
+    "source": "api-01",
+    "target": null,
+    "host": null,
+    "cooldown_scope": "source=api-01",
+    "scope_source": "source",
+    "cooldown_key": "high_error_rate|source=api-01",
+    "retained_because": "kept because 210 seconds elapsed since retained hit `RH-006`, which meets the 180 second cooldown.",
+    "group_position": 3,
+    "group_size": 3,
+    "suppressed_hit_ids": [],
+    "suppression_reasons": [],
+    "suppressed_count": 0,
+    "represented_hit_ids": [
+      "RH-008"
+    ],
+    "represented_raw_hit_count": 1,
+    "group_raw_hit_count": 3,
+    "group_retained_alert_count": 2
+  }
+]
