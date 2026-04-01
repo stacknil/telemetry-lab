@@ -1,0 +1,4 @@
+{"change_id":"cfg-001","timestamp":"2026-03-22T09:00:00Z","actor":"ops-admin","target_system":"identity-proxy","config_key":"disable_admin_mfa","old_value":"false","new_value":"true","change_result":"success","change_ticket":"CHG-1001"}
+{"change_id":"cfg-002","timestamp":"2026-03-22T09:20:00Z","actor":"deploy-bot","target_system":"payments-api","config_key":"public_bind_cidr","old_value":"10.20.0.0/24","new_value":"0.0.0.0/0","change_result":"success","change_ticket":"CHG-1002"}
+{"change_id":"cfg-003","timestamp":"2026-03-22T09:40:00Z","actor":"deploy-bot","target_system":"payments-api","config_key":"log_level","old_value":"info","new_value":"debug","change_result":"success","change_ticket":"CHG-1003"}
+{"change_id":"cfg-004","timestamp":"2026-03-22T10:00:00Z","actor":"sre-admin","target_system":"vault-gateway","config_key":"break_glass_mode","old_value":"disabled","new_value":"enabled","change_result":"success","change_ticket":"CHG-1004"}
