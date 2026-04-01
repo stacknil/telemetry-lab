@@ -1,0 +1,3 @@
+input_path: data/raw/sample_rule_hits.json
+artifacts_dir: artifacts
+cooldown_seconds: 180
