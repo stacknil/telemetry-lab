@@ -1,0 +1,25 @@
+input_paths:
+  config_changes: data/raw/config_changes.jsonl
+  policy_denials: data/raw/policy_denials.jsonl
+  follow_on_events: data/raw/follow_on_events.jsonl
+artifacts_dir: artifacts
+correlation_minutes: 15
+rules:
+  - rule_id: cfg_disable_admin_mfa
+    config_key: disable_admin_mfa
+    severity: critical
+    risky_values:
+      - "true"
+    reason: Admin MFA was disabled on a protected system.
+  - rule_id: cfg_public_bind_cidr
+    config_key: public_bind_cidr
+    severity: high
+    risky_values:
+      - 0.0.0.0/0
+    reason: Public bind CIDR was expanded to all addresses.
+  - rule_id: cfg_break_glass_mode
+    config_key: break_glass_mode
+    severity: high
+    risky_values:
+      - enabled
+    reason: Break-glass mode was enabled on a sensitive service.

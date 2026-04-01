@@ -1,0 +1,5 @@
+{"event_id":"fo-001","timestamp":"2026-03-22T09:05:00Z","target_system":"identity-proxy","event_type":"auth_fail_burst","details":"5 privileged login failures from 203.0.113.24 after the config change."}
+{"event_id":"fo-002","timestamp":"2026-03-22T09:11:00Z","target_system":"identity-proxy","event_type":"service_restart","details":"identity-proxy restarted after an auth-policy reload."}
+{"event_id":"fo-003","timestamp":"2026-03-22T09:26:00Z","target_system":"payments-api","event_type":"service_restart","details":"payments-api restarted after listener rebind."}
+{"event_id":"fo-004","timestamp":"2026-03-22T09:31:00Z","target_system":"payments-api","event_type":"edge_warning","details":"Edge listener observed requests from the newly public CIDR."}
+{"event_id":"fo-005","timestamp":"2026-03-22T10:30:00Z","target_system":"vault-gateway","event_type":"access_request","details":"A break-glass token was requested outside the bounded correlation window."}

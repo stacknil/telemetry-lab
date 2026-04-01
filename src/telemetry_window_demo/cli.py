@@ -75,6 +75,16 @@ def build_parser() -> argparse.ArgumentParser:
     )
     run_rule_dedup_demo_parser.set_defaults(func=run_rule_dedup_demo_command)
 
+    run_config_change_demo_parser = subparsers.add_parser(
+        "run-config-change-demo",
+        help="Run the config-change investigation demo with deterministic correlation.",
+    )
+    run_config_change_demo_parser.add_argument(
+        "--demo-root",
+        help="Path to demos/config-change-investigation-demo.",
+    )
+    run_config_change_demo_parser.set_defaults(func=run_config_change_demo_command)
+
     return parser
 
 
@@ -193,6 +203,20 @@ def run_rule_dedup_demo_command(args: argparse.Namespace) -> None:
     print(f"[OK] Retained {result['retained_alert_count']} alerts")
     print(f"[OK] Suppressed {result['suppressed_hit_count']} repeated hits")
     print(f"[OK] Evaluated {result['group_count']} rule/scope groups")
+    print(f"[OK] Saved artifacts to {_display_path(result['artifacts_dir'])}")
+    for name, path in result["artifacts"].items():
+        print(f"     - {name}: {_display_path(path)}")
+
+
+def run_config_change_demo_command(args: argparse.Namespace) -> None:
+    from .config_change_investigation_demo import default_demo_root, run_demo
+
+    demo_root = Path(args.demo_root).resolve() if args.demo_root else default_demo_root()
+    result = run_demo(demo_root=demo_root)
+
+    print(f"[OK] Loaded {result['change_event_count']} config changes")
+    print(f"[OK] Flagged {result['risky_change_count']} risky changes")
+    print(f"[OK] Built {result['investigation_count']} investigations")
     print(f"[OK] Saved artifacts to {_display_path(result['artifacts_dir'])}")
     for name, path in result["artifacts"].items():
         print(f"     - {name}: {_display_path(path)}")

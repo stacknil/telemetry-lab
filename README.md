@@ -11,16 +11,18 @@ Latest milestone: [v0.5.0 — third demo and three-demo structure](https://githu
 - [telemetry-window-demo](#telemetry-window-demo)
 - [ai-assisted-detection-demo](demos/ai-assisted-detection-demo/README.md)
 - [rule-evaluation-and-dedup-demo](demos/rule-evaluation-and-dedup-demo/README.md)
+- [config-change-investigation-demo](demos/config-change-investigation-demo/README.md)
 
 | Demo | Input | Deterministic core | LLM role | Main artifacts | Guardrails / non-goals |
 | --- | --- | --- | --- | --- | --- |
 | [telemetry-window-demo](#telemetry-window-demo) | JSONL / CSV events | Windows<br>Features<br>Alert thresholds | None | `features.csv`<br>`alerts.csv`<br>`summary.json`<br>3 PNG plots | MVP only<br>No realtime<br>No case management |
 | [ai-assisted-detection-demo](demos/ai-assisted-detection-demo/README.md) | JSONL auth / web / process | Normalize<br>Rules<br>Grouping<br>ATT&CK mapping | JSON-only case drafting | `rule_hits.json`<br>`case_bundles.json`<br>`case_summaries.json`<br>`case_report.md`<br>`audit_traces.jsonl` | Human verification required<br>No autonomous response<br>No final verdict |
 | [rule-evaluation-and-dedup-demo](demos/rule-evaluation-and-dedup-demo/README.md) | JSON raw rule hits | Scope resolution<br>Cooldown grouping<br>Suppression reasoning | None | `rule_hits_before_dedup.json`<br>`rule_hits_after_dedup.json`<br>`dedup_explanations.json`<br>`dedup_report.md` | No realtime<br>No dashboard<br>No AI stage |
+| [config-change-investigation-demo](demos/config-change-investigation-demo/README.md) | JSONL config changes<br>Policy denials<br>Follow-on events | Normalize<br>Risky-change rules<br>Bounded correlation | None | `change_events_normalized.json`<br>`investigation_hits.json`<br>`investigation_summary.json`<br>`investigation_report.md` | No realtime<br>No dashboard<br>No AI stage |
 
 ## What This Repo Is
 
-`telemetry-lab` is a small portfolio repository for telemetry analytics and constrained detection-oriented workflows. It is organized as three local, file-based demos that are reproducible from committed sample data and intentionally scoped for public review rather than production use.
+`telemetry-lab` is a small portfolio repository for telemetry analytics and constrained detection-oriented workflows. It is organized as four local, file-based demos that are reproducible from committed sample data and intentionally scoped for public review rather than production use.
 
 ### telemetry-window-demo
 
@@ -34,6 +36,10 @@ Latest milestone: [v0.5.0 — third demo and three-demo structure](https://githu
 
 `rule-evaluation-and-dedup-demo` starts from raw rule hits and makes cooldown behavior legible. It shows which hits were kept, which were suppressed, how scope was resolved, and why repeated hits collapsed into fewer retained alerts.
 
+### config-change-investigation-demo
+
+`config-change-investigation-demo` follows risky configuration changes into bounded follow-on evidence such as policy denials and service signals. It stays deterministic, file-based, and review-oriented, with no added AI stage.
+
 ## Quick Run
 
 ```bash
@@ -45,6 +51,7 @@ Other demo entrypoints:
 
 - `python -m telemetry_window_demo.cli run-ai-demo`
 - `python -m telemetry_window_demo.cli run-rule-dedup-demo`
+- `python -m telemetry_window_demo.cli run-config-change-demo`
 
 That command reads `data/raw/sample_events.jsonl` and regenerates:
 
@@ -109,6 +116,7 @@ Cooldown behavior:
 ## Repo Guide
 
 - [`demos/rule-evaluation-and-dedup-demo/README.md`](demos/rule-evaluation-and-dedup-demo/README.md) explains the third demo and links its committed before/after dedup artifacts
+- [`demos/config-change-investigation-demo/README.md`](demos/config-change-investigation-demo/README.md) explains the config-change investigation demo and its committed artifacts
 - [`docs/sample-output.md`](docs/sample-output.md) summarizes the committed sample artifacts
 - [`docs/roadmap.md`](docs/roadmap.md) sketches the next demo directions
 - [`data/processed/summary.json`](data/processed/summary.json) captures the default run in machine-readable form
