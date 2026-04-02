@@ -1,0 +1,51 @@
+{
+  "artifact_kind": "risky_change_with_evidence_example",
+  "source_note": "Representative sanitized example aligned with committed artifact semantics. Non-production.",
+  "maps_to_artifacts": [
+    "investigation_hits.json",
+    "investigation_report.md"
+  ],
+  "investigation": {
+    "investigation_id": "CCI-001",
+    "severity": "critical",
+    "rule_id": "cfg_disable_admin_mfa",
+    "target_system": "identity-proxy",
+    "actor": "admin-operator",
+    "triggering_change": {
+      "change_id": "cfg-001",
+      "timestamp": "2026-03-22T09:00:00Z",
+      "config_key": "disable_admin_mfa",
+      "old_value": "false",
+      "new_value": "true"
+    },
+    "trigger_reason": "Admin MFA was disabled on a protected system.",
+    "correlation_window_minutes": 15,
+    "bounded_correlation_reason": "Attached evidence shares target_system 'identity-proxy' and falls within 15 minutes after the triggering change.",
+    "evidence_counts": {
+      "policy_denials": 2,
+      "follow_on_events": 2
+    },
+    "attached_policy_denials": [
+      {
+        "denial_id": "den-001",
+        "policy_name": "admin-login-guard",
+        "decision": "denied"
+      },
+      {
+        "denial_id": "den-002",
+        "policy_name": "token-exchange-guard",
+        "decision": "denied"
+      }
+    ],
+    "attached_follow_on_events": [
+      {
+        "event_id": "fo-001",
+        "event_type": "auth_fail_burst"
+      },
+      {
+        "event_id": "fo-002",
+        "event_type": "service_restart"
+      }
+    ]
+  }
+}
