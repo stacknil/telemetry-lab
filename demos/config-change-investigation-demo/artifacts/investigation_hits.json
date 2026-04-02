@@ -1,0 +1,142 @@
+[
+  {
+    "investigation_id": "CCI-001",
+    "severity": "critical",
+    "rule_id": "cfg_disable_admin_mfa",
+    "target_system": "identity-proxy",
+    "actor": "ops-admin",
+    "triggering_change": {
+      "change_id": "cfg-001",
+      "timestamp": "2026-03-22T09:00:00Z",
+      "actor": "ops-admin",
+      "target_system": "identity-proxy",
+      "config_key": "disable_admin_mfa",
+      "old_value": "false",
+      "new_value": "true",
+      "change_result": "success",
+      "change_ticket": "CHG-1001"
+    },
+    "trigger_reason": "Admin MFA was disabled on a protected system.",
+    "correlation_window_minutes": 15,
+    "bounded_correlation_reason": "Attached evidence shares target_system 'identity-proxy' and falls within 15 minutes after the triggering change.",
+    "attached_policy_denials": [
+      {
+        "denial_id": "den-001",
+        "timestamp": "2026-03-22T09:04:00Z",
+        "actor": "ops-admin",
+        "target_system": "identity-proxy",
+        "policy_name": "admin-login-guard",
+        "decision": "denied",
+        "reason": "MFA policy blocked admin login after configuration drift."
+      },
+      {
+        "denial_id": "den-002",
+        "timestamp": "2026-03-22T09:09:00Z",
+        "actor": "service-account",
+        "target_system": "identity-proxy",
+        "policy_name": "token-exchange-guard",
+        "decision": "denied",
+        "reason": "Token exchange blocked after admin-auth policy divergence."
+      }
+    ],
+    "attached_follow_on_events": [
+      {
+        "event_id": "fo-001",
+        "timestamp": "2026-03-22T09:05:00Z",
+        "target_system": "identity-proxy",
+        "event_type": "auth_fail_burst",
+        "details": "5 privileged login failures from 203.0.113.24 after the config change."
+      },
+      {
+        "event_id": "fo-002",
+        "timestamp": "2026-03-22T09:11:00Z",
+        "target_system": "identity-proxy",
+        "event_type": "service_restart",
+        "details": "identity-proxy restarted after an auth-policy reload."
+      }
+    ],
+    "evidence_counts": {
+      "policy_denials": 2,
+      "follow_on_events": 2
+    }
+  },
+  {
+    "investigation_id": "CCI-002",
+    "severity": "high",
+    "rule_id": "cfg_public_bind_cidr",
+    "target_system": "payments-api",
+    "actor": "deploy-bot",
+    "triggering_change": {
+      "change_id": "cfg-002",
+      "timestamp": "2026-03-22T09:20:00Z",
+      "actor": "deploy-bot",
+      "target_system": "payments-api",
+      "config_key": "public_bind_cidr",
+      "old_value": "10.20.0.0/24",
+      "new_value": "0.0.0.0/0",
+      "change_result": "success",
+      "change_ticket": "CHG-1002"
+    },
+    "trigger_reason": "Public bind CIDR was expanded to all addresses.",
+    "correlation_window_minutes": 15,
+    "bounded_correlation_reason": "Attached evidence shares target_system 'payments-api' and falls within 15 minutes after the triggering change.",
+    "attached_policy_denials": [
+      {
+        "denial_id": "den-003",
+        "timestamp": "2026-03-22T09:23:00Z",
+        "actor": "deploy-bot",
+        "target_system": "payments-api",
+        "policy_name": "public-exposure-guard",
+        "decision": "denied",
+        "reason": "Public bind CIDR exceeded the approved network range."
+      }
+    ],
+    "attached_follow_on_events": [
+      {
+        "event_id": "fo-003",
+        "timestamp": "2026-03-22T09:26:00Z",
+        "target_system": "payments-api",
+        "event_type": "service_restart",
+        "details": "payments-api restarted after listener rebind."
+      },
+      {
+        "event_id": "fo-004",
+        "timestamp": "2026-03-22T09:31:00Z",
+        "target_system": "payments-api",
+        "event_type": "edge_warning",
+        "details": "Edge listener observed requests from the newly public CIDR."
+      }
+    ],
+    "evidence_counts": {
+      "policy_denials": 1,
+      "follow_on_events": 2
+    }
+  },
+  {
+    "investigation_id": "CCI-003",
+    "severity": "high",
+    "rule_id": "cfg_break_glass_mode",
+    "target_system": "vault-gateway",
+    "actor": "sre-admin",
+    "triggering_change": {
+      "change_id": "cfg-004",
+      "timestamp": "2026-03-22T10:00:00Z",
+      "actor": "sre-admin",
+      "target_system": "vault-gateway",
+      "config_key": "break_glass_mode",
+      "old_value": "disabled",
+      "new_value": "enabled",
+      "change_result": "success",
+      "change_ticket": "CHG-1004"
+    },
+    "trigger_reason": "Break-glass mode was enabled on a sensitive service.",
+    "correlation_window_minutes": 15,
+    "bounded_correlation_reason": "Attached evidence shares target_system 'vault-gateway' and falls within 15 minutes after the triggering change.",
+    "attached_policy_denials": [],
+    "attached_follow_on_events": [],
+    "evidence_counts": {
+      "policy_denials": 0,
+      "follow_on_events": 0
+    }
+  }
+]

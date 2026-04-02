@@ -1,0 +1,4 @@
+{"denial_id":"den-001","timestamp":"2026-03-22T09:04:00Z","actor":"ops-admin","target_system":"identity-proxy","policy_name":"admin-login-guard","decision":"denied","reason":"MFA policy blocked admin login after configuration drift."}
+{"denial_id":"den-002","timestamp":"2026-03-22T09:09:00Z","actor":"service-account","target_system":"identity-proxy","policy_name":"token-exchange-guard","decision":"denied","reason":"Token exchange blocked after admin-auth policy divergence."}
+{"denial_id":"den-003","timestamp":"2026-03-22T09:23:00Z","actor":"deploy-bot","target_system":"payments-api","policy_name":"public-exposure-guard","decision":"denied","reason":"Public bind CIDR exceeded the approved network range."}
+{"denial_id":"den-004","timestamp":"2026-03-22T09:55:00Z","actor":"ops-admin","target_system":"payments-api","policy_name":"runtime-policy","decision":"denied","reason":"Runtime policy denied a test action outside the investigation window."}
