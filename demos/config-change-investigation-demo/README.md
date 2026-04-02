@@ -26,6 +26,8 @@ python -m telemetry_window_demo.cli run-config-change-demo
 
 Generated artifacts are written to `demos/config-change-investigation-demo/artifacts/`.
 
+For offline review without running the demo, see [`docs/config-change-investigation-reviewer-pack.md`](../../docs/config-change-investigation-reviewer-pack.md).
+
 ## Demo Inputs
 
 - config changes: `data/raw/config_changes.jsonl`

@@ -1,0 +1,33 @@
+{
+  "artifact_kind": "bounded_case_no_evidence_example",
+  "source_note": "Representative sanitized example aligned with committed artifact semantics. Non-production.",
+  "maps_to_artifacts": [
+    "investigation_hits.json",
+    "investigation_summary.json",
+    "investigation_report.md"
+  ],
+  "reviewer_expectation": "The risky change remains explicit as an investigation even though bounded correlation found zero nearby evidence records.",
+  "investigation": {
+    "investigation_id": "CCI-003",
+    "severity": "high",
+    "rule_id": "cfg_break_glass_mode",
+    "target_system": "vault-gateway",
+    "actor": "sre-admin",
+    "triggering_change": {
+      "change_id": "cfg-004",
+      "timestamp": "2026-03-22T10:00:00Z",
+      "config_key": "break_glass_mode",
+      "old_value": "disabled",
+      "new_value": "enabled"
+    },
+    "trigger_reason": "Break-glass mode was enabled on a sensitive service.",
+    "correlation_window_minutes": 15,
+    "bounded_correlation_reason": "Attached evidence shares target_system 'vault-gateway' and falls within 15 minutes after the triggering change.",
+    "evidence_counts": {
+      "policy_denials": 0,
+      "follow_on_events": 0
+    },
+    "attached_policy_denials": [],
+    "attached_follow_on_events": []
+  }
+}

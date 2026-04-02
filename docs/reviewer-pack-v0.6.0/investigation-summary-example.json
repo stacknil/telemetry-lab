@@ -1,0 +1,17 @@
+{
+  "artifact_kind": "investigation_summary_example",
+  "source_note": "Representative sanitized example aligned with committed artifact semantics. Non-production.",
+  "maps_to_artifact": "investigation_summary.json",
+  "summary_record": {
+    "investigation_id": "CCI-001",
+    "severity": "critical",
+    "target_system": "identity-proxy",
+    "triggering_change_id": "cfg-001",
+    "summary": "disable_admin_mfa changed from false to true on identity-proxy, followed by 2 policy denials and 2 follow-on events within 15 minutes.",
+    "evidence_counts": {
+      "policy_denials": 2,
+      "follow_on_events": 2
+    },
+    "bounded_correlation_reason": "Attached evidence shares target_system 'identity-proxy' and falls within 15 minutes after the triggering change."
+  }
+}
