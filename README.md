@@ -4,7 +4,7 @@
 
 Small portfolio prototypes for telemetry analytics, monitoring, and detection-oriented signal processing.
 
-Latest milestone: [v0.5.0 — third demo and three-demo structure](https://github.com/stacknil/telemetry-lab/releases/latest).
+Latest milestone: [v0.6.0 — fourth demo and config-change investigation](https://github.com/stacknil/telemetry-lab/releases/latest).
 
 ## Demos
 
