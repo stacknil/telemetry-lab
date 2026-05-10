@@ -8,6 +8,8 @@ from typing import Any
 
 import yaml
 
+from ..time_utils import parse_utc_timestamp
+
 SEVERITY_ORDER = {"low": 1, "medium": 2, "high": 3, "critical": 4}
 CHANGE_REQUIRED_FIELDS = (
     "change_id",
@@ -35,6 +37,11 @@ FOLLOW_ON_REQUIRED_FIELDS = (
     "event_type",
     "details",
 )
+CONFIG_INPUT_PATH_FIELDS = (
+    "config_changes",
+    "policy_denials",
+    "follow_on_events",
+)
 
 
 def default_demo_root() -> Path:
@@ -46,13 +53,14 @@ def run_demo(
     artifacts_dir: Path | None = None,
 ) -> dict[str, Any]:
     demo_root = Path(demo_root or default_demo_root()).resolve()
-    config = load_yaml(demo_root / "config" / "investigation.yaml")
-    input_paths = config.get("input_paths", {})
+    config = validate_demo_config(load_yaml(demo_root / "config" / "investigation.yaml"))
+    input_paths = config["input_paths"]
     artifacts_dir = Path(
         artifacts_dir
-        or resolve_demo_path(demo_root, str(config.get("artifacts_dir", "artifacts")))
+        or resolve_demo_path(demo_root, str(config["artifacts_dir"]))
     ).resolve()
     artifacts_dir.mkdir(parents=True, exist_ok=True)
+    correlation_minutes = int(config["correlation_minutes"])
 
     config_changes = normalize_config_changes(
         load_jsonl(resolve_demo_path(demo_root, str(input_paths["config_changes"])))
@@ -69,17 +77,17 @@ def run_demo(
         rule_hits,
         policy_denials,
         follow_on_events,
-        correlation_minutes=int(config.get("correlation_minutes", 15)),
+        correlation_minutes=correlation_minutes,
     )
     summary = build_investigation_summary(
         investigations,
-        correlation_minutes=int(config.get("correlation_minutes", 15)),
+        correlation_minutes=correlation_minutes,
     )
     report_text = build_investigation_report(
         config_changes=config_changes,
         rule_hits=rule_hits,
         investigations=investigations,
-        correlation_minutes=int(config.get("correlation_minutes", 15)),
+        correlation_minutes=correlation_minutes,
     )
 
     paths = {
@@ -117,6 +125,39 @@ def load_yaml(path: Path) -> dict[str, Any]:
     if not isinstance(payload, dict):
         raise ValueError("YAML config must deserialize into a mapping.")
     return payload
+
+
+def validate_demo_config(config: Mapping[str, Any]) -> dict[str, Any]:
+    input_paths = config.get("input_paths")
+    if not isinstance(input_paths, Mapping):
+        raise ValueError("Config field 'input_paths' must be a mapping.")
+
+    validated_input_paths: dict[str, str] = {}
+    for field in CONFIG_INPUT_PATH_FIELDS:
+        validated_input_paths[field] = require_non_empty_string(
+            input_paths.get(field),
+            f"input_paths.{field}",
+        )
+
+    artifacts_dir = require_non_empty_string(
+        config.get("artifacts_dir", "artifacts"),
+        "artifacts_dir",
+    )
+    correlation_minutes = require_positive_int(
+        config.get("correlation_minutes", 15),
+        "correlation_minutes",
+    )
+
+    rules = config.get("rules")
+    if not isinstance(rules, list) or not rules:
+        raise ValueError("Config field 'rules' must be a non-empty list.")
+
+    return {
+        "input_paths": validated_input_paths,
+        "artifacts_dir": artifacts_dir,
+        "correlation_minutes": correlation_minutes,
+        "rules": rules,
+    }
 
 
 def load_jsonl(path: Path) -> list[dict[str, Any]]:
@@ -306,6 +347,24 @@ def validate_rules(rules: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
     return validated
 
 
+def require_positive_int(value: Any, field_name: str) -> int:
+    if isinstance(value, bool):
+        raise ValueError(f"{field_name} must be a positive integer.")
+    try:
+        parsed = int(value)
+    except (TypeError, ValueError) as exc:
+        raise ValueError(f"{field_name} must be a positive integer.") from exc
+    if parsed <= 0:
+        raise ValueError(f"{field_name} must be a positive integer.")
+    return parsed
+
+
+def require_non_empty_string(value: Any, field_name: str) -> str:
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(f"Config field '{field_name}' must be a non-empty string.")
+    return value.strip()
+
+
 def build_investigations(
     rule_hits: Sequence[Mapping[str, Any]],
     policy_denials: Sequence[Mapping[str, Any]],
@@ -313,6 +372,10 @@ def build_investigations(
     correlation_minutes: int,
 ) -> list[dict[str, Any]]:
     investigations: list[dict[str, Any]] = []
+    correlation_minutes = require_positive_int(
+        correlation_minutes,
+        "correlation_minutes",
+    )
     correlation_window = timedelta(minutes=correlation_minutes)
 
     for hit in rule_hits:
@@ -464,7 +527,7 @@ def normalize_optional_text(value: Any) -> str | None:
 
 
 def parse_timestamp(raw_value: str) -> datetime:
-    return datetime.fromisoformat(raw_value.replace("Z", "+00:00")).astimezone(UTC)
+    return parse_utc_timestamp(raw_value)
 
 
 def format_timestamp(value: Any) -> str:

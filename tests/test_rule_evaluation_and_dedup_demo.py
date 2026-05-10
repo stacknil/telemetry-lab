@@ -9,6 +9,7 @@ from telemetry_window_demo.rule_evaluation_and_dedup_demo.pipeline import (
     group_rule_hits_by_cooldown_key,
     load_json,
     normalize_rule_hits,
+    parse_timestamp,
 )
 
 
@@ -51,6 +52,12 @@ def test_group_rule_hits_by_rule_and_resolved_scope() -> None:
         "high_error_rate|source=api-01": 3,
         "rare_event_repeat_malware_alert|unscoped": 2,
     }
+
+
+def test_parse_timestamp_treats_naive_values_as_utc() -> None:
+    assert parse_timestamp("2026-03-18T10:00:00").isoformat() == (
+        "2026-03-18T10:00:00+00:00"
+    )
 
 
 def test_deduplicate_rule_hits_respects_cooldown_boundary() -> None:
