@@ -9,6 +9,8 @@ from typing import Any
 
 import yaml
 
+from ..time_utils import parse_utc_timestamp
+
 SCOPE_FIELDS = ("entity", "source", "target", "host")
 REQUIRED_HIT_FIELDS = (
     "hit_id",
@@ -588,7 +590,7 @@ def write_text(content: str, path: Path) -> Path:
 
 
 def parse_timestamp(raw_value: str) -> datetime:
-    return datetime.fromisoformat(raw_value.replace("Z", "+00:00")).astimezone(UTC)
+    return parse_utc_timestamp(raw_value)
 
 
 def format_timestamp(value: Any) -> str:

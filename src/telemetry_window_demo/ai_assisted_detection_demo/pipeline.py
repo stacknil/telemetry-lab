@@ -11,6 +11,7 @@ from typing import Any
 
 import yaml
 
+from ..time_utils import parse_utc_timestamp
 from .llm import DemoStructuredCaseLlm
 
 SEVERITY_ORDER = {"low": 1, "medium": 2, "high": 3, "critical": 4}
@@ -1037,7 +1038,7 @@ def derive_pipeline_ts(raw_events: Sequence[Mapping[str, Any]]) -> str:
 
 
 def parse_timestamp(raw_value: str) -> datetime:
-    return datetime.fromisoformat(raw_value.replace("Z", "+00:00")).astimezone(UTC)
+    return parse_utc_timestamp(raw_value)
 
 
 def format_timestamp(value: datetime) -> str:

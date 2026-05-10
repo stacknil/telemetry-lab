@@ -22,6 +22,7 @@ from telemetry_window_demo.ai_assisted_detection_demo.pipeline import (
     load_jsonl,
     load_yaml,
     normalize_events,
+    parse_timestamp,
     parse_and_validate_json_output,
 )
 
@@ -107,6 +108,12 @@ def test_rules_trigger_expected_hits() -> None:
     assert [hit["rule_id"] for hit in rule_hits].count("WEB-001") == 1
     assert [hit["rule_id"] for hit in rule_hits].count("PROC-001") == 2
     assert all(hit["attack_mapping"]["technique_id"] for hit in rule_hits)
+
+
+def test_parse_timestamp_treats_naive_values_as_utc() -> None:
+    assert parse_timestamp("2026-03-10T10:00:00").isoformat() == (
+        "2026-03-10T10:00:00+00:00"
+    )
 
 
 def test_grouping_merges_hits_by_entities_and_time() -> None:
