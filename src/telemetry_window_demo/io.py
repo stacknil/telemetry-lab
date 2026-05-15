@@ -12,8 +12,13 @@ from .schema import validate_event_frame
 
 def load_config(path: str | Path) -> dict[str, Any]:
     config_path = Path(path)
-    with config_path.open("r", encoding="utf-8") as handle:
-        config = yaml.safe_load(handle) or {}
+    if not config_path.exists():
+        raise FileNotFoundError(f"Config file not found: {config_path}")
+    try:
+        with config_path.open("r", encoding="utf-8") as handle:
+            config = yaml.safe_load(handle) or {}
+    except yaml.YAMLError as exc:
+        raise ValueError(f"Invalid YAML config in {config_path}: {exc}") from exc
     if not isinstance(config, dict):
         raise ValueError("Configuration must deserialize to a mapping.")
     return config
