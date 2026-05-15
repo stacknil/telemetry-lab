@@ -9,6 +9,22 @@ import yaml
 
 from .schema import validate_event_frame
 
+FEATURE_TABLE_REQUIRED_COLUMNS = (
+    "window_start",
+    "window_end",
+    "event_count",
+    "error_rate",
+)
+FEATURE_TABLE_DATETIME_COLUMNS = ("window_start", "window_end")
+ALERT_TABLE_REQUIRED_COLUMNS = (
+    "alert_time",
+    "window_start",
+    "window_end",
+    "rule_name",
+    "severity",
+)
+ALERT_TABLE_DATETIME_COLUMNS = ("alert_time", "window_start", "window_end")
+
 
 def load_config(path: str | Path) -> dict[str, Any]:
     config_path = Path(path)
@@ -32,7 +48,6 @@ def resolve_config_path(config_path: str | Path, value: str | Path) -> Path:
     if base_dir.name == "configs":
         base_dir = base_dir.parent
     return (base_dir / candidate).resolve()
-
 
 
 def load_events(path: str | Path) -> pd.DataFrame:
@@ -77,14 +92,60 @@ def load_events(path: str | Path) -> pd.DataFrame:
 
 
 def load_feature_table(path: str | Path) -> pd.DataFrame:
-    return pd.read_csv(path, parse_dates=["window_start", "window_end"])
+    table_path = Path(path)
+    frame = pd.read_csv(table_path)
+    _require_columns(frame, FEATURE_TABLE_REQUIRED_COLUMNS, source=str(table_path))
+    _parse_datetime_columns(
+        frame,
+        FEATURE_TABLE_DATETIME_COLUMNS,
+        source=str(table_path),
+    )
+    return frame
 
 
 def load_alert_table(path: str | Path) -> pd.DataFrame:
-    return pd.read_csv(
-        path,
-        parse_dates=["alert_time", "window_start", "window_end"],
+    table_path = Path(path)
+    frame = pd.read_csv(table_path)
+    _require_columns(frame, ALERT_TABLE_REQUIRED_COLUMNS, source=str(table_path))
+    _parse_datetime_columns(
+        frame,
+        ALERT_TABLE_DATETIME_COLUMNS,
+        source=str(table_path),
     )
+    return frame
+
+
+def _require_columns(
+    frame: pd.DataFrame,
+    required_columns: tuple[str, ...],
+    *,
+    source: str,
+) -> None:
+    missing_columns = [
+        column for column in required_columns if column not in frame.columns
+    ]
+    if missing_columns:
+        raise ValueError(
+            f"Missing required columns in {source}: " + ", ".join(missing_columns)
+        )
+
+
+def _parse_datetime_columns(
+    frame: pd.DataFrame,
+    datetime_columns: tuple[str, ...],
+    *,
+    source: str,
+) -> None:
+    for column in datetime_columns:
+        try:
+            parsed = pd.to_datetime(frame[column], utc=True, errors="raise")
+        except (TypeError, ValueError) as exc:
+            raise ValueError(
+                f"Invalid datetime values in {source}: {column}"
+            ) from exc
+        if parsed.isna().any():
+            raise ValueError(f"Missing datetime values in {source}: {column}")
+        frame[column] = parsed
 
 
 def write_table(frame: pd.DataFrame, path: str | Path) -> Path:

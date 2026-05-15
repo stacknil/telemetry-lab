@@ -2,7 +2,27 @@ from __future__ import annotations
 
 import pytest
 
-from telemetry_window_demo.io import load_events
+from telemetry_window_demo.io import (
+    load_alert_table,
+    load_config,
+    load_events,
+    load_feature_table,
+)
+
+
+def test_load_config_reports_missing_file(tmp_path) -> None:
+    path = tmp_path / "missing.yaml"
+
+    with pytest.raises(FileNotFoundError, match="Config file not found"):
+        load_config(path)
+
+
+def test_load_config_rejects_invalid_yaml(tmp_path) -> None:
+    path = tmp_path / "broken.yaml"
+    path.write_text("input_path: [\n", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="Invalid YAML config"):
+        load_config(path)
 
 
 def test_load_events_from_jsonl(tmp_path) -> None:
@@ -138,4 +158,68 @@ def test_load_events_rejects_missing_required_values(filename, content, tmp_path
     message = str(excinfo.value)
     assert "Missing required event values" in message
     assert "target (1 row(s))" in message
+
+
+def test_load_feature_table_requires_plot_columns(tmp_path) -> None:
+    path = tmp_path / "features.csv"
+    path.write_text(
+        "window_start,window_end,error_rate\n"
+        "2026-03-10T10:00:00Z,2026-03-10T10:01:00Z,0.25\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError) as excinfo:
+        load_feature_table(path)
+
+    message = str(excinfo.value)
+    assert "Missing required columns" in message
+    assert "event_count" in message
+
+
+def test_load_feature_table_rejects_invalid_window_timestamp(tmp_path) -> None:
+    path = tmp_path / "features.csv"
+    path.write_text(
+        "window_start,window_end,event_count,error_rate\n"
+        "not-a-time,2026-03-10T10:01:00Z,10,0.25\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError) as excinfo:
+        load_feature_table(path)
+
+    message = str(excinfo.value)
+    assert "Invalid datetime values" in message
+    assert "window_start" in message
+
+
+def test_load_alert_table_requires_plot_columns(tmp_path) -> None:
+    path = tmp_path / "alerts.csv"
+    path.write_text(
+        "alert_time,window_start,window_end,severity\n"
+        "2026-03-10T10:01:00Z,2026-03-10T10:00:00Z,2026-03-10T10:01:00Z,high\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError) as excinfo:
+        load_alert_table(path)
+
+    message = str(excinfo.value)
+    assert "Missing required columns" in message
+    assert "rule_name" in message
+
+
+def test_load_alert_table_rejects_missing_alert_timestamp(tmp_path) -> None:
+    path = tmp_path / "alerts.csv"
+    path.write_text(
+        "alert_time,window_start,window_end,rule_name,severity\n"
+        ",2026-03-10T10:00:00Z,2026-03-10T10:01:00Z,high_error_rate,medium\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError) as excinfo:
+        load_alert_table(path)
+
+    message = str(excinfo.value)
+    assert "Missing datetime values" in message
+    assert "alert_time" in message
 
