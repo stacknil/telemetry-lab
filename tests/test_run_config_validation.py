@@ -89,3 +89,57 @@ def test_run_config_rejects_string_rare_event_types(tmp_path) -> None:
 
     with pytest.raises(ValueError, match="rules.rare_event_repeat.event_types"):
         run_command(Namespace(config=str(config_path)))
+
+
+def test_run_config_rejects_unknown_rule_name(tmp_path) -> None:
+    config = _base_config(tmp_path)
+    config["rules"]["high_error_rates"] = {"threshold": 0.30}
+    config_path = _write_config(tmp_path, config)
+
+    with pytest.raises(ValueError, match="high_error_rates"):
+        run_command(Namespace(config=str(config_path)))
+
+
+def test_run_config_rejects_unknown_rule_field(tmp_path) -> None:
+    config = _base_config(tmp_path)
+    config["rules"]["high_error_rate"]["thresholds"] = 0.30
+    config_path = _write_config(tmp_path, config)
+
+    with pytest.raises(ValueError, match="rules.high_error_rate"):
+        run_command(Namespace(config=str(config_path)))
+
+
+def test_run_config_rejects_boolean_rule_threshold(tmp_path) -> None:
+    config = _base_config(tmp_path)
+    config["rules"]["high_error_rate"]["threshold"] = True
+    config_path = _write_config(tmp_path, config)
+
+    with pytest.raises(ValueError, match="rules.high_error_rate.threshold"):
+        run_command(Namespace(config=str(config_path)))
+
+
+def test_run_config_rejects_non_positive_count_threshold(tmp_path) -> None:
+    config = _base_config(tmp_path)
+    config["rules"]["login_fail_burst"]["threshold"] = 0
+    config_path = _write_config(tmp_path, config)
+
+    with pytest.raises(ValueError, match="rules.login_fail_burst.threshold"):
+        run_command(Namespace(config=str(config_path)))
+
+
+def test_run_config_rejects_source_spread_multiplier_below_one(tmp_path) -> None:
+    config = _base_config(tmp_path)
+    config["rules"]["source_spread_spike"]["multiplier"] = 0.5
+    config_path = _write_config(tmp_path, config)
+
+    with pytest.raises(ValueError, match="rules.source_spread_spike.multiplier"):
+        run_command(Namespace(config=str(config_path)))
+
+
+def test_run_config_rejects_empty_rule_severity(tmp_path) -> None:
+    config = _base_config(tmp_path)
+    config["rules"]["persistent_high_error"]["severity"] = ""
+    config_path = _write_config(tmp_path, config)
+
+    with pytest.raises(ValueError, match="rules.persistent_high_error.severity"):
+        run_command(Namespace(config=str(config_path)))
