@@ -42,10 +42,13 @@ RUN_RULE_CONFIG_FIELDS = {
 }
 
 
-def main() -> None:
+def main(argv: Sequence[str] | None = None) -> None:
     parser = build_parser()
-    args = parser.parse_args()
-    args.func(args)
+    args = parser.parse_args(argv)
+    try:
+        args.func(args)
+    except (OSError, ValueError) as exc:
+        parser.exit(status=1, message=f"error: {exc}\n")
 
 
 def build_parser() -> argparse.ArgumentParser:
