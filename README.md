@@ -101,7 +101,7 @@ Runtime input support:
 
 Required fields for both formats on every row or record:
 
-- `timestamp`
+- `timestamp` by default, or the column named by `time.timestamp_col` in a run config
 - `event_type`
 - `source`
 - `target`

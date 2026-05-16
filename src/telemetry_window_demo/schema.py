@@ -4,7 +4,9 @@ import re
 
 import pandas as pd
 
-REQUIRED_COLUMNS = ("timestamp", "event_type", "source", "target", "status")
+DEFAULT_TIMESTAMP_COLUMN = "timestamp"
+REQUIRED_EVENT_COLUMNS = ("event_type", "source", "target", "status")
+REQUIRED_COLUMNS = (DEFAULT_TIMESTAMP_COLUMN, *REQUIRED_EVENT_COLUMNS)
 RECOMMENDED_COLUMNS = ("user", "host", "ip", "severity")
 OPTIONAL_COLUMNS = RECOMMENDED_COLUMNS + ("metadata",)
 
@@ -12,16 +14,23 @@ DEFAULT_ERROR_STATUSES = ("fail", "blocked", "error")
 DEFAULT_HIGH_SEVERITY_LEVELS = ("high", "critical")
 
 
-def validate_event_frame(events: pd.DataFrame, source: str | None = None) -> None:
+def validate_event_frame(
+    events: pd.DataFrame,
+    source: str | None = None,
+    timestamp_col: str = DEFAULT_TIMESTAMP_COLUMN,
+) -> None:
+    if not isinstance(timestamp_col, str) or not timestamp_col.strip():
+        raise ValueError("Timestamp column name must be a non-empty string.")
+    required_columns = (timestamp_col.strip(), *REQUIRED_EVENT_COLUMNS)
     location = f" in {source}" if source else ""
-    missing = [column for column in REQUIRED_COLUMNS if column not in events.columns]
+    missing = [column for column in required_columns if column not in events.columns]
     if missing:
         raise ValueError(
             f"Missing required event fields{location}: {', '.join(missing)}"
         )
 
     missing_values: list[str] = []
-    for column in REQUIRED_COLUMNS:
+    for column in required_columns:
         values = events[column]
         missing_mask = values.isna()
         blank_mask = values.astype("string").str.strip().eq("").fillna(False)

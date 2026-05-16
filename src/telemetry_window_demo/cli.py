@@ -121,17 +121,18 @@ def run_command(args: argparse.Namespace) -> None:
     rules_config = run_config["rules"]
     input_path = resolve_config_path(config_path, run_config["input_path"])
     output_dir = resolve_config_path(config_path, run_config["output_dir"])
+    timestamp_col = time_config["timestamp_col"]
 
-    events = load_events(input_path)
+    events = load_events(input_path, timestamp_col=timestamp_col)
     normalized = normalize_events(
         events,
-        timestamp_col=time_config.get("timestamp_col", "timestamp"),
+        timestamp_col=timestamp_col,
         error_statuses=feature_config.get("error_statuses"),
         high_severity_levels=feature_config.get("severity_levels"),
     )
     windows = build_windows(
         normalized,
-        timestamp_col=time_config.get("timestamp_col", "timestamp"),
+        timestamp_col=timestamp_col,
         window_size_seconds=time_config["window_size_seconds"],
         step_size_seconds=time_config["step_size_seconds"],
     )

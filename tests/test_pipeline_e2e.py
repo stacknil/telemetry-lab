@@ -178,3 +178,38 @@ def test_pipeline_writes_summary_when_rules_are_null(tmp_path, capsys) -> None:
 
     stdout = capsys.readouterr().out
     assert "[OK] Loaded 41 events" in stdout
+
+
+def test_pipeline_honors_configured_timestamp_column(tmp_path, capsys) -> None:
+    repo_root = Path(__file__).resolve().parents[1]
+    config = load_config(repo_root / "configs" / "default.yaml")
+    generated_output_dir = tmp_path / "custom_time"
+    input_path = tmp_path / "custom_time_events.csv"
+    input_path.write_text(
+        "event_time,event_type,source,target,status,severity\n"
+        "2026-03-10T10:00:00Z,login_fail,user_a,auth,fail,high\n"
+        "2026-03-10T10:00:10Z,login_success,user_a,auth,ok,low\n",
+        encoding="utf-8",
+    )
+    config["input_path"] = str(input_path.resolve())
+    config["output_dir"] = str(generated_output_dir.resolve())
+    config["time"]["timestamp_col"] = "event_time"
+
+    temp_config_path = tmp_path / "custom_time.yaml"
+    temp_config_path.write_text(
+        yaml.safe_dump(config, sort_keys=False),
+        encoding="utf-8",
+    )
+
+    run_command(Namespace(config=str(temp_config_path)))
+
+    generated_features = load_feature_table(generated_output_dir / "features.csv")
+    generated_summary = _load_summary(generated_output_dir / "summary.json")
+
+    assert len(generated_features) == 2
+    assert generated_features.loc[0, "event_count"] == 2
+    assert generated_summary["normalized_event_count"] == 2
+    assert generated_summary["window_count"] == 2
+
+    stdout = capsys.readouterr().out
+    assert "[OK] Loaded 2 events" in stdout
