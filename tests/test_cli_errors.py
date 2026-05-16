@@ -50,6 +50,28 @@ def test_main_reports_invalid_yaml_config_without_traceback(tmp_path, capsys) ->
     assert "Traceback" not in stderr
 
 
+def test_main_reports_directory_input_without_traceback(tmp_path, capsys) -> None:
+    config_path = tmp_path / "directory-input.yaml"
+    config_path.write_text(
+        yaml.safe_dump(
+            {
+                "input_path": str(tmp_path),
+                "output_dir": str(tmp_path / "processed"),
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(SystemExit) as excinfo:
+        main(["run", "--config", str(config_path)])
+
+    assert excinfo.value.code == 1
+    stderr = capsys.readouterr().err
+    assert stderr.startswith("error: ")
+    assert "Input file path is not a file" in stderr
+    assert "Traceback" not in stderr
+
+
 def test_main_reports_bad_plot_feature_table_without_traceback(tmp_path, capsys) -> None:
     features_path = tmp_path / "features.csv"
     features_path.write_text(

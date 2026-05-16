@@ -17,6 +17,11 @@ def test_load_config_reports_missing_file(tmp_path) -> None:
         load_config(path)
 
 
+def test_load_config_rejects_directory_path(tmp_path) -> None:
+    with pytest.raises(ValueError, match="Config file path is not a file"):
+        load_config(tmp_path)
+
+
 def test_load_config_rejects_invalid_yaml(tmp_path) -> None:
     path = tmp_path / "broken.yaml"
     path.write_text("input_path: [\n", encoding="utf-8")
@@ -68,6 +73,11 @@ def test_load_events_from_csv_preserves_na_like_required_values(tmp_path) -> Non
 
     assert len(frame) == 2
     assert list(frame["target"]) == ["NA", "null"]
+
+
+def test_load_events_rejects_directory_path(tmp_path) -> None:
+    with pytest.raises(ValueError, match="Input file path is not a file"):
+        load_events(tmp_path)
 
 
 @pytest.mark.parametrize(
@@ -183,6 +193,11 @@ def test_load_feature_table_reports_missing_file(tmp_path) -> None:
         load_feature_table(path)
 
 
+def test_load_feature_table_rejects_directory_path(tmp_path) -> None:
+    with pytest.raises(ValueError, match="Feature table path is not a file"):
+        load_feature_table(tmp_path)
+
+
 def test_load_feature_table_rejects_invalid_window_timestamp(tmp_path) -> None:
     path = tmp_path / "features.csv"
     path.write_text(
@@ -242,6 +257,11 @@ def test_load_alert_table_rejects_invalid_csv(tmp_path) -> None:
 
     with pytest.raises(ValueError, match="Invalid alert table CSV"):
         load_alert_table(path)
+
+
+def test_load_alert_table_rejects_directory_path(tmp_path) -> None:
+    with pytest.raises(ValueError, match="Alert table path is not a file"):
+        load_alert_table(tmp_path)
 
 
 def test_load_alert_table_requires_plot_columns(tmp_path) -> None:
