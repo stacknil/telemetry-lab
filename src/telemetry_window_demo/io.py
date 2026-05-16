@@ -54,7 +54,7 @@ def resolve_config_path(config_path: str | Path, value: str | Path) -> Path:
     return (base_dir / candidate).resolve()
 
 
-def load_events(path: str | Path) -> pd.DataFrame:
+def load_events(path: str | Path, *, timestamp_col: str = "timestamp") -> pd.DataFrame:
     input_path = Path(path)
     _require_existing_file(input_path, display_name="Input file")
 
@@ -90,7 +90,7 @@ def load_events(path: str | Path) -> pd.DataFrame:
     else:
         raise ValueError("Unsupported input format. Use .jsonl or .csv.")
 
-    validate_event_frame(events, source=str(input_path))
+    validate_event_frame(events, source=str(input_path), timestamp_col=timestamp_col)
     return events
 
 

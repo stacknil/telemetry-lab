@@ -75,6 +75,38 @@ def test_load_events_from_csv_preserves_na_like_required_values(tmp_path) -> Non
     assert list(frame["target"]) == ["NA", "null"]
 
 
+@pytest.mark.parametrize(
+    ("filename", "content"),
+    [
+        (
+            "events.jsonl",
+            (
+                '{"event_time":"2026-03-10T10:00:00Z","event_type":"login_success",'
+                '"source":"user_a","target":"auth","status":"ok"}\n'
+            ),
+        ),
+        (
+            "events.csv",
+            "event_time,event_type,source,target,status\n"
+            "2026-03-10T10:00:00Z,login_success,user_a,auth,ok\n",
+        ),
+    ],
+)
+def test_load_events_allows_configured_timestamp_column(
+    filename,
+    content,
+    tmp_path,
+) -> None:
+    path = tmp_path / filename
+    path.write_text(content, encoding="utf-8")
+
+    frame = load_events(path, timestamp_col="event_time")
+
+    assert len(frame) == 1
+    assert "timestamp" not in frame.columns
+    assert frame.loc[0, "event_time"] == "2026-03-10T10:00:00Z"
+
+
 def test_load_events_rejects_directory_path(tmp_path) -> None:
     with pytest.raises(ValueError, match="Input file path is not a file"):
         load_events(tmp_path)
