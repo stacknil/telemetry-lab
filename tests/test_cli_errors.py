@@ -66,3 +66,21 @@ def test_main_reports_bad_plot_feature_table_without_traceback(tmp_path, capsys)
     assert stderr.startswith("error: ")
     assert "event_count" in stderr
     assert "Traceback" not in stderr
+
+
+def test_main_reports_missing_default_alert_table_without_traceback(tmp_path, capsys) -> None:
+    features_path = tmp_path / "features.csv"
+    features_path.write_text(
+        "window_start,window_end,event_count,error_rate\n"
+        "2026-03-10T10:00:00Z,2026-03-10T10:01:00Z,10,0.25\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(SystemExit) as excinfo:
+        main(["plot", "--features", str(features_path)])
+
+    assert excinfo.value.code == 1
+    stderr = capsys.readouterr().err
+    assert stderr.startswith("error: ")
+    assert "Alert table not found" in stderr
+    assert "Traceback" not in stderr

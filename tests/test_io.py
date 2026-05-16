@@ -176,6 +176,13 @@ def test_load_feature_table_requires_plot_columns(tmp_path) -> None:
     assert "event_count" in message
 
 
+def test_load_feature_table_reports_missing_file(tmp_path) -> None:
+    path = tmp_path / "missing-features.csv"
+
+    with pytest.raises(FileNotFoundError, match="Feature table not found"):
+        load_feature_table(path)
+
+
 def test_load_feature_table_rejects_invalid_window_timestamp(tmp_path) -> None:
     path = tmp_path / "features.csv"
     path.write_text(
@@ -190,6 +197,19 @@ def test_load_feature_table_rejects_invalid_window_timestamp(tmp_path) -> None:
     message = str(excinfo.value)
     assert "Invalid datetime values" in message
     assert "window_start" in message
+
+
+def test_load_alert_table_rejects_invalid_csv(tmp_path) -> None:
+    path = tmp_path / "alerts.csv"
+    path.write_text(
+        'alert_time,window_start,window_end,rule_name,severity\n'
+        '"2026-03-10T10:01:00Z,2026-03-10T10:00:00Z,'
+        '2026-03-10T10:01:00Z,high_error_rate,medium\n',
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="Invalid alert table CSV"):
+        load_alert_table(path)
 
 
 def test_load_alert_table_requires_plot_columns(tmp_path) -> None:

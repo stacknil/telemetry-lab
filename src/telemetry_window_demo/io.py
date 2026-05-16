@@ -93,7 +93,7 @@ def load_events(path: str | Path) -> pd.DataFrame:
 
 def load_feature_table(path: str | Path) -> pd.DataFrame:
     table_path = Path(path)
-    frame = pd.read_csv(table_path)
+    frame = _read_csv_table(table_path, table_name="feature table")
     _require_columns(frame, FEATURE_TABLE_REQUIRED_COLUMNS, source=str(table_path))
     _parse_datetime_columns(
         frame,
@@ -105,7 +105,7 @@ def load_feature_table(path: str | Path) -> pd.DataFrame:
 
 def load_alert_table(path: str | Path) -> pd.DataFrame:
     table_path = Path(path)
-    frame = pd.read_csv(table_path)
+    frame = _read_csv_table(table_path, table_name="alert table")
     _require_columns(frame, ALERT_TABLE_REQUIRED_COLUMNS, source=str(table_path))
     _parse_datetime_columns(
         frame,
@@ -113,6 +113,20 @@ def load_alert_table(path: str | Path) -> pd.DataFrame:
         source=str(table_path),
     )
     return frame
+
+
+def _read_csv_table(table_path: Path, *, table_name: str) -> pd.DataFrame:
+    if not table_path.exists():
+        display_name = table_name[:1].upper() + table_name[1:]
+        raise FileNotFoundError(f"{display_name} not found: {table_path}")
+    try:
+        return pd.read_csv(table_path)
+    except (
+        pd.errors.EmptyDataError,
+        pd.errors.ParserError,
+        UnicodeDecodeError,
+    ) as exc:
+        raise ValueError(f"Invalid {table_name} CSV in {table_path}: {exc}") from exc
 
 
 def _require_columns(
