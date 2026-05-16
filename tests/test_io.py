@@ -199,6 +199,38 @@ def test_load_feature_table_rejects_invalid_window_timestamp(tmp_path) -> None:
     assert "window_start" in message
 
 
+def test_load_feature_table_rejects_invalid_numeric_value(tmp_path) -> None:
+    path = tmp_path / "features.csv"
+    path.write_text(
+        "window_start,window_end,event_count,error_rate\n"
+        "2026-03-10T10:00:00Z,2026-03-10T10:01:00Z,not-a-count,0.25\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError) as excinfo:
+        load_feature_table(path)
+
+    message = str(excinfo.value)
+    assert "Invalid numeric values" in message
+    assert "event_count" in message
+
+
+def test_load_feature_table_rejects_out_of_range_error_rate(tmp_path) -> None:
+    path = tmp_path / "features.csv"
+    path.write_text(
+        "window_start,window_end,event_count,error_rate\n"
+        "2026-03-10T10:00:00Z,2026-03-10T10:01:00Z,10,1.5\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError) as excinfo:
+        load_feature_table(path)
+
+    message = str(excinfo.value)
+    assert "at most 1" in message
+    assert "error_rate" in message
+
+
 def test_load_alert_table_rejects_invalid_csv(tmp_path) -> None:
     path = tmp_path / "alerts.csv"
     path.write_text(
@@ -242,4 +274,20 @@ def test_load_alert_table_rejects_missing_alert_timestamp(tmp_path) -> None:
     message = str(excinfo.value)
     assert "Missing datetime values" in message
     assert "alert_time" in message
+
+
+def test_load_alert_table_rejects_missing_rule_name(tmp_path) -> None:
+    path = tmp_path / "alerts.csv"
+    path.write_text(
+        "alert_time,window_start,window_end,rule_name,severity\n"
+        "2026-03-10T10:01:00Z,2026-03-10T10:00:00Z,2026-03-10T10:01:00Z,,medium\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError) as excinfo:
+        load_alert_table(path)
+
+    message = str(excinfo.value)
+    assert "Missing text values" in message
+    assert "rule_name" in message
 

@@ -16,6 +16,10 @@ FEATURE_TABLE_REQUIRED_COLUMNS = (
     "error_rate",
 )
 FEATURE_TABLE_DATETIME_COLUMNS = ("window_start", "window_end")
+FEATURE_TABLE_NUMERIC_COLUMNS = (
+    ("event_count", 0.0, None, True),
+    ("error_rate", 0.0, 1.0, False),
+)
 ALERT_TABLE_REQUIRED_COLUMNS = (
     "alert_time",
     "window_start",
@@ -24,6 +28,7 @@ ALERT_TABLE_REQUIRED_COLUMNS = (
     "severity",
 )
 ALERT_TABLE_DATETIME_COLUMNS = ("alert_time", "window_start", "window_end")
+ALERT_TABLE_TEXT_COLUMNS = ("rule_name", "severity")
 
 
 def load_config(path: str | Path) -> dict[str, Any]:
@@ -100,6 +105,11 @@ def load_feature_table(path: str | Path) -> pd.DataFrame:
         FEATURE_TABLE_DATETIME_COLUMNS,
         source=str(table_path),
     )
+    _parse_numeric_columns(
+        frame,
+        FEATURE_TABLE_NUMERIC_COLUMNS,
+        source=str(table_path),
+    )
     return frame
 
 
@@ -112,6 +122,7 @@ def load_alert_table(path: str | Path) -> pd.DataFrame:
         ALERT_TABLE_DATETIME_COLUMNS,
         source=str(table_path),
     )
+    _require_text_columns(frame, ALERT_TABLE_TEXT_COLUMNS, source=str(table_path))
     return frame
 
 
@@ -160,6 +171,52 @@ def _parse_datetime_columns(
         if parsed.isna().any():
             raise ValueError(f"Missing datetime values in {source}: {column}")
         frame[column] = parsed
+
+
+def _parse_numeric_columns(
+    frame: pd.DataFrame,
+    numeric_columns: tuple[tuple[str, float, float | None, bool], ...],
+    *,
+    source: str,
+) -> None:
+    for column, minimum, maximum, require_integer in numeric_columns:
+        try:
+            parsed = pd.to_numeric(frame[column], errors="raise")
+        except (TypeError, ValueError) as exc:
+            raise ValueError(
+                f"Invalid numeric values in {source}: {column}"
+            ) from exc
+
+        if parsed.isna().any():
+            raise ValueError(f"Missing numeric values in {source}: {column}")
+        if (parsed < minimum).any():
+            raise ValueError(
+                f"Numeric values in {source} must be at least {minimum:g}: {column}"
+            )
+        if maximum is not None and (parsed > maximum).any():
+            raise ValueError(
+                f"Numeric values in {source} must be at most {maximum:g}: {column}"
+            )
+        if require_integer and not (parsed % 1 == 0).all():
+            raise ValueError(
+                f"Numeric values in {source} must be whole numbers: {column}"
+            )
+
+        frame[column] = parsed.astype("int64" if require_integer else "float64")
+
+
+def _require_text_columns(
+    frame: pd.DataFrame,
+    text_columns: tuple[str, ...],
+    *,
+    source: str,
+) -> None:
+    for column in text_columns:
+        empty_values = (
+            frame[column].isna() | frame[column].astype(str).str.strip().eq("")
+        )
+        if empty_values.any():
+            raise ValueError(f"Missing text values in {source}: {column}")
 
 
 def write_table(frame: pd.DataFrame, path: str | Path) -> Path:
