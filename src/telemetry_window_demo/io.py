@@ -33,8 +33,7 @@ ALERT_TABLE_TEXT_COLUMNS = ("rule_name", "severity")
 
 def load_config(path: str | Path) -> dict[str, Any]:
     config_path = Path(path)
-    if not config_path.exists():
-        raise FileNotFoundError(f"Config file not found: {config_path}")
+    _require_existing_file(config_path, display_name="Config file")
     try:
         with config_path.open("r", encoding="utf-8") as handle:
             config = yaml.safe_load(handle) or {}
@@ -57,8 +56,7 @@ def resolve_config_path(config_path: str | Path, value: str | Path) -> Path:
 
 def load_events(path: str | Path) -> pd.DataFrame:
     input_path = Path(path)
-    if not input_path.exists():
-        raise FileNotFoundError(f"Input file not found: {input_path}")
+    _require_existing_file(input_path, display_name="Input file")
 
     suffix = input_path.suffix.lower()
     if suffix == ".jsonl":
@@ -127,9 +125,8 @@ def load_alert_table(path: str | Path) -> pd.DataFrame:
 
 
 def _read_csv_table(table_path: Path, *, table_name: str) -> pd.DataFrame:
-    if not table_path.exists():
-        display_name = table_name[:1].upper() + table_name[1:]
-        raise FileNotFoundError(f"{display_name} not found: {table_path}")
+    display_name = table_name[:1].upper() + table_name[1:]
+    _require_existing_file(table_path, display_name=display_name)
     try:
         return pd.read_csv(table_path)
     except (
@@ -138,6 +135,13 @@ def _read_csv_table(table_path: Path, *, table_name: str) -> pd.DataFrame:
         UnicodeDecodeError,
     ) as exc:
         raise ValueError(f"Invalid {table_name} CSV in {table_path}: {exc}") from exc
+
+
+def _require_existing_file(file_path: Path, *, display_name: str) -> None:
+    if not file_path.exists():
+        raise FileNotFoundError(f"{display_name} not found: {file_path}")
+    if not file_path.is_file():
+        raise ValueError(f"{display_name} path is not a file: {file_path}")
 
 
 def _require_columns(
