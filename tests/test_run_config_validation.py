@@ -55,6 +55,15 @@ def test_run_config_rejects_non_positive_step_size(tmp_path) -> None:
         run_command(Namespace(config=str(config_path)))
 
 
+def test_run_config_rejects_timestamp_column_event_field_collision(tmp_path) -> None:
+    config = _base_config(tmp_path)
+    config["time"]["timestamp_col"] = "event_type"
+    config_path = _write_config(tmp_path, config)
+
+    with pytest.raises(ValueError, match="time.timestamp_col"):
+        run_command(Namespace(config=str(config_path)))
+
+
 def test_run_config_rejects_string_feature_list(tmp_path) -> None:
     config = _base_config(tmp_path)
     config["features"]["count_event_types"] = "login_fail"
