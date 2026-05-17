@@ -108,6 +108,7 @@ def load_feature_table(path: str | Path) -> pd.DataFrame:
         FEATURE_TABLE_NUMERIC_COLUMNS,
         source=str(table_path),
     )
+    _require_window_bounds(frame, source=str(table_path))
     return frame
 
 
@@ -120,6 +121,8 @@ def load_alert_table(path: str | Path) -> pd.DataFrame:
         ALERT_TABLE_DATETIME_COLUMNS,
         source=str(table_path),
     )
+    _require_window_bounds(frame, source=str(table_path))
+    _require_alert_time_bounds(frame, source=str(table_path))
     _require_text_columns(frame, ALERT_TABLE_TEXT_COLUMNS, source=str(table_path))
     return frame
 
@@ -207,6 +210,26 @@ def _parse_numeric_columns(
             )
 
         frame[column] = parsed.astype("int64" if require_integer else "float64")
+
+
+def _require_window_bounds(frame: pd.DataFrame, *, source: str) -> None:
+    invalid_windows = frame["window_end"] <= frame["window_start"]
+    if invalid_windows.any():
+        raise ValueError(
+            f"Window end must be after window start in {source}: "
+            f"{int(invalid_windows.sum())} row(s)"
+        )
+
+
+def _require_alert_time_bounds(frame: pd.DataFrame, *, source: str) -> None:
+    out_of_bounds = (frame["alert_time"] < frame["window_start"]) | (
+        frame["alert_time"] > frame["window_end"]
+    )
+    if out_of_bounds.any():
+        raise ValueError(
+            f"Alert time must fall within window bounds in {source}: "
+            f"{int(out_of_bounds.sum())} row(s)"
+        )
 
 
 def _require_text_columns(

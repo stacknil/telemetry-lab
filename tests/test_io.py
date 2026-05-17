@@ -294,6 +294,22 @@ def test_load_feature_table_rejects_out_of_range_error_rate(tmp_path) -> None:
     assert "error_rate" in message
 
 
+def test_load_feature_table_rejects_non_positive_window_bounds(tmp_path) -> None:
+    path = tmp_path / "features.csv"
+    path.write_text(
+        "window_start,window_end,event_count,error_rate\n"
+        "2026-03-10T10:01:00Z,2026-03-10T10:01:00Z,10,0.25\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError) as excinfo:
+        load_feature_table(path)
+
+    message = str(excinfo.value)
+    assert "Window end must be after window start" in message
+    assert "1 row(s)" in message
+
+
 def test_load_alert_table_rejects_invalid_csv(tmp_path) -> None:
     path = tmp_path / "alerts.csv"
     path.write_text(
@@ -342,6 +358,40 @@ def test_load_alert_table_rejects_missing_alert_timestamp(tmp_path) -> None:
     message = str(excinfo.value)
     assert "Missing datetime values" in message
     assert "alert_time" in message
+
+
+def test_load_alert_table_rejects_non_positive_window_bounds(tmp_path) -> None:
+    path = tmp_path / "alerts.csv"
+    path.write_text(
+        "alert_time,window_start,window_end,rule_name,severity\n"
+        "2026-03-10T10:00:30Z,2026-03-10T10:01:00Z,"
+        "2026-03-10T10:00:00Z,high_error_rate,medium\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError) as excinfo:
+        load_alert_table(path)
+
+    message = str(excinfo.value)
+    assert "Window end must be after window start" in message
+    assert "1 row(s)" in message
+
+
+def test_load_alert_table_rejects_alert_time_outside_window(tmp_path) -> None:
+    path = tmp_path / "alerts.csv"
+    path.write_text(
+        "alert_time,window_start,window_end,rule_name,severity\n"
+        "2026-03-10T10:02:00Z,2026-03-10T10:00:00Z,"
+        "2026-03-10T10:01:00Z,high_error_rate,medium\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError) as excinfo:
+        load_alert_table(path)
+
+    message = str(excinfo.value)
+    assert "Alert time must fall within window bounds" in message
+    assert "1 row(s)" in message
 
 
 def test_load_alert_table_rejects_missing_rule_name(tmp_path) -> None:
