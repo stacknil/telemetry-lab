@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import math
+from collections.abc import Mapping, Sequence
 from typing import Any
 
 import pandas as pd
@@ -19,30 +21,39 @@ COOLDOWN_SCOPE_COLUMNS = ("entity", "source", "target", "host")
 
 def apply_rules(
     features: pd.DataFrame,
-    rules_config: dict[str, Any] | None = None,
+    rules_config: Mapping[str, Any] | None = None,
 ) -> pd.DataFrame:
+    config = _rules_mapping(rules_config)
+    cooldown_seconds = _int_option(
+        config,
+        "cooldown_seconds",
+        0,
+        label="cooldown_seconds",
+        minimum=0,
+    )
+    high_error_rate_config = _rule_mapping(config, "high_error_rate")
+    login_fail_burst_config = _rule_mapping(config, "login_fail_burst")
+    high_severity_spike_config = _rule_mapping(config, "high_severity_spike")
+    persistent_high_error_config = _rule_mapping(config, "persistent_high_error")
+    source_spread_spike_config = _rule_mapping(config, "source_spread_spike")
+    rare_event_repeat_config = _rule_mapping(config, "rare_event_repeat")
+
     if features.empty:
         return pd.DataFrame(columns=ALERT_COLUMNS)
 
-    config = rules_config or {}
-    cooldown_seconds = int(config.get("cooldown_seconds", 0))
     alerts: list[dict[str, object]] = []
 
-    alerts.extend(_high_error_rate_alerts(features, config.get("high_error_rate", {})))
-    alerts.extend(_login_fail_burst_alerts(features, config.get("login_fail_burst", {})))
-    alerts.extend(
-        _high_severity_spike_alerts(features, config.get("high_severity_spike", {}))
-    )
+    alerts.extend(_high_error_rate_alerts(features, high_error_rate_config))
+    alerts.extend(_login_fail_burst_alerts(features, login_fail_burst_config))
+    alerts.extend(_high_severity_spike_alerts(features, high_severity_spike_config))
     alerts.extend(
         _persistent_high_error_alerts(
             features,
-            config.get("persistent_high_error", {}),
+            persistent_high_error_config,
         )
     )
-    alerts.extend(
-        _source_spread_spike_alerts(features, config.get("source_spread_spike", {}))
-    )
-    alerts.extend(_rare_event_repeat_alerts(features, config.get("rare_event_repeat", {})))
+    alerts.extend(_source_spread_spike_alerts(features, source_spread_spike_config))
+    alerts.extend(_rare_event_repeat_alerts(features, rare_event_repeat_config))
 
     if not alerts:
         return pd.DataFrame(columns=ALERT_COLUMNS)
@@ -132,10 +143,21 @@ def _apply_alert_cooldown(
 
 def _high_error_rate_alerts(
     features: pd.DataFrame,
-    rule: dict[str, Any],
+    rule: Mapping[str, Any],
 ) -> list[dict[str, object]]:
-    threshold = float(rule.get("threshold", 0.30))
-    severity = str(rule.get("severity", "medium"))
+    threshold = _float_option(
+        rule,
+        "threshold",
+        0.30,
+        label="high_error_rate.threshold",
+        minimum=0.0,
+    )
+    severity = _string_option(
+        rule,
+        "severity",
+        "medium",
+        label="high_error_rate.severity",
+    )
     matches = features[features["error_rate"] > threshold]
     return [
         _row_alert(
@@ -150,14 +172,25 @@ def _high_error_rate_alerts(
 
 def _login_fail_burst_alerts(
     features: pd.DataFrame,
-    rule: dict[str, Any],
+    rule: Mapping[str, Any],
 ) -> list[dict[str, object]]:
     column = event_count_column("login_fail")
     if column not in features.columns:
         return []
 
-    threshold = int(rule.get("threshold", 10))
-    severity = str(rule.get("severity", "high"))
+    threshold = _int_option(
+        rule,
+        "threshold",
+        10,
+        label="login_fail_burst.threshold",
+        minimum=1,
+    )
+    severity = _string_option(
+        rule,
+        "severity",
+        "high",
+        label="login_fail_burst.severity",
+    )
     matches = features[features[column] >= threshold]
     return [
         _row_alert(
@@ -172,10 +205,21 @@ def _login_fail_burst_alerts(
 
 def _high_severity_spike_alerts(
     features: pd.DataFrame,
-    rule: dict[str, Any],
+    rule: Mapping[str, Any],
 ) -> list[dict[str, object]]:
-    threshold = int(rule.get("threshold", 3))
-    severity = str(rule.get("severity", "high"))
+    threshold = _int_option(
+        rule,
+        "threshold",
+        3,
+        label="high_severity_spike.threshold",
+        minimum=1,
+    )
+    severity = _string_option(
+        rule,
+        "severity",
+        "high",
+        label="high_severity_spike.severity",
+    )
     matches = features[features["high_severity_count"] >= threshold]
     return [
         _row_alert(
@@ -190,11 +234,28 @@ def _high_severity_spike_alerts(
 
 def _persistent_high_error_alerts(
     features: pd.DataFrame,
-    rule: dict[str, Any],
+    rule: Mapping[str, Any],
 ) -> list[dict[str, object]]:
-    threshold = float(rule.get("threshold", 0.25))
-    consecutive_windows = int(rule.get("consecutive_windows", 2))
-    severity = str(rule.get("severity", "medium"))
+    threshold = _float_option(
+        rule,
+        "threshold",
+        0.25,
+        label="persistent_high_error.threshold",
+        minimum=0.0,
+    )
+    consecutive_windows = _int_option(
+        rule,
+        "consecutive_windows",
+        2,
+        label="persistent_high_error.consecutive_windows",
+        minimum=1,
+    )
+    severity = _string_option(
+        rule,
+        "severity",
+        "medium",
+        label="persistent_high_error.severity",
+    )
 
     alerts: list[dict[str, object]] = []
     streak = 0
@@ -220,11 +281,28 @@ def _persistent_high_error_alerts(
 
 def _source_spread_spike_alerts(
     features: pd.DataFrame,
-    rule: dict[str, Any],
+    rule: Mapping[str, Any],
 ) -> list[dict[str, object]]:
-    absolute_threshold = int(rule.get("absolute_threshold", 10))
-    multiplier = float(rule.get("multiplier", 1.5))
-    severity = str(rule.get("severity", "medium"))
+    absolute_threshold = _int_option(
+        rule,
+        "absolute_threshold",
+        10,
+        label="source_spread_spike.absolute_threshold",
+        minimum=1,
+    )
+    multiplier = _float_option(
+        rule,
+        "multiplier",
+        1.5,
+        label="source_spread_spike.multiplier",
+        minimum=1.0,
+    )
+    severity = _string_option(
+        rule,
+        "severity",
+        "medium",
+        label="source_spread_spike.severity",
+    )
 
     alerts: list[dict[str, object]] = []
     previous_sources: int | None = None
@@ -250,11 +328,26 @@ def _source_spread_spike_alerts(
 
 def _rare_event_repeat_alerts(
     features: pd.DataFrame,
-    rule: dict[str, Any],
+    rule: Mapping[str, Any],
 ) -> list[dict[str, object]]:
-    threshold = int(rule.get("threshold", 2))
-    severity = str(rule.get("severity", "high"))
-    event_types = list(rule.get("event_types", []))
+    threshold = _int_option(
+        rule,
+        "threshold",
+        2,
+        label="rare_event_repeat.threshold",
+        minimum=1,
+    )
+    severity = _string_option(
+        rule,
+        "severity",
+        "high",
+        label="rare_event_repeat.severity",
+    )
+    event_types = _string_sequence_option(
+        rule,
+        "event_types",
+        label="rare_event_repeat.event_types",
+    )
 
     alerts: list[dict[str, object]] = []
     for event_type in event_types:
@@ -273,4 +366,106 @@ def _rare_event_repeat_alerts(
                 )
             )
     return alerts
+
+
+def _rules_mapping(rules_config: Mapping[str, Any] | None) -> Mapping[str, Any]:
+    if rules_config is None:
+        return {}
+    if not isinstance(rules_config, Mapping):
+        raise ValueError("Rules config must be a mapping.")
+    return rules_config
+
+
+def _rule_mapping(config: Mapping[str, Any], rule_name: str) -> Mapping[str, Any]:
+    value = config.get(rule_name, {})
+    if not isinstance(value, Mapping):
+        raise ValueError(f"Rules config '{rule_name}' must be a mapping.")
+    return value
+
+
+def _int_option(
+    config: Mapping[str, Any],
+    key: str,
+    default: int,
+    *,
+    label: str,
+    minimum: int,
+) -> int:
+    value = config.get(key, default)
+    if isinstance(value, bool):
+        raise ValueError(f"Rules config '{label}' must be an integer.")
+    if isinstance(value, int):
+        parsed = value
+    elif isinstance(value, str) and value.strip().lstrip("+-").isdigit():
+        parsed = int(value)
+    else:
+        raise ValueError(f"Rules config '{label}' must be an integer.")
+
+    if parsed < minimum:
+        qualifier = "positive" if minimum == 1 else f"at least {minimum}"
+        raise ValueError(f"Rules config '{label}' must be {qualifier}.")
+    return parsed
+
+
+def _float_option(
+    config: Mapping[str, Any],
+    key: str,
+    default: float,
+    *,
+    label: str,
+    minimum: float,
+) -> float:
+    value = config.get(key, default)
+    if isinstance(value, bool):
+        raise ValueError(f"Rules config '{label}' must be a number.")
+    if isinstance(value, (int, float)):
+        parsed = float(value)
+    elif isinstance(value, str):
+        try:
+            parsed = float(value.strip())
+        except ValueError as exc:
+            raise ValueError(f"Rules config '{label}' must be a number.") from exc
+    else:
+        raise ValueError(f"Rules config '{label}' must be a number.")
+
+    if not math.isfinite(parsed):
+        raise ValueError(f"Rules config '{label}' must be a finite number.")
+    if parsed < minimum:
+        raise ValueError(f"Rules config '{label}' must be at least {minimum:g}.")
+    return parsed
+
+
+def _string_option(
+    config: Mapping[str, Any],
+    key: str,
+    default: str,
+    *,
+    label: str,
+) -> str:
+    value = config.get(key, default)
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(f"Rules config '{label}' must be a non-empty string.")
+    return value.strip()
+
+
+def _string_sequence_option(
+    config: Mapping[str, Any],
+    key: str,
+    *,
+    label: str,
+) -> list[str]:
+    value = config.get(key, [])
+    if isinstance(value, str) or not isinstance(value, Sequence):
+        raise ValueError(
+            f"Rules config '{label}' must be a list of non-empty strings."
+        )
+
+    normalized: list[str] = []
+    for item in value:
+        if not isinstance(item, str) or not item.strip():
+            raise ValueError(
+                f"Rules config '{label}' must be a list of non-empty strings."
+            )
+        normalized.append(item.strip())
+    return normalized
 
