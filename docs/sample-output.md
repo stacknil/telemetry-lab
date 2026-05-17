@@ -1,6 +1,7 @@
 # Sample Output
 
 The committed sample artifacts are intended to be reproducible from the bundled inputs and configs.
+The CLI validates plot CSV inputs before rendering: required columns must be present, timestamps must parse, counts and rates must stay in range, and each output row must have coherent window bounds.
 
 ## Default Sample
 

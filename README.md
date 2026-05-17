@@ -107,6 +107,13 @@ Required fields for both formats on every row or record:
 - `target`
 - `status`
 
+Input and output validation:
+
+- config paths, event inputs, and plot CSV inputs must point to files
+- required event fields must be present and non-empty
+- custom timestamp columns cannot reuse required event field names
+- plot input tables validate required columns, datetime values, numeric ranges, and window bounds
+
 Cooldown behavior:
 
 - repeated alerts are keyed by `(rule_name, scope)`
@@ -125,8 +132,8 @@ Cooldown behavior:
 
 ## Next Demo Directions
 
-- strengthen JSONL and CSV validation so ingestion failures are clearer
-- keep reducing repeated alert noise while preserving simple rule-based behavior
+- add a focused auth/login anomaly triage walkthrough on top of the existing window features
+- add a compact config-change drift follow-up scenario using the current deterministic evidence model
 - keep sample-output docs and public repo presentation aligned with the checked-in demo state
 
 ## Scope
