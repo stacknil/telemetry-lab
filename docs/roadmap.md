@@ -6,6 +6,7 @@ Recently added:
 
 - [rule-evaluation-and-dedup-demo](../demos/rule-evaluation-and-dedup-demo/README.md) now shows raw rule hits, retained alerts, and suppression reasons side by side.
 - [config-change-investigation-demo](../demos/config-change-investigation-demo/README.md) now shows risky configuration changes, bounded evidence attachment, and deterministic investigation summaries.
+- Core telemetry-window validation now gives clearer failures for malformed inputs, invalid run configs, rule parameters, plot CSV values, and output window bounds.
 
 ## 1. Auth/Login Anomaly Triage Demo
 
