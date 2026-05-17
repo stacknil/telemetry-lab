@@ -1,8 +1,28 @@
 from __future__ import annotations
 
 import pandas as pd
+import pytest
 
 from telemetry_window_demo.rules import apply_rules
+
+
+def _rule_validation_features() -> pd.DataFrame:
+    return pd.DataFrame(
+        [
+            {
+                "window_start": pd.Timestamp("2026-03-10T10:00:00Z"),
+                "window_end": pd.Timestamp("2026-03-10T10:01:00Z"),
+                "event_count": 10,
+                "error_count": 4,
+                "error_rate": 0.40,
+                "unique_sources": 4,
+                "unique_targets": 2,
+                "high_severity_count": 2,
+                "login_fail_count": 4,
+                "malware_alert_count": 0,
+            }
+        ]
+    )
 
 
 def test_apply_rules_triggers_expected_alerts() -> None:
@@ -254,4 +274,28 @@ def test_apply_rules_keeps_different_rules_during_same_cooldown_window() -> None
         "high_severity_spike",
         "login_fail_burst",
     ]
+
+
+@pytest.mark.parametrize(
+    ("rules_config", "message"),
+    [
+        ([], "Rules config must be a mapping"),
+        ({"cooldown_seconds": True}, "cooldown_seconds"),
+        ({"cooldown_seconds": -1}, "cooldown_seconds"),
+        ({"high_error_rate": True}, "high_error_rate"),
+        ({"high_error_rate": {"threshold": True}}, "high_error_rate.threshold"),
+        ({"login_fail_burst": {"threshold": 0}}, "login_fail_burst.threshold"),
+        (
+            {"source_spread_spike": {"multiplier": float("inf")}},
+            "source_spread_spike.multiplier",
+        ),
+        (
+            {"rare_event_repeat": {"event_types": "malware_alert"}},
+            "rare_event_repeat.event_types",
+        ),
+    ],
+)
+def test_apply_rules_rejects_invalid_direct_rule_config(rules_config, message) -> None:
+    with pytest.raises(ValueError, match=message):
+        apply_rules(_rule_validation_features(), rules_config)
 
