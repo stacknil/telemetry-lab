@@ -19,6 +19,7 @@ from .io import (
 )
 from .preprocess import normalize_events
 from .rules import apply_rules
+from .schema import DEFAULT_TIMESTAMP_COLUMN, REQUIRED_EVENT_COLUMNS
 from .visualize import plot_outputs
 from .windowing import build_windows
 
@@ -269,7 +270,7 @@ def _validate_run_config(config: Mapping[str, Any]) -> dict[str, Any]:
             "output_dir",
         ),
         "time": {
-            "timestamp_col": _string_config_value(
+            "timestamp_col": _timestamp_column_config_value(
                 time_config.get("timestamp_col", "timestamp"),
                 "time.timestamp_col",
             ),
@@ -438,6 +439,19 @@ def _string_config_value(value: Any, field_name: str) -> str:
     if not isinstance(value, str) or not value.strip():
         raise ValueError(f"Config field '{field_name}' must be a non-empty string.")
     return value.strip()
+
+
+def _timestamp_column_config_value(value: Any, field_name: str) -> str:
+    timestamp_col = _string_config_value(value, field_name)
+    if (
+        timestamp_col != DEFAULT_TIMESTAMP_COLUMN
+        and timestamp_col in REQUIRED_EVENT_COLUMNS
+    ):
+        raise ValueError(
+            f"Config field '{field_name}' must not reuse an event field name: "
+            f"{timestamp_col}."
+        )
+    return timestamp_col
 
 
 def _int_config_value(value: Any, field_name: str, *, minimum: int) -> int:

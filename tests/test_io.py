@@ -107,6 +107,22 @@ def test_load_events_allows_configured_timestamp_column(
     assert frame.loc[0, "event_time"] == "2026-03-10T10:00:00Z"
 
 
+def test_load_events_rejects_timestamp_column_that_reuses_event_field(tmp_path) -> None:
+    path = tmp_path / "events.csv"
+    path.write_text(
+        "event_type,source,target,status\n"
+        "2026-03-10T10:00:00Z,user_a,auth,ok\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError) as excinfo:
+        load_events(path, timestamp_col="event_type")
+
+    message = str(excinfo.value)
+    assert "Timestamp column must not reuse an event field name" in message
+    assert "event_type" in message
+
+
 def test_load_events_rejects_directory_path(tmp_path) -> None:
     with pytest.raises(ValueError, match="Input file path is not a file"):
         load_events(tmp_path)

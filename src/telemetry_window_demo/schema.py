@@ -21,7 +21,14 @@ def validate_event_frame(
 ) -> None:
     if not isinstance(timestamp_col, str) or not timestamp_col.strip():
         raise ValueError("Timestamp column name must be a non-empty string.")
-    required_columns = (timestamp_col.strip(), *REQUIRED_EVENT_COLUMNS)
+    timestamp_column = timestamp_col.strip()
+    if timestamp_column in REQUIRED_EVENT_COLUMNS:
+        raise ValueError(
+            "Timestamp column must not reuse an event field name: "
+            f"{timestamp_column}"
+        )
+
+    required_columns = (timestamp_column, *REQUIRED_EVENT_COLUMNS)
     location = f" in {source}" if source else ""
     missing = [column for column in required_columns if column not in events.columns]
     if missing:
