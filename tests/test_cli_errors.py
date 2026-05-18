@@ -102,6 +102,37 @@ def test_main_reports_file_output_dir_without_traceback(tmp_path, capsys) -> Non
     assert "Traceback" not in stderr
 
 
+def test_main_reports_directory_output_artifact_without_traceback(tmp_path, capsys) -> None:
+    input_path = tmp_path / "events.csv"
+    input_path.write_text(
+        "timestamp,event_type,source,target,status\n"
+        "2026-03-10T10:00:00Z,login_success,user_a,auth,ok\n",
+        encoding="utf-8",
+    )
+    output_dir = tmp_path / "processed"
+    (output_dir / "features.csv").mkdir(parents=True)
+    config_path = tmp_path / "directory-output-artifact.yaml"
+    config_path.write_text(
+        yaml.safe_dump(
+            {
+                "input_path": str(input_path),
+                "output_dir": str(output_dir),
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(SystemExit) as excinfo:
+        main(["run", "--config", str(config_path)])
+
+    assert excinfo.value.code == 1
+    stderr = capsys.readouterr().err
+    assert stderr.startswith("error: ")
+    assert "Output file path is a directory" in stderr
+    assert "features.csv" in stderr
+    assert "Traceback" not in stderr
+
+
 def test_main_reports_bad_summarize_timestamp_column_without_traceback(
     tmp_path,
     capsys,
@@ -221,4 +252,42 @@ def test_main_reports_file_plot_output_dir_without_traceback(tmp_path, capsys) -
     stderr = capsys.readouterr().err
     assert stderr.startswith("error: ")
     assert "Output directory path is not a directory" in stderr
+    assert "Traceback" not in stderr
+
+
+def test_main_reports_directory_plot_artifact_without_traceback(tmp_path, capsys) -> None:
+    features_path = tmp_path / "features.csv"
+    features_path.write_text(
+        "window_start,window_end,event_count,error_rate\n"
+        "2026-03-10T10:00:00Z,2026-03-10T10:01:00Z,10,0.25\n",
+        encoding="utf-8",
+    )
+    alerts_path = tmp_path / "alerts.csv"
+    alerts_path.write_text(
+        "alert_time,window_start,window_end,rule_name,severity\n"
+        "2026-03-10T10:01:00Z,2026-03-10T10:00:00Z,"
+        "2026-03-10T10:01:00Z,high_error_rate,medium\n",
+        encoding="utf-8",
+    )
+    output_dir = tmp_path / "plots"
+    (output_dir / "event_count_timeline.png").mkdir(parents=True)
+
+    with pytest.raises(SystemExit) as excinfo:
+        main(
+            [
+                "plot",
+                "--features",
+                str(features_path),
+                "--alerts",
+                str(alerts_path),
+                "--output-dir",
+                str(output_dir),
+            ]
+        )
+
+    assert excinfo.value.code == 1
+    stderr = capsys.readouterr().err
+    assert stderr.startswith("error: ")
+    assert "Output file path is a directory" in stderr
+    assert "event_count_timeline.png" in stderr
     assert "Traceback" not in stderr

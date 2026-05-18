@@ -5,7 +5,7 @@ from pathlib import Path
 import matplotlib
 import pandas as pd
 
-from .io import ensure_output_directory
+from .io import ensure_output_directory, ensure_output_file_path
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -51,6 +51,7 @@ def _plot_metric(
     ylabel: str,
     alerts: pd.DataFrame | None = None,
 ) -> Path:
+    output_path = ensure_output_file_path(output_path)
     figure, axis = plt.subplots(figsize=(11, 4.5))
     if features.empty:
         axis.text(0.5, 0.5, "No feature windows generated", ha="center", va="center")
@@ -95,6 +96,7 @@ def _plot_metric(
 
 
 def _plot_alert_timeline(alerts: pd.DataFrame, output_path: Path) -> Path:
+    output_path = ensure_output_file_path(output_path)
     figure, axis = plt.subplots(figsize=(11, 4.5))
     if alerts.empty:
         axis.text(0.5, 0.5, "No alerts triggered", ha="center", va="center")
