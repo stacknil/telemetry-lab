@@ -5,6 +5,8 @@ from pathlib import Path
 import matplotlib
 import pandas as pd
 
+from .io import ensure_output_directory
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
@@ -14,8 +16,7 @@ def plot_outputs(
     alerts: pd.DataFrame,
     output_dir: str | Path,
 ) -> list[Path]:
-    target_dir = Path(output_dir)
-    target_dir.mkdir(parents=True, exist_ok=True)
+    target_dir = ensure_output_directory(output_dir)
 
     plt.style.use("seaborn-v0_8-whitegrid")
     paths = [
