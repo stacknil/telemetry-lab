@@ -217,7 +217,7 @@ def plot_command(args: argparse.Namespace) -> None:
 def run_ai_demo_command(args: argparse.Namespace) -> None:
     from .ai_assisted_detection_demo import default_demo_root, run_demo
 
-    demo_root = Path(args.demo_root).resolve() if args.demo_root else default_demo_root()
+    demo_root = _demo_root_path(args.demo_root, default_demo_root())
     result = run_demo(demo_root=demo_root)
 
     print(f"[OK] Loaded {result['raw_event_count']} raw events")
@@ -235,7 +235,7 @@ def run_ai_demo_command(args: argparse.Namespace) -> None:
 def run_rule_dedup_demo_command(args: argparse.Namespace) -> None:
     from .rule_evaluation_and_dedup_demo import default_demo_root, run_demo
 
-    demo_root = Path(args.demo_root).resolve() if args.demo_root else default_demo_root()
+    demo_root = _demo_root_path(args.demo_root, default_demo_root())
     result = run_demo(demo_root=demo_root)
 
     print(f"[OK] Loaded {result['raw_hit_count']} raw rule hits")
@@ -250,7 +250,7 @@ def run_rule_dedup_demo_command(args: argparse.Namespace) -> None:
 def run_config_change_demo_command(args: argparse.Namespace) -> None:
     from .config_change_investigation_demo import default_demo_root, run_demo
 
-    demo_root = Path(args.demo_root).resolve() if args.demo_root else default_demo_root()
+    demo_root = _demo_root_path(args.demo_root, default_demo_root())
     result = run_demo(demo_root=demo_root)
 
     print(f"[OK] Loaded {result['change_event_count']} config changes")
@@ -268,6 +268,15 @@ def _display_path(path: Path) -> str:
         return resolved.relative_to(cwd).as_posix()
     except ValueError:
         return resolved.as_posix()
+
+
+def _demo_root_path(value: str | None, default_root: Path) -> Path:
+    demo_root = Path(value).resolve() if value else default_root.resolve()
+    if not demo_root.exists():
+        raise FileNotFoundError(f"Demo root not found: {demo_root}")
+    if not demo_root.is_dir():
+        raise ValueError(f"Demo root path is not a directory: {demo_root}")
+    return demo_root
 
 
 def _validate_run_config(config: Mapping[str, Any]) -> dict[str, Any]:

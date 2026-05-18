@@ -255,6 +255,37 @@ def test_main_reports_file_plot_output_dir_without_traceback(tmp_path, capsys) -
     assert "Traceback" not in stderr
 
 
+@pytest.mark.parametrize(
+    "command",
+    ["run-ai-demo", "run-rule-dedup-demo", "run-config-change-demo"],
+)
+def test_main_reports_file_demo_root_without_traceback(command, tmp_path, capsys) -> None:
+    demo_root = tmp_path / "demo-root"
+    demo_root.write_text("not a directory\n", encoding="utf-8")
+
+    with pytest.raises(SystemExit) as excinfo:
+        main([command, "--demo-root", str(demo_root)])
+
+    assert excinfo.value.code == 1
+    stderr = capsys.readouterr().err
+    assert stderr.startswith("error: ")
+    assert "Demo root path is not a directory" in stderr
+    assert "Traceback" not in stderr
+
+
+def test_main_reports_missing_demo_root_without_traceback(tmp_path, capsys) -> None:
+    demo_root = tmp_path / "missing-demo-root"
+
+    with pytest.raises(SystemExit) as excinfo:
+        main(["run-ai-demo", "--demo-root", str(demo_root)])
+
+    assert excinfo.value.code == 1
+    stderr = capsys.readouterr().err
+    assert stderr.startswith("error: ")
+    assert "Demo root not found" in stderr
+    assert "Traceback" not in stderr
+
+
 def test_main_reports_directory_plot_artifact_without_traceback(tmp_path, capsys) -> None:
     features_path = tmp_path / "features.csv"
     features_path.write_text(
