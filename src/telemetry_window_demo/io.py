@@ -248,7 +248,7 @@ def _require_text_columns(
 
 def write_table(frame: pd.DataFrame, path: str | Path) -> Path:
     output_path = Path(path)
-    output_path.parent.mkdir(parents=True, exist_ok=True)
+    _ensure_output_directory(output_path.parent)
 
     export = frame.copy()
     for column in export.columns:
@@ -265,12 +265,24 @@ def write_table(frame: pd.DataFrame, path: str | Path) -> Path:
 
 def write_json(payload: dict[str, Any], path: str | Path) -> Path:
     output_path = Path(path)
-    output_path.parent.mkdir(parents=True, exist_ok=True)
+    _ensure_output_directory(output_path.parent)
     output_path.write_text(
         json.dumps(payload, indent=2) + "\n",
         encoding="utf-8",
     )
     return output_path
+
+
+def ensure_output_directory(path: str | Path) -> Path:
+    output_dir = Path(path)
+    _ensure_output_directory(output_dir)
+    return output_dir
+
+
+def _ensure_output_directory(output_dir: Path) -> None:
+    if output_dir.exists() and not output_dir.is_dir():
+        raise ValueError(f"Output directory path is not a directory: {output_dir}")
+    output_dir.mkdir(parents=True, exist_ok=True)
 
 
 def format_timestamp(value: Any) -> str:
