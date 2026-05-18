@@ -68,6 +68,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="Summarize an input event file.",
     )
     summarize_parser.add_argument("--input", required=True, help="Path to .jsonl or .csv.")
+    summarize_parser.add_argument(
+        "--timestamp-col",
+        default=DEFAULT_TIMESTAMP_COLUMN,
+        help="Timestamp column name in the input event file.",
+    )
     summarize_parser.set_defaults(func=summarize_command)
 
     plot_parser = subparsers.add_parser("plot", help="Render plots from CSV outputs.")
@@ -175,9 +180,16 @@ def run_command(args: argparse.Namespace) -> None:
 
 
 def summarize_command(args: argparse.Namespace) -> None:
-    events = normalize_events(load_events(args.input))
-    min_time = format_timestamp(events["timestamp"].min())
-    max_time = format_timestamp(events["timestamp"].max())
+    timestamp_col = _timestamp_column_config_value(
+        args.timestamp_col,
+        "timestamp-col",
+    )
+    events = normalize_events(
+        load_events(args.input, timestamp_col=timestamp_col),
+        timestamp_col=timestamp_col,
+    )
+    min_time = format_timestamp(events[timestamp_col].min())
+    max_time = format_timestamp(events[timestamp_col].max())
     top_event_types = events["event_type"].value_counts().head(5).to_dict()
     overall_error_rate = float(events["is_error"].mean()) if not events.empty else 0.0
 

@@ -72,6 +72,36 @@ def test_main_reports_directory_input_without_traceback(tmp_path, capsys) -> Non
     assert "Traceback" not in stderr
 
 
+def test_main_reports_bad_summarize_timestamp_column_without_traceback(
+    tmp_path,
+    capsys,
+) -> None:
+    input_path = tmp_path / "events.csv"
+    input_path.write_text(
+        "event_type,source,target,status\n"
+        "2026-03-10T10:00:00Z,user_a,auth,ok\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(SystemExit) as excinfo:
+        main(
+            [
+                "summarize",
+                "--input",
+                str(input_path),
+                "--timestamp-col",
+                "event_type",
+            ]
+        )
+
+    assert excinfo.value.code == 1
+    stderr = capsys.readouterr().err
+    assert stderr.startswith("error: ")
+    assert "timestamp-col" in stderr
+    assert "event_type" in stderr
+    assert "Traceback" not in stderr
+
+
 def test_main_reports_bad_plot_feature_table_without_traceback(tmp_path, capsys) -> None:
     features_path = tmp_path / "features.csv"
     features_path.write_text(

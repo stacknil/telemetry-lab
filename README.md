@@ -53,6 +53,11 @@ Other demo entrypoints:
 - `python -m telemetry_window_demo.cli run-rule-dedup-demo`
 - `python -m telemetry_window_demo.cli run-config-change-demo`
 
+Useful inspection commands:
+
+- `python -m telemetry_window_demo.cli summarize --input data/raw/sample_events.jsonl`
+- `python -m telemetry_window_demo.cli summarize --input events.csv --timestamp-col event_time`
+
 That command reads `data/raw/sample_events.jsonl` and regenerates:
 
 - `data/processed/features.csv`
