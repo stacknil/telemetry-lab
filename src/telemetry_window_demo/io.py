@@ -247,8 +247,7 @@ def _require_text_columns(
 
 
 def write_table(frame: pd.DataFrame, path: str | Path) -> Path:
-    output_path = Path(path)
-    _ensure_output_directory(output_path.parent)
+    output_path = ensure_output_file_path(path)
 
     export = frame.copy()
     for column in export.columns:
@@ -264,8 +263,7 @@ def write_table(frame: pd.DataFrame, path: str | Path) -> Path:
 
 
 def write_json(payload: dict[str, Any], path: str | Path) -> Path:
-    output_path = Path(path)
-    _ensure_output_directory(output_path.parent)
+    output_path = ensure_output_file_path(path)
     output_path.write_text(
         json.dumps(payload, indent=2) + "\n",
         encoding="utf-8",
@@ -277,6 +275,14 @@ def ensure_output_directory(path: str | Path) -> Path:
     output_dir = Path(path)
     _ensure_output_directory(output_dir)
     return output_dir
+
+
+def ensure_output_file_path(path: str | Path) -> Path:
+    output_path = Path(path)
+    if output_path.exists() and output_path.is_dir():
+        raise ValueError(f"Output file path is a directory: {output_path}")
+    _ensure_output_directory(output_path.parent)
+    return output_path
 
 
 def _ensure_output_directory(output_dir: Path) -> None:
