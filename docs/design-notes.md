@@ -23,7 +23,7 @@ The implementation follows a narrow pipeline:
 - `pandas` is used for clarity and concise feature computation.
 - Rules stay threshold-based to emphasize detection semantics over model complexity.
 - Relative config paths are resolved from the repository root when the config lives under `configs/`.
-- Outputs are CSV and PNG because they are easy to inspect, diff, and embed in README material.
+- Outputs are CSV, JSON, and PNG: tables and summaries stay easy to diff, while PNG timelines are easy to inspect and embed in README material.
 - The notebook remains intentionally tiny so the packaged CLI pipeline stays the primary entrypoint.
 
 ## Non-goals

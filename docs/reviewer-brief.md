@@ -13,6 +13,14 @@ Telemetry and detection projects often look impressive in screenshots but are ha
 - `rule-evaluation-and-dedup-demo` for cooldown and suppression reasoning
 - `config-change-investigation-demo` for risky-change evidence correlation
 
+## Reviewer Evidence
+
+- Reproducible command: `python -m telemetry_window_demo.cli run --config configs/default.yaml`
+- Deterministic outputs: feature tables, alert tables, `summary.json`, PNG timelines, dedup reports, investigation reports, and bounded AI case reports.
+- Tests / CI: pytest coverage for windowing, CLI behavior, demo pipelines, artifact validation, and deterministic guardrails; GitHub Actions CI is enabled.
+- Release evidence: reviewer packs and release notes through the current `v0.6.0` milestone.
+- Non-goals: production monitoring, real-time ingestion, alert routing, autonomous response, dashboards, or final incident verdicts.
+
 ## Quick run
 
 ```bash

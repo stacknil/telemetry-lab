@@ -17,7 +17,7 @@ Thanks for the interest. This is a solo-maintainer portfolio repository, so the 
 - run:
 
   ```bash
-  python -m pip install -e .
+  python -m pip install -e ".[dev]"
   pytest
   ```
 

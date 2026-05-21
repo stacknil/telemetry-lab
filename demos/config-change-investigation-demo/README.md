@@ -58,6 +58,17 @@ Evidence is attached only when:
 - `artifacts/investigation_summary.json`
 - `artifacts/investigation_report.md`
 
+## Expected Run Summary
+
+The bundled sample run should report:
+
+- `4` normalized configuration changes
+- `3` risky changes
+- `3` investigations
+- `15` minute correlation window
+- `1` benign change that remains normalized but does not become an investigation
+- `1` risky break-glass investigation with no nearby supporting evidence
+
 ## Artifact Semantics
 
 - `change_events_normalized.json`: normalized config changes before any rule match is applied

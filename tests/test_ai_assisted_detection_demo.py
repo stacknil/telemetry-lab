@@ -258,6 +258,30 @@ def test_prompt_injection_like_event_stays_in_untrusted_evidence() -> None:
     assert any("untrusted evidence only" in item.lower() for item in web_case["evidence_highlights"])
 
 
+def test_default_case_report_includes_reviewer_run_summary(tmp_path) -> None:
+    result = run_demo(demo_root=default_demo_root(), artifacts_dir=tmp_path / "artifacts")
+
+    assert result["raw_event_count"] == 15
+    assert result["normalized_event_count"] == 15
+    assert result["rule_hit_count"] == 5
+    assert result["case_count"] == 3
+    assert result["summary_count"] == 3
+    assert result["rejected_summary_count"] == 0
+    assert result["audit_record_count"] == 3
+
+    report_text = (tmp_path / "artifacts" / "case_report.md").read_text(
+        encoding="utf-8"
+    )
+    assert "## Run Summary" in report_text
+    assert "- raw_events: 15" in report_text
+    assert "- normalized_events: 15" in report_text
+    assert "- rule_hits: 5" in report_text
+    assert "- cases: 3" in report_text
+    assert "- accepted_summaries: 3" in report_text
+    assert "- rejected_summaries: 0" in report_text
+    assert "- audit_records: 3" in report_text
+
+
 def test_malformed_attack_metadata_is_rejected_and_recorded(tmp_path) -> None:
     demo_root = _copy_demo_root(tmp_path)
     rules_path = demo_root / "config" / "rules.yaml"
@@ -394,3 +418,11 @@ def test_case_id_mismatch_is_rejected_and_not_counted_as_accepted(tmp_path) -> N
     assert "## CASE-001" in report_text
     assert "Summary status: rejected" in report_text
     assert "Rejection reason: case_id_mismatch" in report_text
+
+
+def test_run_demo_rejects_file_artifacts_dir(tmp_path) -> None:
+    artifacts_dir = tmp_path / "artifacts"
+    artifacts_dir.write_text("not a directory\n", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="Output directory path is not a directory"):
+        run_demo(demo_root=default_demo_root(), artifacts_dir=artifacts_dir)

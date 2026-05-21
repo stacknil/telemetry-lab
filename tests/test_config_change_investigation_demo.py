@@ -210,6 +210,14 @@ def test_run_demo_reports_config_errors_before_loading_inputs(tmp_path) -> None:
         run_demo(demo_root=demo_root, artifacts_dir=tmp_path / "artifacts")
 
 
+def test_run_demo_rejects_file_artifacts_dir(tmp_path) -> None:
+    artifacts_dir = tmp_path / "artifacts"
+    artifacts_dir.write_text("not a directory\n", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="Output directory path is not a directory"):
+        run_demo(demo_root=default_demo_root(), artifacts_dir=artifacts_dir)
+
+
 def test_run_demo_is_deterministic_and_matches_committed_artifacts(tmp_path) -> None:
     demo_root, _, _, _, _ = _load_demo_inputs()
     first_dir = tmp_path / "run-one"

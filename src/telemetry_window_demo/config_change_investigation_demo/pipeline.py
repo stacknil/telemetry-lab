@@ -8,6 +8,7 @@ from typing import Any
 
 import yaml
 
+from ..io import ensure_output_directory, ensure_output_file_path
 from ..time_utils import parse_utc_timestamp
 
 SEVERITY_ORDER = {"low": 1, "medium": 2, "high": 3, "critical": 4}
@@ -59,7 +60,7 @@ def run_demo(
         artifacts_dir
         or resolve_demo_path(demo_root, str(config["artifacts_dir"]))
     ).resolve()
-    artifacts_dir.mkdir(parents=True, exist_ok=True)
+    ensure_output_directory(artifacts_dir)
     correlation_minutes = int(config["correlation_minutes"])
 
     config_changes = normalize_config_changes(
@@ -536,7 +537,7 @@ def format_timestamp(value: Any) -> str:
 
 
 def write_json(payload: Any, path: Path) -> Path:
-    path.parent.mkdir(parents=True, exist_ok=True)
+    path = ensure_output_file_path(path)
     path.write_text(
         json.dumps(serialize_record(payload), indent=2) + "\n",
         encoding="utf-8",
@@ -545,8 +546,8 @@ def write_json(payload: Any, path: Path) -> Path:
 
 
 def write_text(content: str, path: Path) -> Path:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(content, encoding="utf-8")
+    path = ensure_output_file_path(path)
+    path.write_text(content, encoding="utf-8", newline="\n")
     return path
 
 

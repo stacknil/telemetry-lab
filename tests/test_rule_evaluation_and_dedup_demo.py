@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 from telemetry_window_demo.rule_evaluation_and_dedup_demo import default_demo_root, run_demo
 from telemetry_window_demo.rule_evaluation_and_dedup_demo.pipeline import (
     deduplicate_rule_hits,
@@ -120,3 +122,11 @@ def test_run_demo_is_deterministic_and_matches_committed_artifacts(tmp_path) -> 
     expected_report = (demo_root / "artifacts" / "dedup_report.md").read_text(encoding="utf-8")
     assert (first_dir / "dedup_report.md").read_text(encoding="utf-8") == expected_report
     assert (second_dir / "dedup_report.md").read_text(encoding="utf-8") == expected_report
+
+
+def test_run_demo_rejects_file_artifacts_dir(tmp_path) -> None:
+    artifacts_dir = tmp_path / "artifacts"
+    artifacts_dir.write_text("not a directory\n", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="Output directory path is not a directory"):
+        run_demo(demo_root=default_demo_root(), artifacts_dir=artifacts_dir)

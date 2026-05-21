@@ -4,6 +4,16 @@ This report is analyst-facing draft output from a constrained case summarization
 Detections and grouping are deterministic. The LLM is limited to structured summarization only.
 Human verification is required. No automated response actions or final incident verdicts are produced.
 
+## Run Summary
+
+- raw_events: 15
+- normalized_events: 15
+- rule_hits: 5
+- cases: 3
+- accepted_summaries: 3
+- rejected_summaries: 0
+- audit_records: 3
+
 ## Run Integrity
 
 - accepted_rules: AUTH-001, AUTH-002, PROC-001, WEB-001
