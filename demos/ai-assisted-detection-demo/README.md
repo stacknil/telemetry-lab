@@ -73,14 +73,23 @@ Generated artifacts are written to `demos/ai-assisted-detection-demo/artifacts/`
 - `artifacts/case_report.md`
 - `artifacts/audit_traces.jsonl`
 
-The bundled sample data is designed to produce at least three generated cases.
+## Expected run summary
+
+The bundled sample run should report:
+
+- `15` raw events normalized into `15` internal events
+- `5` deterministic rule hits
+- `3` grouped cases
+- `3` accepted JSON summaries
+- `0` rejected summaries in the default accepted path
+- `3` audit records
 
 ## Artifact semantics
 
 - `rule_hits.json`: deterministic rule hits with rule metadata, ATT&CK mapping, entities, and evidence highlights
 - `case_bundles.json`: grouped cases with severity, rule hits, ATT&CK mappings, raw evidence, and untrusted-data marking
 - `case_summaries.json`: only accepted JSON summaries that passed schema and semantic validation
-- `case_report.md`: analyst-facing report that shows accepted summaries and explicitly notes rejected case summaries
+- `case_report.md`: analyst-facing report with run counts, accepted summaries, and explicit notes for rejected case summaries
 - `case_report.md`: includes a top-level run integrity section that surfaces rule/config degradation
 - `audit_traces.jsonl`: stable per-record audit log for accepted and rejected paths, using `schema_version = ai-assisted-detection-audit/v1` and including `ts`, `case_id`, `validation_status`, `rejection_reason`, `rule_ids`, `prompt_input_digest`, `evidence_digest`, and bounded response excerpts
 
@@ -105,13 +114,25 @@ Verify that `CASE-001` appears in all three places, that the `case_id` matches e
 
 ### Rejected summary path
 
-Run `pytest tests/test_ai_assisted_detection_demo.py -k "audit_traces_capture_accepted_and_rejected_paths or case_id_mismatch"` and inspect the `case_report.md`, `case_summaries.json`, and `audit_traces.jsonl` artifacts written by the test.
+Run:
+
+```bash
+pytest tests/test_ai_assisted_detection_demo.py -k "audit_traces_capture_accepted_and_rejected_paths or case_id_mismatch" --basetemp .pytest-artifacts-ai-demo-rejections
+```
+
+Then inspect the `case_report.md`, `case_summaries.json`, and `audit_traces.jsonl` files under `.pytest-artifacts-ai-demo-rejections/test_*/artifacts/`.
 
 Verify that the rejected case is absent from `case_summaries.json`, appears in `case_report.md` as `Summary status: rejected`, and has an audit record with `validation_status = rejected` plus a concrete `rejection_reason` such as `missing_required_fields`, `semantic_validation_failed`, or `case_id_mismatch`.
 
 ### Degraded coverage path
 
-Run `pytest tests/test_ai_assisted_detection_demo.py -k malformed_attack_metadata_is_rejected_and_recorded` and inspect the generated `case_report.md` and `audit_traces.jsonl`.
+Run:
+
+```bash
+pytest tests/test_ai_assisted_detection_demo.py -k malformed_attack_metadata_is_rejected_and_recorded --basetemp .pytest-artifacts-ai-demo-degraded
+```
+
+Then inspect the generated `case_report.md` and `audit_traces.jsonl` files under `.pytest-artifacts-ai-demo-degraded/test_*/artifacts/`.
 
 Verify that `case_report.md` exposes `## Run Integrity`, `coverage_degraded: yes`, and the rejected rule id, and that `audit_traces.jsonl` contains a global rejection record with `case_id = null` and `rejection_reason = rule_metadata_validation_failed`.
 

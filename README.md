@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/stacknil/telemetry-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/stacknil/telemetry-lab/actions/workflows/ci.yml)
 
-Small portfolio prototypes for telemetry analytics, monitoring, and detection-oriented signal processing.
+A local, file-based detection workflow lab for reviewer-verifiable telemetry and detection demos.
 
 Latest milestone: [v0.6.0 — fourth demo and config-change investigation](https://github.com/stacknil/telemetry-lab/releases/latest).
 
@@ -22,7 +22,7 @@ Latest milestone: [v0.6.0 — fourth demo and config-change investigation](https
 
 ## What This Repo Is
 
-`telemetry-lab` is a small portfolio repository for telemetry analytics and constrained detection-oriented workflows. It is organized as four local, file-based demos that are reproducible from committed sample data and intentionally scoped for public review rather than production use.
+`telemetry-lab` is a small portfolio repository for constrained detection workflows. It is not a SIEM, dashboard, or monitoring platform; it is organized as four local, file-based demos that are reproducible from committed sample data and intentionally scoped for public review rather than production use.
 
 ### telemetry-window-demo
 
@@ -47,6 +47,9 @@ python -m pip install -e .
 python -m telemetry_window_demo.cli run --config configs/default.yaml
 ```
 
+Use the same Python interpreter for install, tests, and demo commands. On machines with multiple Python installs, replace `python` with the intended interpreter path.
+To run the test suite in a fresh environment, install the dev extra with `python -m pip install -e ".[dev]"`.
+
 Other demo entrypoints:
 
 - `python -m telemetry_window_demo.cli run-ai-demo`
@@ -56,9 +59,10 @@ Other demo entrypoints:
 Useful inspection commands:
 
 - `python -m telemetry_window_demo.cli summarize --input data/raw/sample_events.jsonl`
-- `python -m telemetry_window_demo.cli summarize --input events.csv --timestamp-col event_time`
 
-That command reads `data/raw/sample_events.jsonl` and regenerates:
+For CSV inputs, pass a `.csv` file to `--input`; use `--timestamp-col` when the timestamp column is not named `timestamp`.
+
+The `run --config configs/default.yaml` command reads `data/raw/sample_events.jsonl` and regenerates:
 
 - `data/processed/features.csv`
 - `data/processed/alerts.csv`
@@ -80,6 +84,15 @@ Why it is worth a quick look:
 - a second bundled scenario gives a slightly richer walkthrough without changing the basic CLI flow
 
 ![Default alert timeline](data/processed/alerts_timeline.png)
+
+## Reviewer Path
+
+For a quick coherence pass across the demos:
+
+1. Run `python -m telemetry_window_demo.cli run --config configs/default.yaml` and confirm `data/processed/summary.json` reports `41` events, `24` windows, and `12` alerts.
+2. Run `python -m telemetry_window_demo.cli run-rule-dedup-demo` and confirm `demos/rule-evaluation-and-dedup-demo/artifacts/dedup_report.md` shows `10` raw hits reduced to `6` retained alerts with `4` suppressions.
+3. Run `python -m telemetry_window_demo.cli run-config-change-demo` and confirm `demos/config-change-investigation-demo/artifacts/investigation_report.md` shows `4` normalized changes, `3` risky changes, and `3` investigations.
+4. Run `python -m telemetry_window_demo.cli run-ai-demo` and confirm `demos/ai-assisted-detection-demo/artifacts/case_report.md` shows `3` deterministic cases with human verification and no final incident verdict.
 
 ## Demo Variants
 
@@ -129,6 +142,7 @@ Cooldown behavior:
 
 - [`demos/rule-evaluation-and-dedup-demo/README.md`](demos/rule-evaluation-and-dedup-demo/README.md) explains the third demo and links its committed before/after dedup artifacts
 - [`demos/config-change-investigation-demo/README.md`](demos/config-change-investigation-demo/README.md) explains the config-change investigation demo and its committed artifacts
+- [`docs/reviewer-path.md`](docs/reviewer-path.md) maps common review questions to the right demo and artifacts
 - [`docs/sample-output.md`](docs/sample-output.md) summarizes the committed sample artifacts
 - [`docs/roadmap.md`](docs/roadmap.md) sketches the next demo directions
 - [`data/processed/summary.json`](data/processed/summary.json) captures the default run in machine-readable form

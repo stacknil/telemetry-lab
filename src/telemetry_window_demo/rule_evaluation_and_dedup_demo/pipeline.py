@@ -9,6 +9,7 @@ from typing import Any
 
 import yaml
 
+from ..io import ensure_output_directory, ensure_output_file_path
 from ..time_utils import parse_utc_timestamp
 
 SCOPE_FIELDS = ("entity", "source", "target", "host")
@@ -42,7 +43,7 @@ def run_demo(
         artifacts_dir
         or resolve_demo_path(demo_root, str(config.get("artifacts_dir", "artifacts")))
     ).resolve()
-    artifacts_dir.mkdir(parents=True, exist_ok=True)
+    ensure_output_directory(artifacts_dir)
 
     raw_hits = load_json(input_path)
     normalized_hits = normalize_rule_hits(raw_hits)
@@ -575,7 +576,7 @@ def rule_hit_sort_key(rule_hit: Mapping[str, Any]) -> tuple[str, str, str, str]:
 
 
 def write_json(payload: Any, path: Path) -> Path:
-    path.parent.mkdir(parents=True, exist_ok=True)
+    path = ensure_output_file_path(path)
     path.write_text(
         json.dumps(serialize_record(payload), indent=2) + "\n",
         encoding="utf-8",
@@ -584,8 +585,8 @@ def write_json(payload: Any, path: Path) -> Path:
 
 
 def write_text(content: str, path: Path) -> Path:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(content, encoding="utf-8")
+    path = ensure_output_file_path(path)
+    path.write_text(content, encoding="utf-8", newline="\n")
     return path
 
 

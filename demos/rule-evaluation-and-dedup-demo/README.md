@@ -59,6 +59,16 @@ That means repeated hits for the same rule can still be kept separately when the
 - `artifacts/dedup_explanations.json`
 - `artifacts/dedup_report.md`
 
+## Expected Run Summary
+
+The bundled sample run should report:
+
+- `10` raw rule hits
+- `6` retained alerts
+- `4` suppressed repeated hits
+- `4` rule/scope groups
+- `180` second cooldown
+
 ## Artifact Semantics
 
 - `rule_hits_before_dedup.json`: normalized raw hits with resolved cooldown scope and cooldown key

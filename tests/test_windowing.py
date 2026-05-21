@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import pandas as pd
+import pytest
 
 from telemetry_window_demo.preprocess import normalize_events
 from telemetry_window_demo.windowing import build_windows
@@ -90,3 +91,32 @@ def test_build_windows_handles_microsecond_backed_timestamps() -> None:
     assert windows[0].end_index == 3
     assert windows[1].start_index == 1
     assert windows[1].end_index == 3
+
+
+def test_build_windows_rejects_unsorted_timestamps() -> None:
+    events = pd.DataFrame(
+        [
+            {
+                "timestamp": pd.Timestamp("2026-03-10T10:00:20Z"),
+                "event_type": "login_fail",
+                "source": "user_b",
+                "target": "auth",
+                "status": "fail",
+            },
+            {
+                "timestamp": pd.Timestamp("2026-03-10T10:00:00Z"),
+                "event_type": "login_success",
+                "source": "user_a",
+                "target": "auth",
+                "status": "ok",
+            },
+        ]
+    )
+
+    with pytest.raises(ValueError, match="sorted by timestamp"):
+        build_windows(
+            events,
+            timestamp_col="timestamp",
+            window_size_seconds=60,
+            step_size_seconds=10,
+        )

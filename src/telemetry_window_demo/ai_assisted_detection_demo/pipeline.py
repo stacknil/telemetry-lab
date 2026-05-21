@@ -11,6 +11,7 @@ from typing import Any
 
 import yaml
 
+from ..io import ensure_output_directory, ensure_output_file_path
 from ..time_utils import parse_utc_timestamp
 from .llm import DemoStructuredCaseLlm
 
@@ -102,7 +103,7 @@ def run_demo(
 ) -> dict[str, Any]:
     demo_root = Path(demo_root or default_demo_root()).resolve()
     artifacts_dir = Path(artifacts_dir or demo_root / "artifacts").resolve()
-    artifacts_dir.mkdir(parents=True, exist_ok=True)
+    ensure_output_directory(artifacts_dir)
 
     raw_events = load_jsonl(demo_root / "data" / "raw" / "sample_security_events.jsonl")
     rules_config = load_yaml(demo_root / "config" / "rules.yaml")
@@ -251,6 +252,15 @@ def run_demo(
                 case_summaries,
                 audit_records,
                 accepted_rule_ids=accepted_rule_ids,
+                run_summary={
+                    "raw_events": len(raw_events),
+                    "normalized_events": len(normalized_events),
+                    "rule_hits": len(rule_hits),
+                    "cases": len(case_bundles),
+                    "accepted_summaries": len(case_summaries),
+                    "rejected_summaries": rejected_summary_count,
+                    "audit_records": len(audit_records),
+                },
             ),
             artifacts_dir / "case_report.md",
         ),
@@ -843,6 +853,7 @@ def build_case_report(
     case_summaries: Sequence[Mapping[str, Any]],
     audit_records: Sequence[Mapping[str, Any]],
     accepted_rule_ids: Sequence[str],
+    run_summary: Mapping[str, int],
 ) -> str:
     global_rejections = [
         record for record in audit_records if record.get("case_id") is None
@@ -869,6 +880,16 @@ def build_case_report(
         "This report is analyst-facing draft output from a constrained case summarization pipeline.",
         "Detections and grouping are deterministic. The LLM is limited to structured summarization only.",
         "Human verification is required. No automated response actions or final incident verdicts are produced.",
+        "",
+        "## Run Summary",
+        "",
+        f"- raw_events: {run_summary['raw_events']}",
+        f"- normalized_events: {run_summary['normalized_events']}",
+        f"- rule_hits: {run_summary['rule_hits']}",
+        f"- cases: {run_summary['cases']}",
+        f"- accepted_summaries: {run_summary['accepted_summaries']}",
+        f"- rejected_summaries: {run_summary['rejected_summaries']}",
+        f"- audit_records: {run_summary['audit_records']}",
         "",
         "## Run Integrity",
         "",
@@ -1008,7 +1029,7 @@ def bounded_excerpt(raw_response: str | None) -> str | None:
 
 
 def write_json(records: Any, path: Path) -> Path:
-    path.parent.mkdir(parents=True, exist_ok=True)
+    path = ensure_output_file_path(path)
     with path.open("w", encoding="utf-8") as handle:
         json.dump(serialize_record(records), handle, indent=2)
         handle.write("\n")
@@ -1016,7 +1037,7 @@ def write_json(records: Any, path: Path) -> Path:
 
 
 def write_jsonl(records: Sequence[Mapping[str, Any]], path: Path) -> Path:
-    path.parent.mkdir(parents=True, exist_ok=True)
+    path = ensure_output_file_path(path)
     with path.open("w", encoding="utf-8") as handle:
         for record in records:
             handle.write(json.dumps(serialize_record(record), sort_keys=True))
@@ -1025,8 +1046,8 @@ def write_jsonl(records: Sequence[Mapping[str, Any]], path: Path) -> Path:
 
 
 def write_text(content: str, path: Path) -> Path:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(content, encoding="utf-8")
+    path = ensure_output_file_path(path)
+    path.write_text(content, encoding="utf-8", newline="\n")
     return path
 
 

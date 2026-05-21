@@ -25,6 +25,9 @@ def build_windows(
         return []
 
     timestamps = pd.DatetimeIndex(events[timestamp_col])
+    if not timestamps.is_monotonic_increasing:
+        raise ValueError("Events must be sorted by timestamp before building windows.")
+
     start = timestamps.min().floor(f"{step_size_seconds}s")
     last_start = timestamps.max().floor(f"{step_size_seconds}s")
     window_delta = pd.Timedelta(seconds=window_size_seconds)
