@@ -1,25 +1,40 @@
 # Roadmap
 
-This repository is intentionally small, so the next steps should be new demos that make the existing telemetry pipeline easier to understand rather than a broad platform build-out.
+`telemetry-lab` is moving from demo expansion toward v0.7 / v1.0 consolidation.
+
+The repo now has four reviewer-verifiable demos and a clear [`docs/reviewer-path.md`](reviewer-path.md). The priority is to keep the demo matrix stable, preserve artifact names, and make review faster without implying a SIEM, dashboard, or production monitoring platform.
 
 Recently added:
 
 - [rule-evaluation-and-dedup-demo](../demos/rule-evaluation-and-dedup-demo/README.md) now shows raw rule hits, retained alerts, and suppression reasons side by side.
 - [config-change-investigation-demo](../demos/config-change-investigation-demo/README.md) now shows risky configuration changes, bounded evidence attachment, and deterministic investigation summaries.
-- Core telemetry-window validation now gives clearer failures for malformed inputs, invalid run configs, rule parameters, plot CSV values, and output window bounds.
+- [`docs/reviewer-path.md`](reviewer-path.md) maps common review questions to the right demo and artifacts.
+- [`docs/reviewer-pack.md`](reviewer-pack.md) collects the top-level reviewer flow and artifact naming contract.
+- [`docs/architecture.md`](architecture.md) describes the local file-based workflow shape.
 
-## 1. Auth/Login Anomaly Triage Demo
+## v0.7 / v1.0 Consolidation
 
-Goal:
-Add a demo that walks from bursty login failures into follow-on signals such as source spread, eventual success, or repeated target concentration.
+1. Stabilize the demo matrix.
+2. Freeze reviewer-visible artifact names unless a rename is intentional and documented across README, reviewer docs, demo docs, tests, and sample outputs.
+3. Keep one top-level reviewer pack as the primary no-guessing entrypoint.
+4. Keep the architecture diagram aligned with actual CLI and artifact behavior.
+5. Prefer regression tests and documentation accuracy over adding new workflow surface area.
 
-Why it helps the portfolio:
-This strengthens the repo's analyst-facing story. It shows how simple window features and rule output can support a concrete triage narrative instead of stopping at generic alert generation.
+## Optional Final Demo
 
-## 2. Config-Change Drift Follow-Up Demo
+At most one more demo should be added before v1-style consolidation.
 
-Goal:
-Add a compact follow-up scenario centered on repeated config drift, rollback attempts, and evidence that the remediation path actually reduced nearby denials or noisy follow-on signals.
+Good candidates:
 
-Why it helps the portfolio:
-This would build on the current config-change investigation demo without changing the repo's local, file-based character. It would show not just the initial risky change, but also how deterministic evidence can support a short remediation narrative.
+- auth/login anomaly triage from bursty login failures into follow-on signals
+- config-change drift follow-up showing rollback attempts and reduced nearby denials
+
+Only add one if it clearly strengthens the detection workflow portfolio without turning the repo into a platform.
+
+## Non-Directions
+
+- No production monitoring claims
+- No realtime ingestion or streaming state
+- No dashboard or service deployment
+- No alert routing or case management
+- No autonomous response
