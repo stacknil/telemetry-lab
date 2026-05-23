@@ -142,18 +142,21 @@ Cooldown behavior:
 
 - [`demos/rule-evaluation-and-dedup-demo/README.md`](demos/rule-evaluation-and-dedup-demo/README.md) explains the third demo and links its committed before/after dedup artifacts
 - [`demos/config-change-investigation-demo/README.md`](demos/config-change-investigation-demo/README.md) explains the config-change investigation demo and its committed artifacts
+- [`docs/reviewer-pack.md`](docs/reviewer-pack.md) is the top-level no-guessing reviewer pack
 - [`docs/reviewer-path.md`](docs/reviewer-path.md) maps common review questions to the right demo and artifacts
+- [`docs/architecture.md`](docs/architecture.md) diagrams the local file-based detection workflow
 - [`docs/sample-output.md`](docs/sample-output.md) summarizes the committed sample artifacts
-- [`docs/roadmap.md`](docs/roadmap.md) sketches the next demo directions
+- [`docs/roadmap.md`](docs/roadmap.md) sketches the v0.7 / v1.0 consolidation direction
 - [`data/processed/summary.json`](data/processed/summary.json) captures the default run in machine-readable form
 - [`data/processed/richer_sample/summary.json`](data/processed/richer_sample/summary.json) captures the richer scenario pack
 - [`tests/`](tests/) keeps regression coverage close to the CLI behavior and windowing logic
 
-## Next Demo Directions
+## v0.7 / v1.0 Direction
 
-- add a focused auth/login anomaly triage walkthrough on top of the existing window features
-- add a compact config-change drift follow-up scenario using the current deterministic evidence model
-- keep sample-output docs and public repo presentation aligned with the checked-in demo state
+- stabilize the four-demo matrix and avoid broad platform expansion
+- freeze reviewer-visible artifact names unless a rename is intentionally coordinated across docs, tests, and sample outputs
+- use [`docs/reviewer-pack.md`](docs/reviewer-pack.md) and [`docs/architecture.md`](docs/architecture.md) as the consolidation entrypoints
+- add at most one more demo before v1-style consolidation
 
 ## Scope
 
