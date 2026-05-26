@@ -36,6 +36,16 @@ The current artifact names are reviewer-facing contracts for the v0.7 / v1.0 con
 - If an artifact must be renamed, update the README, reviewer path, this reviewer pack, demo README, tests, and committed sample outputs in the same change.
 - Do not introduce platform-style names that imply alert routing, case management, real-time ingestion, or autonomous response.
 
+### Stable Reviewer-Visible Artifacts
+
+| Area | Stable artifact paths |
+| --- | --- |
+| Default telemetry sample | `data/processed/features.csv`, `data/processed/alerts.csv`, `data/processed/summary.json`, `data/processed/event_count_timeline.png`, `data/processed/error_rate_timeline.png`, `data/processed/alerts_timeline.png` |
+| Richer telemetry sample | `data/processed/richer_sample/features.csv`, `data/processed/richer_sample/alerts.csv`, `data/processed/richer_sample/summary.json`, `data/processed/richer_sample/event_count_timeline.png`, `data/processed/richer_sample/error_rate_timeline.png`, `data/processed/richer_sample/alerts_timeline.png` |
+| AI-assisted detection demo | `demos/ai-assisted-detection-demo/artifacts/rule_hits.json`, `demos/ai-assisted-detection-demo/artifacts/case_bundles.json`, `demos/ai-assisted-detection-demo/artifacts/case_summaries.json`, `demos/ai-assisted-detection-demo/artifacts/case_report.md`, `demos/ai-assisted-detection-demo/artifacts/audit_traces.jsonl` |
+| Rule dedup demo | `demos/rule-evaluation-and-dedup-demo/artifacts/rule_hits_before_dedup.json`, `demos/rule-evaluation-and-dedup-demo/artifacts/rule_hits_after_dedup.json`, `demos/rule-evaluation-and-dedup-demo/artifacts/dedup_explanations.json`, `demos/rule-evaluation-and-dedup-demo/artifacts/dedup_report.md` |
+| Config-change investigation demo | `demos/config-change-investigation-demo/artifacts/change_events_normalized.json`, `demos/config-change-investigation-demo/artifacts/investigation_hits.json`, `demos/config-change-investigation-demo/artifacts/investigation_summary.json`, `demos/config-change-investigation-demo/artifacts/investigation_report.md` |
+
 ## Fast Verification
 
 From the repository root:

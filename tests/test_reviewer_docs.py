@@ -43,6 +43,34 @@ REVIEWER_DEMO_MATRIX = [
     ),
 ]
 
+STABLE_REVIEWER_ARTIFACTS = [
+    "data/processed/features.csv",
+    "data/processed/alerts.csv",
+    "data/processed/summary.json",
+    "data/processed/event_count_timeline.png",
+    "data/processed/error_rate_timeline.png",
+    "data/processed/alerts_timeline.png",
+    "data/processed/richer_sample/features.csv",
+    "data/processed/richer_sample/alerts.csv",
+    "data/processed/richer_sample/summary.json",
+    "data/processed/richer_sample/event_count_timeline.png",
+    "data/processed/richer_sample/error_rate_timeline.png",
+    "data/processed/richer_sample/alerts_timeline.png",
+    "demos/ai-assisted-detection-demo/artifacts/rule_hits.json",
+    "demos/ai-assisted-detection-demo/artifacts/case_bundles.json",
+    "demos/ai-assisted-detection-demo/artifacts/case_summaries.json",
+    "demos/ai-assisted-detection-demo/artifacts/case_report.md",
+    "demos/ai-assisted-detection-demo/artifacts/audit_traces.jsonl",
+    "demos/rule-evaluation-and-dedup-demo/artifacts/rule_hits_before_dedup.json",
+    "demos/rule-evaluation-and-dedup-demo/artifacts/rule_hits_after_dedup.json",
+    "demos/rule-evaluation-and-dedup-demo/artifacts/dedup_explanations.json",
+    "demos/rule-evaluation-and-dedup-demo/artifacts/dedup_report.md",
+    "demos/config-change-investigation-demo/artifacts/change_events_normalized.json",
+    "demos/config-change-investigation-demo/artifacts/investigation_hits.json",
+    "demos/config-change-investigation-demo/artifacts/investigation_summary.json",
+    "demos/config-change-investigation-demo/artifacts/investigation_report.md",
+]
+
 
 def _read_repo_file(relative_path: str) -> str:
     return (REPO_ROOT / relative_path).read_text(encoding="utf-8")
@@ -92,6 +120,15 @@ def test_top_level_reviewer_pack_covers_matrix_and_artifact_contract() -> None:
         assert f"`{demo_name}`" in reviewer_pack
         for artifact_path in artifact_paths:
             assert f"`{artifact_path}`" in reviewer_pack
+
+
+def test_reviewer_pack_freezes_stable_artifact_names() -> None:
+    reviewer_pack = _read_repo_file("docs/reviewer-pack.md")
+
+    assert "Stable Reviewer-Visible Artifacts" in reviewer_pack
+    for artifact_path in STABLE_REVIEWER_ARTIFACTS:
+        assert f"`{artifact_path}`" in reviewer_pack
+        assert (REPO_ROOT / artifact_path).is_file(), artifact_path
 
 
 def test_architecture_doc_keeps_local_file_based_boundaries() -> None:
