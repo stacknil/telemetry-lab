@@ -131,6 +131,21 @@ def test_reviewer_pack_freezes_stable_artifact_names() -> None:
         assert (REPO_ROOT / artifact_path).is_file(), artifact_path
 
 
+def test_reviewer_pack_defines_v1_readiness_gate() -> None:
+    reviewer_pack = _read_repo_file("docs/reviewer-pack.md")
+    roadmap = _read_repo_file("docs/roadmap.md")
+    readme = _read_repo_file("README.md")
+
+    assert "## v1 Readiness Gate" in reviewer_pack
+    assert "four-demo matrix stable" in reviewer_pack
+    assert "reviewer-visible artifact names stable" in reviewer_pack
+    assert "Regenerate and inspect committed artifacts" in reviewer_pack
+    assert "Run `pytest`" in reviewer_pack
+    assert "Do not add SIEM, dashboard, alert routing" in reviewer_pack
+    assert "[`docs/reviewer-pack.md`](reviewer-pack.md#v1-readiness-gate)" in roadmap
+    assert "[`v1 readiness gate`](docs/reviewer-pack.md#v1-readiness-gate)" in readme
+
+
 def test_architecture_doc_keeps_local_file_based_boundaries() -> None:
     architecture = _read_repo_file("docs/architecture.md")
 

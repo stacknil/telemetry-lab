@@ -20,6 +20,8 @@ Recently added:
 4. Keep the architecture diagram aligned with actual CLI and artifact behavior.
 5. Prefer regression tests and documentation accuracy over adding new workflow surface area.
 
+The consolidation gate lives in [`docs/reviewer-pack.md`](reviewer-pack.md#v1-readiness-gate).
+
 ## Optional Final Demo
 
 At most one more demo should be added before v1-style consolidation.
