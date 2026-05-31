@@ -11,8 +11,8 @@ MARKDOWN_LINK_RE = re.compile(r"!?\[[^\]]*\]\(([^)]+)\)")
 def _markdown_files() -> list[Path]:
     return [
         REPO_ROOT / "README.md",
-        *sorted((REPO_ROOT / "docs").glob("*.md")),
-        *sorted((REPO_ROOT / "demos").glob("*/README.md")),
+        *sorted((REPO_ROOT / "docs").rglob("*.md")),
+        *sorted((REPO_ROOT / "demos").rglob("*.md")),
     ]
 
 
