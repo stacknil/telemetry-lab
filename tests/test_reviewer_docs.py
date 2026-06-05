@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import tomllib
 from pathlib import Path
 
 
@@ -76,6 +77,10 @@ def _read_repo_file(relative_path: str) -> str:
     return (REPO_ROOT / relative_path).read_text(encoding="utf-8")
 
 
+def _read_pyproject() -> dict[str, object]:
+    return tomllib.loads(_read_repo_file("pyproject.toml"))
+
+
 def test_reviewer_path_keeps_detection_lab_positioning() -> None:
     reviewer_path = _read_repo_file("docs/reviewer-path.md")
     normalized = reviewer_path.lower()
@@ -105,6 +110,18 @@ def test_readme_links_reviewer_path_and_uses_lab_framing() -> None:
     assert "[`docs/reviewer-pack.md`](docs/reviewer-pack.md)" in readme
     assert "[`docs/reviewer-path.md`](docs/reviewer-path.md)" in readme
     assert "[`docs/architecture.md`](docs/architecture.md)" in readme
+
+
+def test_package_metadata_uses_detection_lab_framing() -> None:
+    pyproject = _read_pyproject()
+    description = str(pyproject["project"]["description"])
+
+    assert description == (
+        "A local, file-based detection workflow lab for "
+        "reviewer-verifiable telemetry and detection demos."
+    )
+    assert "small prototype" not in description.lower()
+    assert "monitoring platform" not in description.lower()
 
 
 def test_top_level_reviewer_pack_covers_matrix_and_artifact_contract() -> None:
@@ -139,6 +156,7 @@ def test_reviewer_pack_defines_v1_readiness_gate() -> None:
     assert "## v1 Readiness Gate" in reviewer_pack
     assert "four-demo matrix stable" in reviewer_pack
     assert "reviewer-visible artifact names stable" in reviewer_pack
+    assert "package metadata, and repository metadata" in reviewer_pack
     assert "Regenerate and inspect committed artifacts" in reviewer_pack
     assert "Run `pytest`" in reviewer_pack
     assert "Do not add SIEM, dashboard, alert routing" in reviewer_pack
