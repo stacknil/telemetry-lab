@@ -53,6 +53,7 @@ Before treating the repo as v1-style consolidated:
 - Keep the four-demo matrix stable, or document any intentional retirement in the README, reviewer path, reviewer pack, roadmap, and tests.
 - Keep reviewer-visible artifact names stable, or update the artifact naming contract and committed sample outputs in the same change.
 - Keep `docs/reviewer-path.md`, this reviewer pack, `docs/architecture.md`, and demo READMEs aligned with actual CLI behavior.
+- Keep README, package metadata, and repository metadata aligned with the local, file-based detection workflow lab framing.
 - Regenerate and inspect committed artifacts after behavior changes.
 - Run `pytest` and confirm reviewer-doc tests still cover the demo matrix, artifact contract, and architecture boundaries.
 - Do not add SIEM, dashboard, alert routing, case-management, real-time ingestion, autonomous response, or final-verdict claims.
