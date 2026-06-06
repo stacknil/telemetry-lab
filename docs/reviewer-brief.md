@@ -67,7 +67,7 @@ The other demos emit reviewer-facing artifacts such as `dedup_report.md`, `inves
 - no alert routing, dashboarding, or case management
 - sample-data driven, not connected to live systems
 - no streaming state management
-- intentionally small-scope demos rather than a unified monitoring platform
+- intentionally small-scope detection workflow demos rather than a unified monitoring platform
 
 ## Next milestone
 

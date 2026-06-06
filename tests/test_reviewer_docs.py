@@ -83,6 +83,7 @@ def _read_pyproject() -> dict[str, object]:
 
 def test_reviewer_path_keeps_detection_lab_positioning() -> None:
     reviewer_path = _read_repo_file("docs/reviewer-path.md")
+    reviewer_brief = _read_repo_file("docs/reviewer-brief.md")
     normalized = reviewer_path.lower()
 
     assert "controlled detection workflow portfolio" in reviewer_path
@@ -90,6 +91,7 @@ def test_reviewer_path_keeps_detection_lab_positioning() -> None:
     assert "not a dashboard" in normalized
     assert "not an unfinished monitoring platform" in normalized
     assert "local and file-based" in normalized
+    assert "small-scope detection workflow demos" in reviewer_brief
 
 
 def test_reviewer_path_matrix_references_committed_artifacts() -> None:
@@ -104,12 +106,16 @@ def test_reviewer_path_matrix_references_committed_artifacts() -> None:
 
 def test_readme_links_reviewer_path_and_uses_lab_framing() -> None:
     readme = _read_repo_file("README.md")
+    normalized = readme.lower()
 
     assert "A local, file-based detection workflow lab" in readme
+    assert "local, reviewer-oriented detection workflow lab" in readme
     assert "not a SIEM, dashboard, or monitoring platform" in readme
     assert "[`docs/reviewer-pack.md`](docs/reviewer-pack.md)" in readme
     assert "[`docs/reviewer-path.md`](docs/reviewer-path.md)" in readme
     assert "[`docs/architecture.md`](docs/architecture.md)" in readme
+    assert "portfolio prototype" not in normalized
+    assert "mvp only" not in normalized
 
 
 def test_package_metadata_uses_detection_lab_framing() -> None:
