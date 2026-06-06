@@ -15,7 +15,7 @@ Latest milestone: [v0.6.0 — fourth demo and config-change investigation](https
 
 | Demo | Input | Deterministic core | LLM role | Main artifacts | Guardrails / non-goals |
 | --- | --- | --- | --- | --- | --- |
-| [telemetry-window-demo](#telemetry-window-demo) | JSONL / CSV events | Windows<br>Features<br>Alert thresholds | None | `features.csv`<br>`alerts.csv`<br>`summary.json`<br>3 PNG plots | MVP only<br>No realtime<br>No case management |
+| [telemetry-window-demo](#telemetry-window-demo) | JSONL / CSV events | Windows<br>Features<br>Alert thresholds | None | `features.csv`<br>`alerts.csv`<br>`summary.json`<br>3 PNG plots | Local demo only<br>No realtime<br>No case management |
 | [ai-assisted-detection-demo](demos/ai-assisted-detection-demo/README.md) | JSONL auth / web / process | Normalize<br>Rules<br>Grouping<br>ATT&CK mapping | JSON-only case drafting | `rule_hits.json`<br>`case_bundles.json`<br>`case_summaries.json`<br>`case_report.md`<br>`audit_traces.jsonl` | Human verification required<br>No autonomous response<br>No final verdict |
 | [rule-evaluation-and-dedup-demo](demos/rule-evaluation-and-dedup-demo/README.md) | JSON raw rule hits | Scope resolution<br>Cooldown grouping<br>Suppression reasoning | None | `rule_hits_before_dedup.json`<br>`rule_hits_after_dedup.json`<br>`dedup_explanations.json`<br>`dedup_report.md` | No realtime<br>No dashboard<br>No AI stage |
 | [config-change-investigation-demo](demos/config-change-investigation-demo/README.md) | JSONL config changes<br>Policy denials<br>Follow-on events | Normalize<br>Risky-change rules<br>Bounded correlation | None | `change_events_normalized.json`<br>`investigation_hits.json`<br>`investigation_summary.json`<br>`investigation_report.md` | No realtime<br>No dashboard<br>No AI stage |
@@ -161,7 +161,7 @@ Cooldown behavior:
 
 ## Scope
 
-This repository is a portfolio prototype, not a production monitoring system.
+This repository is a local, reviewer-oriented detection workflow lab, not a production monitoring system.
 
 ## Limitations
 
