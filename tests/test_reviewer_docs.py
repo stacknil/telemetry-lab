@@ -112,6 +112,7 @@ def test_readme_links_reviewer_path_and_uses_lab_framing() -> None:
     assert "local, reviewer-oriented detection workflow lab" in readme
     assert "not a SIEM, dashboard, or monitoring platform" in readme
     assert "[`docs/reviewer-pack.md`](docs/reviewer-pack.md)" in readme
+    assert "[`docs/reviewer-brief.md`](docs/reviewer-brief.md)" in readme
     assert "[`docs/reviewer-path.md`](docs/reviewer-path.md)" in readme
     assert "[`docs/architecture.md`](docs/architecture.md)" in readme
     assert "portfolio prototype" not in normalized
