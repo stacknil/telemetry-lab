@@ -142,6 +142,7 @@ Cooldown behavior:
 
 - [`demos/rule-evaluation-and-dedup-demo/README.md`](demos/rule-evaluation-and-dedup-demo/README.md) explains the third demo and links its committed before/after dedup artifacts
 - [`demos/config-change-investigation-demo/README.md`](demos/config-change-investigation-demo/README.md) explains the config-change investigation demo and its committed artifacts
+- [`docs/README.md`](docs/README.md) indexes current reviewer docs, supporting design notes, and historical release evidence
 - [`docs/reviewer-pack.md`](docs/reviewer-pack.md) is the top-level no-guessing reviewer pack and artifact naming contract
 - [`docs/reviewer-brief.md`](docs/reviewer-brief.md) gives the short problem, value, evidence, and boundary summary
 - [`docs/reviewer-path.md`](docs/reviewer-path.md) maps common review questions to the right demo and artifacts

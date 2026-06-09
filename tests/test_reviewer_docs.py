@@ -111,12 +111,40 @@ def test_readme_links_reviewer_path_and_uses_lab_framing() -> None:
     assert "A local, file-based detection workflow lab" in readme
     assert "local, reviewer-oriented detection workflow lab" in readme
     assert "not a SIEM, dashboard, or monitoring platform" in readme
+    assert "[`docs/README.md`](docs/README.md)" in readme
     assert "[`docs/reviewer-pack.md`](docs/reviewer-pack.md)" in readme
     assert "[`docs/reviewer-brief.md`](docs/reviewer-brief.md)" in readme
     assert "[`docs/reviewer-path.md`](docs/reviewer-path.md)" in readme
     assert "[`docs/architecture.md`](docs/architecture.md)" in readme
     assert "portfolio prototype" not in normalized
     assert "mvp only" not in normalized
+
+
+def test_docs_index_separates_current_route_from_history() -> None:
+    docs_index = _read_repo_file("docs/README.md")
+    normalized = docs_index.lower()
+
+    assert "Current reviewer route" in docs_index
+    assert "Supporting docs" in docs_index
+    assert "Historical release evidence" in docs_index
+    assert "Use the current reviewer route above" in docs_index
+    assert "not a siem, dashboard, or production monitoring platform" in normalized
+
+    for current_doc in [
+        "reviewer-pack.md",
+        "reviewer-path.md",
+        "reviewer-brief.md",
+        "architecture.md",
+        "roadmap.md",
+    ]:
+        assert f"({current_doc})" in docs_index
+
+    for historical_doc in [
+        "release-v0.4.0.md",
+        "reviewer-pack-v0.4.0/MANIFEST.md",
+        "reviewer-pack-v0.6.0/MANIFEST.md",
+    ]:
+        assert f"({historical_doc})" in docs_index
 
 
 def test_package_metadata_uses_detection_lab_framing() -> None:
