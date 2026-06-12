@@ -6,6 +6,13 @@ A local, file-based detection workflow lab for reviewer-verifiable telemetry and
 
 Latest milestone: [v0.6.0 — fourth demo and config-change investigation](https://github.com/stacknil/telemetry-lab/releases/latest).
 
+## Reviewer Start
+
+- [`docs/reviewer-brief.md`](docs/reviewer-brief.md): scope, value, evidence, and boundaries
+- [`docs/reviewer-path.md`](docs/reviewer-path.md): choose the right demo by review question
+- [`docs/reviewer-pack.md`](docs/reviewer-pack.md): demo matrix, artifact contract, and v1 readiness gate
+- [`docs/README.md`](docs/README.md): current route, supporting docs, and historical release evidence
+
 ## Demos
 
 - [telemetry-window-demo](#telemetry-window-demo)

@@ -111,6 +111,11 @@ def test_readme_links_reviewer_path_and_uses_lab_framing() -> None:
     assert "A local, file-based detection workflow lab" in readme
     assert "local, reviewer-oriented detection workflow lab" in readme
     assert "not a SIEM, dashboard, or monitoring platform" in readme
+    assert "## Reviewer Start" in readme
+    assert "scope, value, evidence, and boundaries" in readme
+    assert "choose the right demo by review question" in readme
+    assert "demo matrix, artifact contract, and v1 readiness gate" in readme
+    assert "current route, supporting docs, and historical release evidence" in readme
     assert "[`docs/README.md`](docs/README.md)" in readme
     assert "[`docs/reviewer-pack.md`](docs/reviewer-pack.md)" in readme
     assert "[`docs/reviewer-brief.md`](docs/reviewer-brief.md)" in readme
