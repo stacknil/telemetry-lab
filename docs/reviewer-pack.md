@@ -75,10 +75,12 @@ Use the same Python interpreter for install, tests, and demo commands.
 
 ## Review Anchors
 
+- [`docs/README.md`](README.md): docs index for the current route, supporting docs, and historical release evidence
 - [`docs/reviewer-brief.md`](reviewer-brief.md): short problem / value summary
 - [`docs/reviewer-path.md`](reviewer-path.md): demo choice by review question
 - [`docs/architecture.md`](architecture.md): local file-based workflow diagram
 - [`docs/sample-output.md`](sample-output.md): committed output counts and sample artifacts
+- [`docs/roadmap.md`](roadmap.md): v0.7 / v1.0 consolidation direction
 - [`tests/test_reviewer_docs.py`](../tests/test_reviewer_docs.py): regression checks for reviewer-facing docs
 
 ## Boundaries

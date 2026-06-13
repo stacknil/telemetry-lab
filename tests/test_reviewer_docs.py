@@ -169,8 +169,11 @@ def test_top_level_reviewer_pack_covers_matrix_and_artifact_contract() -> None:
 
     assert "top-level reviewer pack" in reviewer_pack
     assert "Artifact Naming Contract" in reviewer_pack
+    assert "[`docs/README.md`](README.md)" in reviewer_pack
     assert "[`docs/reviewer-path.md`](reviewer-path.md)" in reviewer_pack
     assert "[`docs/architecture.md`](architecture.md)" in reviewer_pack
+    assert "[`docs/roadmap.md`](roadmap.md)" in reviewer_pack
+    assert "current route, supporting docs, and historical release evidence" in reviewer_pack
 
     for question, demo_name, artifact_paths in REVIEWER_DEMO_MATRIX:
         assert question in reviewer_pack
