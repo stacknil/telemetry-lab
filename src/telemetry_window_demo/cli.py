@@ -41,6 +41,13 @@ RUN_RULE_CONFIG_FIELDS = {
     "source_spread_spike": frozenset(("absolute_threshold", "multiplier", "severity")),
     "rare_event_repeat": frozenset(("threshold", "event_types", "severity")),
 }
+RUN_CONFIG_FIELDS = frozenset(("input_path", "output_dir", "time", "features", "rules"))
+RUN_TIME_CONFIG_FIELDS = frozenset(
+    ("timestamp_col", "window_size_seconds", "step_size_seconds")
+)
+RUN_FEATURE_CONFIG_FIELDS = frozenset(
+    ("count_event_types", "error_statuses", "severity_levels")
+)
 
 
 def main(argv: Sequence[str] | None = None) -> None:
@@ -280,8 +287,18 @@ def _demo_root_path(value: str | None, default_root: Path) -> Path:
 
 
 def _validate_run_config(config: Mapping[str, Any]) -> dict[str, Any]:
+    _reject_unknown_config_fields(config, RUN_CONFIG_FIELDS)
+
     time_config = _optional_mapping(config.get("time", {}), "time")
+    _reject_unknown_config_fields(time_config, RUN_TIME_CONFIG_FIELDS, parent="time")
+
     feature_config = _optional_mapping(config.get("features", {}), "features")
+    _reject_unknown_config_fields(
+        feature_config,
+        RUN_FEATURE_CONFIG_FIELDS,
+        parent="features",
+    )
+
     rules_config = _validate_rules_config(config.get("rules"))
 
     return {
@@ -331,13 +348,7 @@ def _validate_rules_config(raw_rules_config: Any) -> dict[str, Any]:
         else dict(_optional_mapping(raw_rules_config, "rules"))
     )
     allowed_rule_keys = {"cooldown_seconds", *RUN_RULE_SECTION_NAMES}
-    unknown_rule_keys = sorted(
-        str(key) for key in rules_config if key not in allowed_rule_keys
-    )
-    if unknown_rule_keys:
-        raise ValueError(
-            "Unknown config field(s) under 'rules': " + ", ".join(unknown_rule_keys)
-        )
+    _reject_unknown_config_fields(rules_config, allowed_rule_keys, parent="rules")
 
     rules_config["cooldown_seconds"] = _int_config_value(
         rules_config.get("cooldown_seconds", 0),
@@ -366,14 +377,11 @@ def _validate_rule_section_config(
     rule_config: dict[str, Any],
 ) -> dict[str, Any]:
     allowed_fields = RUN_RULE_CONFIG_FIELDS[rule_name]
-    unknown_fields = sorted(
-        str(key) for key in rule_config if key not in allowed_fields
+    _reject_unknown_config_fields(
+        rule_config,
+        allowed_fields,
+        parent=f"rules.{rule_name}",
     )
-    if unknown_fields:
-        raise ValueError(
-            f"Unknown config field(s) under 'rules.{rule_name}': "
-            + ", ".join(unknown_fields)
-        )
 
     if "severity" in rule_config:
         rule_config["severity"] = _string_config_value(
@@ -448,6 +456,22 @@ def _optional_mapping(value: Any, field_name: str) -> Mapping[str, Any]:
     if not isinstance(value, Mapping):
         raise ValueError(f"Config field '{field_name}' must be a mapping.")
     return value
+
+
+def _reject_unknown_config_fields(
+    config: Mapping[str, Any],
+    allowed_fields: set[str] | frozenset[str],
+    *,
+    parent: str | None = None,
+) -> None:
+    unknown_fields = sorted(str(key) for key in config if key not in allowed_fields)
+    if not unknown_fields:
+        return
+
+    location = f" under '{parent}'" if parent else ""
+    raise ValueError(
+        f"Unknown config field(s){location}: " + ", ".join(unknown_fields)
+    )
 
 
 def _path_config_value(value: Any, field_name: str) -> str:

@@ -134,6 +134,7 @@ Required fields for both formats on every row or record:
 
 Input and output validation:
 
+- run configs reject unknown top-level, time, feature, and rule fields to catch typos
 - config paths, event inputs, and plot CSV inputs must point to files
 - required event fields must be present and non-empty
 - custom timestamp columns cannot reuse required event field names

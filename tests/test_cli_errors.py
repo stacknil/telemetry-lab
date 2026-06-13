@@ -36,6 +36,32 @@ def test_main_reports_missing_config_without_traceback(tmp_path, capsys) -> None
     assert "Traceback" not in stderr
 
 
+def test_main_reports_unknown_run_config_field_without_traceback(
+    tmp_path,
+    capsys,
+) -> None:
+    config_path = tmp_path / "typo.yaml"
+    config_path.write_text(
+        yaml.safe_dump(
+            {
+                "input": "events.csv",
+                "output_dir": str(tmp_path / "processed"),
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(SystemExit) as excinfo:
+        main(["run", "--config", str(config_path)])
+
+    assert excinfo.value.code == 1
+    stderr = capsys.readouterr().err
+    assert stderr.startswith("error: ")
+    assert "Unknown config field" in stderr
+    assert "input" in stderr
+    assert "Traceback" not in stderr
+
+
 def test_main_reports_invalid_yaml_config_without_traceback(tmp_path, capsys) -> None:
     config_path = tmp_path / "broken.yaml"
     config_path.write_text("input_path: [\n", encoding="utf-8")
