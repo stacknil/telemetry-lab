@@ -37,6 +37,33 @@ def test_run_config_requires_input_path(tmp_path) -> None:
         run_command(Namespace(config=str(config_path)))
 
 
+def test_run_config_rejects_unknown_top_level_field(tmp_path) -> None:
+    config = _base_config(tmp_path)
+    config["input"] = config["input_path"]
+    config_path = _write_config(tmp_path, config)
+
+    with pytest.raises(ValueError, match="Unknown config field.*input"):
+        run_command(Namespace(config=str(config_path)))
+
+
+def test_run_config_rejects_unknown_time_field(tmp_path) -> None:
+    config = _base_config(tmp_path)
+    config["time"]["window_seconds"] = 60
+    config_path = _write_config(tmp_path, config)
+
+    with pytest.raises(ValueError, match="time.*window_seconds"):
+        run_command(Namespace(config=str(config_path)))
+
+
+def test_run_config_rejects_unknown_feature_field(tmp_path) -> None:
+    config = _base_config(tmp_path)
+    config["features"]["event_counts"] = ["login_fail"]
+    config_path = _write_config(tmp_path, config)
+
+    with pytest.raises(ValueError, match="features.*event_counts"):
+        run_command(Namespace(config=str(config_path)))
+
+
 def test_run_config_rejects_boolean_window_size(tmp_path) -> None:
     config = _base_config(tmp_path)
     config["time"]["window_size_seconds"] = True
