@@ -1,0 +1,356 @@
+[
+  {
+    "signal_id": "CTI-001",
+    "rule_id": "failed_console_login_burst",
+    "rule_name": "failed console login burst",
+    "severity": "medium",
+    "signal_time": "2026-04-07T10:03:05Z",
+    "actor": "USER_A",
+    "primary_event_id": "evt-cti-003",
+    "source_ips": [
+      "203.0.113.45"
+    ],
+    "evidence_event_ids": [
+      "evt-cti-001",
+      "evt-cti-002",
+      "evt-cti-003"
+    ],
+    "evidence_events": [
+      {
+        "eventID": "evt-cti-001",
+        "eventTime": "2026-04-07T10:00:00Z",
+        "actor": "USER_A",
+        "eventSource": "signin.amazonaws.com",
+        "eventName": "ConsoleLogin",
+        "awsRegion": "us-east-1",
+        "sourceIPAddress": "203.0.113.45",
+        "errorCode": "FailedAuthentication",
+        "requestParameters": {}
+      },
+      {
+        "eventID": "evt-cti-002",
+        "eventTime": "2026-04-07T10:01:20Z",
+        "actor": "USER_A",
+        "eventSource": "signin.amazonaws.com",
+        "eventName": "ConsoleLogin",
+        "awsRegion": "us-east-1",
+        "sourceIPAddress": "203.0.113.45",
+        "errorCode": "FailedAuthentication",
+        "requestParameters": {}
+      },
+      {
+        "eventID": "evt-cti-003",
+        "eventTime": "2026-04-07T10:03:05Z",
+        "actor": "USER_A",
+        "eventSource": "signin.amazonaws.com",
+        "eventName": "ConsoleLogin",
+        "awsRegion": "us-east-1",
+        "sourceIPAddress": "203.0.113.45",
+        "errorCode": "FailedAuthentication",
+        "requestParameters": {}
+      }
+    ],
+    "attack_mappings": [
+      {
+        "id": "T1110.003",
+        "name": "Brute Force: Password Spraying",
+        "tactic": "Credential Access",
+        "reference": "https://attack.mitre.org/techniques/T1110/003/"
+      },
+      {
+        "id": "T1078.004",
+        "name": "Valid Accounts: Cloud Accounts",
+        "tactic": "Initial Access / Persistence / Privilege Escalation / Defense Evasion",
+        "reference": "https://attack.mitre.org/techniques/T1078/004/"
+      }
+    ],
+    "bounded_correlation_reason": "3 failed ConsoleLogin events for USER_A fell inside a 5 minute window.",
+    "review_scope": "Synthetic signal for reviewer inspection only; it is not a production detection claim and does not assert a final incident verdict."
+  },
+  {
+    "signal_id": "CTI-002",
+    "rule_id": "new_access_key_creation_after_failed_logins",
+    "rule_name": "new access key creation after failed logins",
+    "severity": "high",
+    "signal_time": "2026-04-07T10:05:00Z",
+    "actor": "USER_A",
+    "primary_event_id": "evt-cti-005",
+    "source_ips": [
+      "203.0.113.45"
+    ],
+    "evidence_event_ids": [
+      "evt-cti-001",
+      "evt-cti-002",
+      "evt-cti-003",
+      "evt-cti-005"
+    ],
+    "evidence_events": [
+      {
+        "eventID": "evt-cti-001",
+        "eventTime": "2026-04-07T10:00:00Z",
+        "actor": "USER_A",
+        "eventSource": "signin.amazonaws.com",
+        "eventName": "ConsoleLogin",
+        "awsRegion": "us-east-1",
+        "sourceIPAddress": "203.0.113.45",
+        "errorCode": "FailedAuthentication",
+        "requestParameters": {}
+      },
+      {
+        "eventID": "evt-cti-002",
+        "eventTime": "2026-04-07T10:01:20Z",
+        "actor": "USER_A",
+        "eventSource": "signin.amazonaws.com",
+        "eventName": "ConsoleLogin",
+        "awsRegion": "us-east-1",
+        "sourceIPAddress": "203.0.113.45",
+        "errorCode": "FailedAuthentication",
+        "requestParameters": {}
+      },
+      {
+        "eventID": "evt-cti-003",
+        "eventTime": "2026-04-07T10:03:05Z",
+        "actor": "USER_A",
+        "eventSource": "signin.amazonaws.com",
+        "eventName": "ConsoleLogin",
+        "awsRegion": "us-east-1",
+        "sourceIPAddress": "203.0.113.45",
+        "errorCode": "FailedAuthentication",
+        "requestParameters": {}
+      },
+      {
+        "eventID": "evt-cti-005",
+        "eventTime": "2026-04-07T10:05:00Z",
+        "actor": "USER_A",
+        "eventSource": "iam.amazonaws.com",
+        "eventName": "CreateAccessKey",
+        "awsRegion": "us-east-1",
+        "sourceIPAddress": "203.0.113.45",
+        "errorCode": null,
+        "requestParameters": {
+          "userName": "USER_A"
+        }
+      }
+    ],
+    "attack_mappings": [
+      {
+        "id": "T1098.001",
+        "name": "Account Manipulation: Additional Cloud Credentials",
+        "tactic": "Persistence / Privilege Escalation",
+        "reference": "https://attack.mitre.org/techniques/T1098/001/"
+      },
+      {
+        "id": "T1078.004",
+        "name": "Valid Accounts: Cloud Accounts",
+        "tactic": "Initial Access / Persistence / Privilege Escalation / Defense Evasion",
+        "reference": "https://attack.mitre.org/techniques/T1078/004/"
+      }
+    ],
+    "bounded_correlation_reason": "CreateAccessKey for USER_A occurred after 3 failed console login event(s) inside 15 minutes.",
+    "review_scope": "Synthetic signal for reviewer inspection only; it is not a production detection claim and does not assert a final incident verdict."
+  },
+  {
+    "signal_id": "CTI-003",
+    "rule_id": "policy_attachment_after_unusual_source_ip",
+    "rule_name": "policy attachment after unusual source IP",
+    "severity": "high",
+    "signal_time": "2026-04-07T10:08:00Z",
+    "actor": "USER_A",
+    "primary_event_id": "evt-cti-006",
+    "source_ips": [
+      "203.0.113.45"
+    ],
+    "evidence_event_ids": [
+      "evt-cti-006"
+    ],
+    "evidence_events": [
+      {
+        "eventID": "evt-cti-006",
+        "eventTime": "2026-04-07T10:08:00Z",
+        "actor": "USER_A",
+        "eventSource": "iam.amazonaws.com",
+        "eventName": "AttachUserPolicy",
+        "awsRegion": "us-east-1",
+        "sourceIPAddress": "203.0.113.45",
+        "errorCode": null,
+        "requestParameters": {
+          "userName": "USER_A",
+          "policyArn": "arn:aws:iam::aws:policy/PowerUserAccess"
+        }
+      }
+    ],
+    "attack_mappings": [
+      {
+        "id": "T1078.004",
+        "name": "Valid Accounts: Cloud Accounts",
+        "tactic": "Initial Access / Persistence / Privilege Escalation / Defense Evasion",
+        "reference": "https://attack.mitre.org/techniques/T1078/004/"
+      }
+    ],
+    "bounded_correlation_reason": "AttachUserPolicy came from 203.0.113.45, which is not in the demo's expected source IP list.",
+    "review_scope": "Synthetic signal for reviewer inspection only; it is not a production detection claim and does not assert a final incident verdict."
+  },
+  {
+    "signal_id": "CTI-004",
+    "rule_id": "cloudtrail_logging_disabled_near_iam_change",
+    "rule_name": "CloudTrail logging disabled near IAM change",
+    "severity": "critical",
+    "signal_time": "2026-04-07T10:10:00Z",
+    "actor": "USER_A",
+    "primary_event_id": "evt-cti-007",
+    "source_ips": [
+      "203.0.113.45"
+    ],
+    "evidence_event_ids": [
+      "evt-cti-005",
+      "evt-cti-006",
+      "evt-cti-007"
+    ],
+    "evidence_events": [
+      {
+        "eventID": "evt-cti-005",
+        "eventTime": "2026-04-07T10:05:00Z",
+        "actor": "USER_A",
+        "eventSource": "iam.amazonaws.com",
+        "eventName": "CreateAccessKey",
+        "awsRegion": "us-east-1",
+        "sourceIPAddress": "203.0.113.45",
+        "errorCode": null,
+        "requestParameters": {
+          "userName": "USER_A"
+        }
+      },
+      {
+        "eventID": "evt-cti-006",
+        "eventTime": "2026-04-07T10:08:00Z",
+        "actor": "USER_A",
+        "eventSource": "iam.amazonaws.com",
+        "eventName": "AttachUserPolicy",
+        "awsRegion": "us-east-1",
+        "sourceIPAddress": "203.0.113.45",
+        "errorCode": null,
+        "requestParameters": {
+          "userName": "USER_A",
+          "policyArn": "arn:aws:iam::aws:policy/PowerUserAccess"
+        }
+      },
+      {
+        "eventID": "evt-cti-007",
+        "eventTime": "2026-04-07T10:10:00Z",
+        "actor": "USER_A",
+        "eventSource": "cloudtrail.amazonaws.com",
+        "eventName": "StopLogging",
+        "awsRegion": "us-east-1",
+        "sourceIPAddress": "203.0.113.45",
+        "errorCode": null,
+        "requestParameters": {
+          "name": "ORG_TRAIL_SYNTHETIC"
+        }
+      }
+    ],
+    "attack_mappings": [
+      {
+        "id": "T1685.002",
+        "name": "Disable or Modify Cloud Log",
+        "tactic": "Defense Evasion",
+        "reference": "https://attack.mitre.org/techniques/T1685/002/"
+      },
+      {
+        "id": "T1078.004",
+        "name": "Valid Accounts: Cloud Accounts",
+        "tactic": "Initial Access / Persistence / Privilege Escalation / Defense Evasion",
+        "reference": "https://attack.mitre.org/techniques/T1078/004/"
+      }
+    ],
+    "bounded_correlation_reason": "StopLogging occurred within 10 minutes of 2 IAM change event(s).",
+    "review_scope": "Synthetic signal for reviewer inspection only; it is not a production detection claim and does not assert a final incident verdict."
+  },
+  {
+    "signal_id": "CTI-005",
+    "rule_id": "security_group_ingress_opened_after_identity_change",
+    "rule_name": "security group ingress opened after identity change",
+    "severity": "high",
+    "signal_time": "2026-04-07T10:13:00Z",
+    "actor": "USER_A",
+    "primary_event_id": "evt-cti-008",
+    "source_ips": [
+      "203.0.113.45"
+    ],
+    "evidence_event_ids": [
+      "evt-cti-005",
+      "evt-cti-006",
+      "evt-cti-008"
+    ],
+    "evidence_events": [
+      {
+        "eventID": "evt-cti-005",
+        "eventTime": "2026-04-07T10:05:00Z",
+        "actor": "USER_A",
+        "eventSource": "iam.amazonaws.com",
+        "eventName": "CreateAccessKey",
+        "awsRegion": "us-east-1",
+        "sourceIPAddress": "203.0.113.45",
+        "errorCode": null,
+        "requestParameters": {
+          "userName": "USER_A"
+        }
+      },
+      {
+        "eventID": "evt-cti-006",
+        "eventTime": "2026-04-07T10:08:00Z",
+        "actor": "USER_A",
+        "eventSource": "iam.amazonaws.com",
+        "eventName": "AttachUserPolicy",
+        "awsRegion": "us-east-1",
+        "sourceIPAddress": "203.0.113.45",
+        "errorCode": null,
+        "requestParameters": {
+          "userName": "USER_A",
+          "policyArn": "arn:aws:iam::aws:policy/PowerUserAccess"
+        }
+      },
+      {
+        "eventID": "evt-cti-008",
+        "eventTime": "2026-04-07T10:13:00Z",
+        "actor": "USER_A",
+        "eventSource": "ec2.amazonaws.com",
+        "eventName": "AuthorizeSecurityGroupIngress",
+        "awsRegion": "us-east-1",
+        "sourceIPAddress": "203.0.113.45",
+        "errorCode": null,
+        "requestParameters": {
+          "groupId": "sg-synthetic001",
+          "ipPermissions": [
+            {
+              "ipProtocol": "tcp",
+              "fromPort": 22,
+              "toPort": 22,
+              "ipRanges": [
+                {
+                  "cidrIp": "0.0.0.0/0",
+                  "description": "synthetic open ingress"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ],
+    "attack_mappings": [
+      {
+        "id": "T1578",
+        "name": "Modify Cloud Compute Infrastructure",
+        "tactic": "Defense Evasion",
+        "reference": "https://attack.mitre.org/techniques/T1578/"
+      },
+      {
+        "id": "T1078.004",
+        "name": "Valid Accounts: Cloud Accounts",
+        "tactic": "Initial Access / Persistence / Privilege Escalation / Defense Evasion",
+        "reference": "https://attack.mitre.org/techniques/T1078/004/"
+      }
+    ],
+    "bounded_correlation_reason": "AuthorizeSecurityGroupIngress opened a world-routable range after 2 IAM change event(s) inside 15 minutes.",
+    "review_scope": "Synthetic signal for reviewer inspection only; it is not a production detection claim and does not assert a final incident verdict."
+  }
+]

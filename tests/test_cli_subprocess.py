@@ -109,3 +109,32 @@ def test_plot_command_runs_as_module(tmp_path) -> None:
     assert (output_dir / "event_count_timeline.png").is_file()
     assert (output_dir / "error_rate_timeline.png").is_file()
     assert (output_dir / "alerts_timeline.png").is_file()
+
+
+def test_cloud_iam_demo_command_runs_as_module() -> None:
+    repo_root = Path(__file__).resolve().parents[1]
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "telemetry_window_demo.cli",
+            "run-cloud-iam-change-demo",
+        ],
+        cwd=repo_root,
+        env=_cli_env(repo_root),
+        text=True,
+        capture_output=True,
+        timeout=30,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert "[OK] Loaded 14 CloudTrail-like events" in result.stdout
+    assert "[OK] Built 5 investigation signals" in result.stdout
+    assert (
+        repo_root
+        / "demos"
+        / "cloud-iam-change-investigation-demo"
+        / "artifacts"
+        / "investigation_report.md"
+    ).is_file()

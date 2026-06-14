@@ -1,0 +1,69 @@
+input_path: data/raw/synthetic_cloudtrail_like_events.jsonl
+artifacts_dir: artifacts
+expected_source_ips:
+  - 198.51.100.10
+  - 198.51.100.11
+attack_mappings:
+  T1078.004:
+    name: "Valid Accounts: Cloud Accounts"
+    tactic: "Initial Access / Persistence / Privilege Escalation / Defense Evasion"
+    reference: "https://attack.mitre.org/techniques/T1078/004/"
+  T1110.003:
+    name: "Brute Force: Password Spraying"
+    tactic: "Credential Access"
+    reference: "https://attack.mitre.org/techniques/T1110/003/"
+  T1098.001:
+    name: "Account Manipulation: Additional Cloud Credentials"
+    tactic: "Persistence / Privilege Escalation"
+    reference: "https://attack.mitre.org/techniques/T1098/001/"
+  T1685.002:
+    name: "Disable or Modify Cloud Log"
+    tactic: "Defense Evasion"
+    reference: "https://attack.mitre.org/techniques/T1685/002/"
+  T1578:
+    name: "Modify Cloud Compute Infrastructure"
+    tactic: "Defense Evasion"
+    reference: "https://attack.mitre.org/techniques/T1578/"
+rules:
+  failed_console_login_burst:
+    name: "failed console login burst"
+    severity: medium
+    threshold: 3
+    window_minutes: 5
+    attack_mapping_ids:
+      - T1110.003
+      - T1078.004
+  new_access_key_creation_after_failed_logins:
+    name: "new access key creation after failed logins"
+    severity: high
+    lookback_minutes: 15
+    attack_mapping_ids:
+      - T1098.001
+      - T1078.004
+  policy_attachment_after_unusual_source_ip:
+    name: "policy attachment after unusual source IP"
+    severity: high
+    attack_mapping_ids:
+      - T1078.004
+  cloudtrail_logging_disabled_near_iam_change:
+    name: "CloudTrail logging disabled near IAM change"
+    severity: critical
+    near_window_minutes: 10
+    identity_change_event_names:
+      - CreateAccessKey
+      - AttachUserPolicy
+      - AttachRolePolicy
+    attack_mapping_ids:
+      - T1685.002
+      - T1078.004
+  security_group_ingress_opened_after_identity_change:
+    name: "security group ingress opened after identity change"
+    severity: high
+    follow_on_window_minutes: 15
+    identity_change_event_names:
+      - CreateAccessKey
+      - AttachUserPolicy
+      - AttachRolePolicy
+    attack_mapping_ids:
+      - T1578
+      - T1078.004

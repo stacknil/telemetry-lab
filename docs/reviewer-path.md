@@ -12,6 +12,7 @@ The repo is intentionally local and file-based so reviewers can verify each work
 | How is AI constrained? | `ai-assisted-detection-demo` | `demos/ai-assisted-detection-demo/artifacts/case_summaries.json`, `demos/ai-assisted-detection-demo/artifacts/audit_traces.jsonl`, guardrails in `demos/ai-assisted-detection-demo/README.md` |
 | How are duplicate alerts reduced? | `rule-evaluation-and-dedup-demo` | `demos/rule-evaluation-and-dedup-demo/artifacts/rule_hits_before_dedup.json`, `demos/rule-evaluation-and-dedup-demo/artifacts/rule_hits_after_dedup.json`, `demos/rule-evaluation-and-dedup-demo/artifacts/dedup_explanations.json` |
 | How are risky config changes investigated? | `config-change-investigation-demo` | `demos/config-change-investigation-demo/artifacts/investigation_hits.json`, `demos/config-change-investigation-demo/artifacts/investigation_report.md` |
+| How are IAM changes investigated from CloudTrail-like events? | `cloud-iam-change-investigation-demo` | `demos/cloud-iam-change-investigation-demo/artifacts/investigation_signals.json`, `demos/cloud-iam-change-investigation-demo/artifacts/investigation_report.md` |
 
 ## Fast verification commands
 
@@ -25,6 +26,7 @@ python -m telemetry_window_demo.cli run --config configs/default.yaml
 python -m telemetry_window_demo.cli run-ai-demo
 python -m telemetry_window_demo.cli run-rule-dedup-demo
 python -m telemetry_window_demo.cli run-config-change-demo
+python -m telemetry_window_demo.cli run-cloud-iam-change-demo
 pytest
 ```
 

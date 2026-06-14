@@ -283,7 +283,12 @@ def test_main_reports_file_plot_output_dir_without_traceback(tmp_path, capsys) -
 
 @pytest.mark.parametrize(
     "command",
-    ["run-ai-demo", "run-rule-dedup-demo", "run-config-change-demo"],
+    [
+        "run-ai-demo",
+        "run-rule-dedup-demo",
+        "run-config-change-demo",
+        "run-cloud-iam-change-demo",
+    ],
 )
 def test_main_reports_file_demo_root_without_traceback(command, tmp_path, capsys) -> None:
     demo_root = tmp_path / "demo-root"

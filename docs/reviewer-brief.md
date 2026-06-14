@@ -6,12 +6,13 @@ Telemetry and detection projects often look impressive in screenshots but are ha
 
 ## What it does
 
-`telemetry-lab` is a local, file-based portfolio repo with four demos:
+`telemetry-lab` is a local, file-based portfolio repo with five demos:
 
 - `telemetry-window-demo` for sliding-window features and rule-based alerts
 - `ai-assisted-detection-demo` for deterministic case grouping plus bounded JSON-only LLM drafting
 - `rule-evaluation-and-dedup-demo` for cooldown and suppression reasoning
 - `config-change-investigation-demo` for risky-change evidence correlation
+- `cloud-iam-change-investigation-demo` for synthetic CloudTrail-like IAM change investigation signals
 
 ## Reviewer Evidence
 
@@ -28,6 +29,7 @@ python -m pip install -e ".[dev]"
 python -m telemetry_window_demo.cli run --config configs/default.yaml
 python -m telemetry_window_demo.cli run-rule-dedup-demo
 python -m telemetry_window_demo.cli run-config-change-demo
+python -m telemetry_window_demo.cli run-cloud-iam-change-demo
 python -m telemetry_window_demo.cli run-ai-demo
 ```
 
@@ -46,7 +48,7 @@ The current committed default sample reports:
 - `24` windows
 - `12` alerts after a `60` second cooldown
 
-The other demos emit reviewer-facing artifacts such as `dedup_report.md`, `investigation_report.md`, and `case_report.md`.
+The other demos emit reviewer-facing artifacts such as `dedup_report.md`, `investigation_report.md`, `investigation_signals.json`, and `case_report.md`.
 
 ## What this proves
 

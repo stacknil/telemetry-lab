@@ -14,6 +14,7 @@ Start with the stable demo matrix in [`docs/reviewer-path.md`](reviewer-path.md)
 | How is AI constrained? | `ai-assisted-detection-demo` | `demos/ai-assisted-detection-demo/artifacts/case_summaries.json`, `demos/ai-assisted-detection-demo/artifacts/audit_traces.jsonl`, guardrails in `demos/ai-assisted-detection-demo/README.md` |
 | How are duplicate alerts reduced? | `rule-evaluation-and-dedup-demo` | `demos/rule-evaluation-and-dedup-demo/artifacts/rule_hits_before_dedup.json`, `demos/rule-evaluation-and-dedup-demo/artifacts/rule_hits_after_dedup.json`, `demos/rule-evaluation-and-dedup-demo/artifacts/dedup_explanations.json` |
 | How are risky config changes investigated? | `config-change-investigation-demo` | `demos/config-change-investigation-demo/artifacts/investigation_hits.json`, `demos/config-change-investigation-demo/artifacts/investigation_report.md` |
+| How are IAM changes investigated from CloudTrail-like events? | `cloud-iam-change-investigation-demo` | `demos/cloud-iam-change-investigation-demo/artifacts/investigation_signals.json`, `demos/cloud-iam-change-investigation-demo/artifacts/investigation_report.md` |
 
 ## Architecture
 
@@ -45,12 +46,13 @@ The current artifact names are reviewer-facing contracts for the v0.7 / v1.0 con
 | AI-assisted detection demo | `demos/ai-assisted-detection-demo/artifacts/rule_hits.json`, `demos/ai-assisted-detection-demo/artifacts/case_bundles.json`, `demos/ai-assisted-detection-demo/artifacts/case_summaries.json`, `demos/ai-assisted-detection-demo/artifacts/case_report.md`, `demos/ai-assisted-detection-demo/artifacts/audit_traces.jsonl` |
 | Rule dedup demo | `demos/rule-evaluation-and-dedup-demo/artifacts/rule_hits_before_dedup.json`, `demos/rule-evaluation-and-dedup-demo/artifacts/rule_hits_after_dedup.json`, `demos/rule-evaluation-and-dedup-demo/artifacts/dedup_explanations.json`, `demos/rule-evaluation-and-dedup-demo/artifacts/dedup_report.md` |
 | Config-change investigation demo | `demos/config-change-investigation-demo/artifacts/change_events_normalized.json`, `demos/config-change-investigation-demo/artifacts/investigation_hits.json`, `demos/config-change-investigation-demo/artifacts/investigation_summary.json`, `demos/config-change-investigation-demo/artifacts/investigation_report.md` |
+| Cloud IAM change investigation demo | `demos/cloud-iam-change-investigation-demo/artifacts/normalized_cloudtrail_events.json`, `demos/cloud-iam-change-investigation-demo/artifacts/investigation_signals.json`, `demos/cloud-iam-change-investigation-demo/artifacts/investigation_summary.json`, `demos/cloud-iam-change-investigation-demo/artifacts/investigation_report.md` |
 
 ## v1 Readiness Gate
 
 Before treating the repo as v1-style consolidated:
 
-- Keep the four-demo matrix stable, or document any intentional retirement in the README, reviewer path, reviewer pack, roadmap, and tests.
+- Keep the five-demo matrix stable, or document any intentional retirement in the README, reviewer path, reviewer pack, roadmap, and tests.
 - Keep reviewer-visible artifact names stable, or update the artifact naming contract and committed sample outputs in the same change.
 - Keep `docs/reviewer-path.md`, this reviewer pack, `docs/architecture.md`, and demo READMEs aligned with actual CLI behavior.
 - Keep README, package metadata, and repository metadata aligned with the local, file-based detection workflow lab framing.
@@ -68,6 +70,7 @@ python -m telemetry_window_demo.cli run --config configs/default.yaml
 python -m telemetry_window_demo.cli run-ai-demo
 python -m telemetry_window_demo.cli run-rule-dedup-demo
 python -m telemetry_window_demo.cli run-config-change-demo
+python -m telemetry_window_demo.cli run-cloud-iam-change-demo
 pytest
 ```
 

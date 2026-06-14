@@ -19,6 +19,7 @@ Latest milestone: [v0.6.0 — fourth demo and config-change investigation](https
 - [ai-assisted-detection-demo](demos/ai-assisted-detection-demo/README.md)
 - [rule-evaluation-and-dedup-demo](demos/rule-evaluation-and-dedup-demo/README.md)
 - [config-change-investigation-demo](demos/config-change-investigation-demo/README.md)
+- [cloud-iam-change-investigation-demo](demos/cloud-iam-change-investigation-demo/README.md)
 
 | Demo | Input | Deterministic core | LLM role | Main artifacts | Guardrails / non-goals |
 | --- | --- | --- | --- | --- | --- |
@@ -26,10 +27,11 @@ Latest milestone: [v0.6.0 — fourth demo and config-change investigation](https
 | [ai-assisted-detection-demo](demos/ai-assisted-detection-demo/README.md) | JSONL auth / web / process | Normalize<br>Rules<br>Grouping<br>ATT&CK mapping | JSON-only case drafting | `rule_hits.json`<br>`case_bundles.json`<br>`case_summaries.json`<br>`case_report.md`<br>`audit_traces.jsonl` | Human verification required<br>No autonomous response<br>No final verdict |
 | [rule-evaluation-and-dedup-demo](demos/rule-evaluation-and-dedup-demo/README.md) | JSON raw rule hits | Scope resolution<br>Cooldown grouping<br>Suppression reasoning | None | `rule_hits_before_dedup.json`<br>`rule_hits_after_dedup.json`<br>`dedup_explanations.json`<br>`dedup_report.md` | No realtime<br>No dashboard<br>No AI stage |
 | [config-change-investigation-demo](demos/config-change-investigation-demo/README.md) | JSONL config changes<br>Policy denials<br>Follow-on events | Normalize<br>Risky-change rules<br>Bounded correlation | None | `change_events_normalized.json`<br>`investigation_hits.json`<br>`investigation_summary.json`<br>`investigation_report.md` | No realtime<br>No dashboard<br>No AI stage |
+| [cloud-iam-change-investigation-demo](demos/cloud-iam-change-investigation-demo/README.md) | Synthetic CloudTrail-like JSONL | Validate<br>IAM rules<br>Bounded correlation<br>ATT&CK mapping | None | `normalized_cloudtrail_events.json`<br>`investigation_signals.json`<br>`investigation_summary.json`<br>`investigation_report.md` | Synthetic only<br>No live AWS<br>No final verdict |
 
 ## What This Repo Is
 
-`telemetry-lab` is a small portfolio repository for constrained detection workflows. It is not a SIEM, dashboard, or monitoring platform; it is organized as four local, file-based demos that are reproducible from committed sample data and intentionally scoped for public review rather than production use.
+`telemetry-lab` is a small portfolio repository for constrained detection workflows. It is not a SIEM, dashboard, or monitoring platform; it is organized as five local, file-based demos that are reproducible from committed sample data and intentionally scoped for public review rather than production use.
 
 ### telemetry-window-demo
 
@@ -47,6 +49,10 @@ Latest milestone: [v0.6.0 — fourth demo and config-change investigation](https
 
 `config-change-investigation-demo` follows risky configuration changes into bounded follow-on evidence such as policy denials and service signals. It stays deterministic, file-based, and review-oriented, with no added AI stage.
 
+### cloud-iam-change-investigation-demo
+
+`cloud-iam-change-investigation-demo` uses synthetic CloudTrail-like events to review IAM changes, failed console logins, CloudTrail logging changes, and security group ingress changes with bounded deterministic rules. It has no live AWS account, no real account ID, no production detection claim, and no final incident verdict.
+
 ## Quick Run
 
 ```bash
@@ -62,6 +68,7 @@ Other demo entrypoints:
 - `python -m telemetry_window_demo.cli run-ai-demo`
 - `python -m telemetry_window_demo.cli run-rule-dedup-demo`
 - `python -m telemetry_window_demo.cli run-config-change-demo`
+- `python -m telemetry_window_demo.cli run-cloud-iam-change-demo`
 
 Useful inspection commands:
 
@@ -99,7 +106,8 @@ For a quick coherence pass across the demos:
 1. Run `python -m telemetry_window_demo.cli run --config configs/default.yaml` and confirm `data/processed/summary.json` reports `41` events, `24` windows, and `12` alerts.
 2. Run `python -m telemetry_window_demo.cli run-rule-dedup-demo` and confirm `demos/rule-evaluation-and-dedup-demo/artifacts/dedup_report.md` shows `10` raw hits reduced to `6` retained alerts with `4` suppressions.
 3. Run `python -m telemetry_window_demo.cli run-config-change-demo` and confirm `demos/config-change-investigation-demo/artifacts/investigation_report.md` shows `4` normalized changes, `3` risky changes, and `3` investigations.
-4. Run `python -m telemetry_window_demo.cli run-ai-demo` and confirm `demos/ai-assisted-detection-demo/artifacts/case_report.md` shows `3` deterministic cases with human verification and no final incident verdict.
+4. Run `python -m telemetry_window_demo.cli run-cloud-iam-change-demo` and confirm `demos/cloud-iam-change-investigation-demo/artifacts/investigation_report.md` shows `14` CloudTrail-like events and `5` investigation signals.
+5. Run `python -m telemetry_window_demo.cli run-ai-demo` and confirm `demos/ai-assisted-detection-demo/artifacts/case_report.md` shows `3` deterministic cases with human verification and no final incident verdict.
 
 ## Demo Variants
 
@@ -150,6 +158,7 @@ Cooldown behavior:
 
 - [`demos/rule-evaluation-and-dedup-demo/README.md`](demos/rule-evaluation-and-dedup-demo/README.md) explains the third demo and links its committed before/after dedup artifacts
 - [`demos/config-change-investigation-demo/README.md`](demos/config-change-investigation-demo/README.md) explains the config-change investigation demo and its committed artifacts
+- [`demos/cloud-iam-change-investigation-demo/README.md`](demos/cloud-iam-change-investigation-demo/README.md) explains the synthetic CloudTrail-like IAM investigation demo and its committed artifacts
 - [`docs/README.md`](docs/README.md) indexes current reviewer docs, supporting design notes, and historical release evidence
 - [`docs/reviewer-pack.md`](docs/reviewer-pack.md) is the top-level no-guessing reviewer pack and artifact naming contract
 - [`docs/reviewer-brief.md`](docs/reviewer-brief.md) gives the short problem, value, evidence, and boundary summary
@@ -164,11 +173,11 @@ Cooldown behavior:
 
 ## v0.7 / v1.0 Direction
 
-- stabilize the four-demo matrix and avoid broad platform expansion
+- stabilize the five-demo matrix and avoid broad platform expansion
 - freeze reviewer-visible artifact names unless a rename is intentionally coordinated across docs, tests, and sample outputs
 - use [`docs/reviewer-pack.md`](docs/reviewer-pack.md) and [`docs/architecture.md`](docs/architecture.md) as the consolidation entrypoints
 - use the [`v1 readiness gate`](docs/reviewer-pack.md#v1-readiness-gate) before treating the repo as consolidated
-- add at most one more demo before v1-style consolidation
+- avoid additional demo expansion before v1-style consolidation
 
 ## Scope
 

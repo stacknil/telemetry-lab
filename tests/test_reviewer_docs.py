@@ -42,6 +42,14 @@ REVIEWER_DEMO_MATRIX = [
             "demos/config-change-investigation-demo/artifacts/investigation_report.md",
         ],
     ),
+    (
+        "How are IAM changes investigated from CloudTrail-like events?",
+        "cloud-iam-change-investigation-demo",
+        [
+            "demos/cloud-iam-change-investigation-demo/artifacts/investigation_signals.json",
+            "demos/cloud-iam-change-investigation-demo/artifacts/investigation_report.md",
+        ],
+    ),
 ]
 
 STABLE_REVIEWER_ARTIFACTS = [
@@ -70,6 +78,10 @@ STABLE_REVIEWER_ARTIFACTS = [
     "demos/config-change-investigation-demo/artifacts/investigation_hits.json",
     "demos/config-change-investigation-demo/artifacts/investigation_summary.json",
     "demos/config-change-investigation-demo/artifacts/investigation_report.md",
+    "demos/cloud-iam-change-investigation-demo/artifacts/normalized_cloudtrail_events.json",
+    "demos/cloud-iam-change-investigation-demo/artifacts/investigation_signals.json",
+    "demos/cloud-iam-change-investigation-demo/artifacts/investigation_summary.json",
+    "demos/cloud-iam-change-investigation-demo/artifacts/investigation_report.md",
 ]
 
 
@@ -197,7 +209,7 @@ def test_reviewer_pack_defines_v1_readiness_gate() -> None:
     readme = _read_repo_file("README.md")
 
     assert "## v1 Readiness Gate" in reviewer_pack
-    assert "four-demo matrix stable" in reviewer_pack
+    assert "five-demo matrix stable" in reviewer_pack
     assert "reviewer-visible artifact names stable" in reviewer_pack
     assert "package metadata, and repository metadata" in reviewer_pack
     assert "Regenerate and inspect committed artifacts" in reviewer_pack
