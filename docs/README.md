@@ -13,6 +13,7 @@ This directory separates the current reviewer route from supporting design notes
 ## Supporting docs
 
 - [`sample-output.md`](sample-output.md): committed output counts and sample artifacts
+- [`event-time-model.md`](event-time-model.md): event, observed, window, and artifact time semantics
 - [`design-notes.md`](design-notes.md): original telemetry-window design boundaries
 - [`ai-assisted-detection-design.md`](ai-assisted-detection-design.md): bounded AI-assisted detection design
 - [`ai-assisted-detection-examples.md`](ai-assisted-detection-examples.md): example AI-assisted detection outputs and guardrail behavior
