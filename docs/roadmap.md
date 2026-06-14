@@ -1,6 +1,8 @@
 # Roadmap
 
-`telemetry-lab` is moving from demo expansion toward v0.7 / v1.0 consolidation.
+Demo expansion is closed.
+
+Next phase: v1 reviewer contract stabilization.
 
 The repo now has five reviewer-verifiable demos and a clear [`docs/reviewer-path.md`](reviewer-path.md). The priority is to keep the demo matrix stable, preserve artifact names, and make review faster without implying a SIEM, dashboard, or production monitoring platform.
 
@@ -13,7 +15,7 @@ Recently added:
 - [`docs/reviewer-pack.md`](reviewer-pack.md) collects the top-level reviewer flow and artifact naming contract.
 - [`docs/architecture.md`](architecture.md) describes the local file-based workflow shape.
 
-## v0.7 / v1.0 Consolidation
+## v1 Reviewer Contract Stabilization
 
 1. Stabilize the demo matrix.
 2. Freeze reviewer-visible artifact names unless a rename is intentional and documented across README, reviewer docs, demo docs, tests, and sample outputs.
@@ -23,11 +25,11 @@ Recently added:
 
 The consolidation gate lives in [`docs/reviewer-pack.md`](reviewer-pack.md#v1-readiness-gate).
 
-## Final Demo Slot
+## Demo Expansion Closed
 
-The optional final demo slot is now used by `cloud-iam-change-investigation-demo`.
+The optional final demo slot has been used by `cloud-iam-change-investigation-demo`.
 
-Further work before v1-style consolidation should focus on stability, documentation accuracy, tests, and committed artifact reproducibility rather than adding more workflow surface area.
+Further work before v1 should focus on reviewer contract stability, documentation accuracy, tests, and committed artifact reproducibility rather than adding more workflow surface area.
 
 ## Non-Directions
 
