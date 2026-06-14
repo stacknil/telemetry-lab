@@ -1,0 +1,21 @@
+{
+  "schema_version": "cloud-iam-change-investigation-demo/v1",
+  "source_type": "synthetic CloudTrail-like JSONL",
+  "event_count": 14,
+  "signal_count": 5,
+  "rule_counts": {
+    "cloudtrail_logging_disabled_near_iam_change": 1,
+    "failed_console_login_burst": 1,
+    "new_access_key_creation_after_failed_logins": 1,
+    "policy_attachment_after_unusual_source_ip": 1,
+    "security_group_ingress_opened_after_identity_change": 1
+  },
+  "attack_mapping_count": 5,
+  "boundaries": [
+    "Synthetic CloudTrail-like events only",
+    "No live AWS account",
+    "No real account ID",
+    "No production detection claim",
+    "No final incident verdict"
+  ]
+}
