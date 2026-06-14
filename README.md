@@ -155,6 +155,7 @@ Cooldown behavior:
 - [`docs/reviewer-brief.md`](docs/reviewer-brief.md) gives the short problem, value, evidence, and boundary summary
 - [`docs/reviewer-path.md`](docs/reviewer-path.md) maps common review questions to the right demo and artifacts
 - [`docs/architecture.md`](docs/architecture.md) diagrams the local file-based detection workflow
+- [`docs/event-time-model.md`](docs/event-time-model.md) defines event, observed, window, and artifact time semantics
 - [`docs/sample-output.md`](docs/sample-output.md) summarizes the committed sample artifacts
 - [`docs/roadmap.md`](docs/roadmap.md) sketches the v0.7 / v1.0 consolidation direction
 - [`data/processed/summary.json`](data/processed/summary.json) captures the default run in machine-readable form
