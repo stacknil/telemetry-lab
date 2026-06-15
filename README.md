@@ -4,7 +4,9 @@
 
 A local, file-based detection workflow lab for reviewer-verifiable telemetry and detection demos.
 
-Latest milestone: [v0.6.0 — fourth demo and config-change investigation](https://github.com/stacknil/telemetry-lab/releases/latest).
+Current focus: v1 reviewer contract stabilization for the five-demo matrix.
+
+Latest tagged release: [v0.6.0 — fourth demo and config-change investigation](https://github.com/stacknil/telemetry-lab/releases/latest).
 
 ## Reviewer Start
 

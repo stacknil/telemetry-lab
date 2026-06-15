@@ -15,6 +15,7 @@ from telemetry_window_demo.cloud_iam_change_investigation_demo import (
 from telemetry_window_demo.cloud_iam_change_investigation_demo.pipeline import (
     CLOUDTRAIL_REQUIRED_FIELDS,
     evaluate_cloud_iam_signals,
+    format_timestamp,
     load_jsonl,
     load_yaml,
     normalize_cloudtrail_events,
@@ -65,6 +66,28 @@ def test_normalize_cloudtrail_events_is_sorted_and_derives_actor() -> None:
     assert normalized_events[0]["outcome"] == "failure"
     assert normalized_events[4]["eventName"] == "CreateAccessKey"
     assert normalized_events[4]["outcome"] == "success"
+
+
+def test_normalize_cloudtrail_events_uses_event_time_not_observed_time_for_ordering() -> None:
+    _, _, raw_events, _, _ = _demo_inputs()
+    event_a = {
+        **raw_events[0],
+        "eventID": "evt-time-a",
+        "eventTime": "2026-04-07T10:05:00Z",
+        "observedTime": "2026-04-07T10:00:00Z",
+    }
+    event_b = {
+        **raw_events[1],
+        "eventID": "evt-time-b",
+        "eventTime": "2026-04-07T10:01:00Z",
+        "observedTime": "2026-04-07T10:30:00Z",
+    }
+
+    normalized = normalize_cloudtrail_events([event_a, event_b])
+
+    assert [event["eventID"] for event in normalized] == ["evt-time-b", "evt-time-a"]
+    assert format_timestamp(normalized[0]["event_time"]) == "2026-04-07T10:01:00Z"
+    assert format_timestamp(normalized[0]["observed_time"]) == "2026-04-07T10:30:00Z"
 
 
 def test_evaluate_cloud_iam_signals_flags_expected_rules() -> None:
@@ -172,6 +195,35 @@ def test_validate_demo_config_rejects_more_than_five_attack_mappings() -> None:
         validate_demo_config(config)
 
 
+@pytest.mark.parametrize(
+    ("mutator", "expected_error"),
+    [
+        (
+            lambda config: config.update({"unused": True}),
+            "Unknown config field",
+        ),
+        (
+            lambda config: config["rules"]["failed_console_login_burst"].update(
+                {"typo_threshold": 3}
+            ),
+            "rules.failed_console_login_burst",
+        ),
+        (
+            lambda config: config["attack_mappings"]["T1078.004"].update(
+                {"platform": "cloud"}
+            ),
+            "attack_mappings.T1078.004",
+        ),
+    ],
+)
+def test_validate_demo_config_rejects_unknown_fields(mutator, expected_error) -> None:
+    _, config, _, _, _ = _demo_inputs()
+    mutator(config)
+
+    with pytest.raises(ValueError, match=expected_error):
+        validate_demo_config(config)
+
+
 def test_normalize_cloudtrail_events_reports_missing_required_field() -> None:
     _, _, raw_events, _, _ = _demo_inputs()
     broken_event = dict(raw_events[0])
@@ -193,6 +245,13 @@ def test_run_demo_is_deterministic_and_matches_committed_artifacts(tmp_path) -> 
     assert first_result["rule_count"] == 5
     assert first_result["signal_count"] == 5
     assert second_result["signal_count"] == first_result["signal_count"]
+    generated_summary = _load_json_file(first_dir / "investigation_summary.json")
+    assert generated_summary["time_model"] == {
+        "event_time_source": "eventTime",
+        "observed_time_source": "observedTime when present",
+        "detection_ordering": "event_time",
+        "observed_time_event_count": 0,
+    }
 
     for name in (
         "normalized_cloudtrail_events.json",

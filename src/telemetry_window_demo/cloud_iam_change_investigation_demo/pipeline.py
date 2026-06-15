@@ -32,6 +32,45 @@ REQUIRED_RULE_IDS = (
     "security_group_ingress_opened_after_identity_change",
 )
 SEVERITY_ORDER = {"low": 1, "medium": 2, "high": 3, "critical": 4}
+CLOUD_IAM_CONFIG_FIELDS = frozenset(
+    (
+        "input_path",
+        "artifacts_dir",
+        "expected_source_ips",
+        "attack_mappings",
+        "rules",
+    )
+)
+CLOUD_IAM_ATTACK_MAPPING_FIELDS = frozenset(("id", "name", "tactic", "reference"))
+CLOUD_IAM_RULE_FIELDS = {
+    "failed_console_login_burst": frozenset(
+        ("name", "severity", "threshold", "window_minutes", "attack_mapping_ids")
+    ),
+    "new_access_key_creation_after_failed_logins": frozenset(
+        ("name", "severity", "lookback_minutes", "attack_mapping_ids")
+    ),
+    "policy_attachment_after_unusual_source_ip": frozenset(
+        ("name", "severity", "attack_mapping_ids")
+    ),
+    "cloudtrail_logging_disabled_near_iam_change": frozenset(
+        (
+            "name",
+            "severity",
+            "near_window_minutes",
+            "identity_change_event_names",
+            "attack_mapping_ids",
+        )
+    ),
+    "security_group_ingress_opened_after_identity_change": frozenset(
+        (
+            "name",
+            "severity",
+            "follow_on_window_minutes",
+            "identity_change_event_names",
+            "attack_mapping_ids",
+        )
+    ),
+}
 
 
 def default_demo_root() -> Path:
@@ -112,6 +151,8 @@ def load_jsonl(path: Path) -> list[dict[str, Any]]:
 
 
 def validate_demo_config(config: Mapping[str, Any]) -> dict[str, Any]:
+    reject_unknown_fields(config, CLOUD_IAM_CONFIG_FIELDS)
+
     input_path = require_non_empty_string(config.get("input_path"), "input_path")
     artifacts_dir = require_non_empty_string(
         config.get("artifacts_dir", "artifacts"),
@@ -135,6 +176,7 @@ def validate_demo_config(config: Mapping[str, Any]) -> dict[str, Any]:
     rules = config.get("rules")
     if not isinstance(rules, Mapping):
         raise ValueError("Config field 'rules' must be a mapping.")
+    reject_unknown_fields(rules, set(REQUIRED_RULE_IDS), parent="rules")
 
     validated_rules: dict[str, dict[str, Any]] = {}
     for rule_id in REQUIRED_RULE_IDS:
@@ -159,6 +201,11 @@ def validate_demo_config(config: Mapping[str, Any]) -> dict[str, Any]:
 def validate_attack_mapping(mapping_id: object, raw_mapping: object) -> dict[str, str]:
     if not isinstance(raw_mapping, Mapping):
         raise ValueError(f"ATT&CK mapping '{mapping_id}' must be a mapping.")
+    reject_unknown_fields(
+        raw_mapping,
+        CLOUD_IAM_ATTACK_MAPPING_FIELDS,
+        parent=f"attack_mappings.{mapping_id}",
+    )
     return {
         "id": require_non_empty_string(mapping_id, "attack_mappings.id"),
         "name": require_non_empty_string(raw_mapping.get("name"), f"attack_mappings.{mapping_id}.name"),
@@ -179,6 +226,11 @@ def validate_rule_config(
     *,
     known_mapping_ids: set[str],
 ) -> dict[str, Any]:
+    reject_unknown_fields(
+        raw_rule,
+        CLOUD_IAM_RULE_FIELDS[rule_id],
+        parent=f"rules.{rule_id}",
+    )
     name = require_non_empty_string(raw_rule.get("name"), f"rules.{rule_id}.name")
     severity = require_non_empty_string(raw_rule.get("severity"), f"rules.{rule_id}.severity")
     severity = severity.lower()
@@ -246,6 +298,10 @@ def normalize_cloudtrail_events(raw_events: Sequence[Mapping[str, Any]]) -> list
         event_time = parse_timestamp(
             require_non_empty_string(raw_event["eventTime"], f"event {index}.eventTime")
         )
+        observed_time = parse_optional_timestamp(
+            raw_event.get("observedTime"),
+            f"event {index}.observedTime",
+        )
         event_source = require_non_empty_string(
             raw_event["eventSource"],
             f"event {index}.eventSource",
@@ -256,6 +312,8 @@ def normalize_cloudtrail_events(raw_events: Sequence[Mapping[str, Any]]) -> list
         normalized.append(
             {
                 "eventID": event_id,
+                "event_time": event_time,
+                "observed_time": observed_time,
                 "eventTime": event_time,
                 "actor": actor,
                 "identityType": normalize_optional_text(user_identity.get("type")),
@@ -280,7 +338,7 @@ def normalize_cloudtrail_events(raw_events: Sequence[Mapping[str, Any]]) -> list
 
     return sorted(
         normalized,
-        key=lambda event: (format_timestamp(event["eventTime"]), event["eventID"]),
+        key=lambda event: (format_timestamp(event["event_time"]), event["eventID"]),
     )
 
 
@@ -355,14 +413,14 @@ def detect_failed_console_login_burst(
     for actor, actor_events in sorted(by_actor.items()):
         actor_events = sorted(
             actor_events,
-            key=lambda event: (format_timestamp(event["eventTime"]), str(event["eventID"])),
+            key=lambda event: (format_timestamp(event["event_time"]), str(event["eventID"])),
         )
         for index, event in enumerate(actor_events):
-            window_end = event["eventTime"] + window
+            window_end = event["event_time"] + window
             burst_events = [
                 candidate
                 for candidate in actor_events[index:]
-                if candidate["eventTime"] <= window_end
+                if candidate["event_time"] <= window_end
             ]
             if len(burst_events) < threshold:
                 continue
@@ -371,7 +429,7 @@ def detect_failed_console_login_burst(
                     rule_id="failed_console_login_burst",
                     rule=rule,
                     config=config,
-                    signal_time=burst_events[threshold - 1]["eventTime"],
+                    signal_time=burst_events[threshold - 1]["event_time"],
                     actor=actor,
                     primary_event=burst_events[threshold - 1],
                     evidence_events=burst_events[:threshold],
@@ -398,12 +456,12 @@ def detect_access_key_after_failed_logins(
         if not is_successful_event(event, event_source="iam.amazonaws.com", event_name="CreateAccessKey"):
             continue
         target_actor = target_identity_name(event) or str(event["actor"])
-        window_start = event["eventTime"] - lookback
+        window_start = event["event_time"] - lookback
         nearby_failures = [
             login
             for login in failed_logins
             if str(login["actor"]) == target_actor
-            and window_start <= login["eventTime"] <= event["eventTime"]
+            and window_start <= login["event_time"] <= event["event_time"]
         ]
         if not nearby_failures:
             continue
@@ -412,7 +470,7 @@ def detect_access_key_after_failed_logins(
                 rule_id="new_access_key_creation_after_failed_logins",
                 rule=rule,
                 config=config,
-                signal_time=event["eventTime"],
+                signal_time=event["event_time"],
                 actor=target_actor,
                 primary_event=event,
                 evidence_events=[*nearby_failures, event],
@@ -448,7 +506,7 @@ def detect_policy_attachment_after_unusual_source_ip(
                 rule_id="policy_attachment_after_unusual_source_ip",
                 rule=rule,
                 config=config,
-                signal_time=event["eventTime"],
+                signal_time=event["event_time"],
                 actor=str(event["actor"]),
                 primary_event=event,
                 evidence_events=[event],
@@ -490,7 +548,7 @@ def detect_cloudtrail_logging_disabled_near_iam_change(
         nearby_changes = [
             change
             for change in iam_changes
-            if abs(event["eventTime"] - change["eventTime"]) <= near_window
+            if abs(event["event_time"] - change["event_time"]) <= near_window
         ]
         if not nearby_changes:
             continue
@@ -499,7 +557,7 @@ def detect_cloudtrail_logging_disabled_near_iam_change(
                 rule_id="cloudtrail_logging_disabled_near_iam_change",
                 rule=rule,
                 config=config,
-                signal_time=event["eventTime"],
+                signal_time=event["event_time"],
                 actor=str(event["actor"]),
                 primary_event=event,
                 evidence_events=[*nearby_changes, event],
@@ -542,11 +600,11 @@ def detect_security_group_ingress_after_identity_change(
             continue
         if not opens_ingress_to_world(event):
             continue
-        window_start = event["eventTime"] - follow_on_window
+        window_start = event["event_time"] - follow_on_window
         nearby_changes = [
             change
             for change in identity_changes
-            if window_start <= change["eventTime"] <= event["eventTime"]
+            if window_start <= change["event_time"] <= event["event_time"]
         ]
         if not nearby_changes:
             continue
@@ -555,7 +613,7 @@ def detect_security_group_ingress_after_identity_change(
                 rule_id="security_group_ingress_opened_after_identity_change",
                 rule=rule,
                 config=config,
-                signal_time=event["eventTime"],
+                signal_time=event["event_time"],
                 actor=str(event["actor"]),
                 primary_event=event,
                 evidence_events=[*nearby_changes, event],
@@ -620,6 +678,14 @@ def build_investigation_summary(
         "signal_count": len(signals),
         "rule_counts": dict(sorted(rule_counts.items())),
         "attack_mapping_count": len(config["attack_mappings"]),
+        "time_model": {
+            "event_time_source": "eventTime",
+            "observed_time_source": "observedTime when present",
+            "detection_ordering": "event_time",
+            "observed_time_event_count": sum(
+                1 for event in events if event.get("observed_time") is not None
+            ),
+        },
         "boundaries": [
             "Synthetic CloudTrail-like events only",
             "No live AWS account",
@@ -647,6 +713,8 @@ def build_investigation_report(
         f"- normalized_events: {len(events)}",
         f"- investigation_signals: {len(signals)}",
         f"- attack_mapping_count: {summary['attack_mapping_count']}",
+        "- time_model: eventTime is normalized to event_time; optional observedTime "
+        "is preserved as observed_time but not used for detection ordering",
         "",
         "## Signals",
         "",
@@ -738,6 +806,8 @@ def opens_ingress_to_world(event: Mapping[str, Any]) -> bool:
 def compact_event(event: Mapping[str, Any]) -> dict[str, Any]:
     return {
         "eventID": str(event["eventID"]),
+        "event_time": event["event_time"],
+        "observed_time": event.get("observed_time"),
         "eventTime": event["eventTime"],
         "actor": str(event["actor"]),
         "eventSource": str(event["eventSource"]),
@@ -810,6 +880,22 @@ def require_string_list(value: object, field_name: str) -> list[str]:
     return normalized
 
 
+def reject_unknown_fields(
+    config: Mapping[str, Any],
+    allowed_fields: set[str] | frozenset[str],
+    *,
+    parent: str | None = None,
+) -> None:
+    unknown_fields = sorted(str(key) for key in config if key not in allowed_fields)
+    if not unknown_fields:
+        return
+
+    location = f" under '{parent}'" if parent else ""
+    raise ValueError(
+        f"Unknown config field(s){location}: " + ", ".join(unknown_fields)
+    )
+
+
 def require_positive_int(value: object, field_name: str) -> int:
     if isinstance(value, bool):
         raise ValueError(f"Config field '{field_name}' must be a positive integer.")
@@ -831,6 +917,16 @@ def normalize_optional_text(value: object) -> str | None:
 
 def parse_timestamp(raw_value: str) -> datetime:
     return parse_utc_timestamp(raw_value)
+
+
+def parse_optional_timestamp(value: object, field_name: str) -> datetime | None:
+    raw_value = normalize_optional_text(value)
+    if raw_value is None:
+        return None
+    try:
+        return parse_timestamp(raw_value)
+    except ValueError as exc:
+        raise ValueError(f"Field '{field_name}' must be a UTC timestamp.") from exc
 
 
 def format_timestamp(value: object) -> str:

@@ -11,6 +11,12 @@
     "security_group_ingress_opened_after_identity_change": 1
   },
   "attack_mapping_count": 5,
+  "time_model": {
+    "event_time_source": "eventTime",
+    "observed_time_source": "observedTime when present",
+    "detection_ordering": "event_time",
+    "observed_time_event_count": 0
+  },
   "boundaries": [
     "Synthetic CloudTrail-like events only",
     "No live AWS account",

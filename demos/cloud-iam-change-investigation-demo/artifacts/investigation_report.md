@@ -9,6 +9,7 @@ It uses no live AWS account, no real account IDs, no realtime ingestion, and no 
 - normalized_events: 14
 - investigation_signals: 5
 - attack_mapping_count: 5
+- time_model: eventTime is normalized to event_time; optional observedTime is preserved as observed_time but not used for detection ordering
 
 ## Signals
 

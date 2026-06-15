@@ -1,6 +1,8 @@
 [
   {
     "eventID": "evt-cti-001",
+    "event_time": "2026-04-07T10:00:00Z",
+    "observed_time": null,
     "eventTime": "2026-04-07T10:00:00Z",
     "actor": "USER_A",
     "identityType": "IAMUser",
@@ -26,6 +28,8 @@
   },
   {
     "eventID": "evt-cti-002",
+    "event_time": "2026-04-07T10:01:20Z",
+    "observed_time": null,
     "eventTime": "2026-04-07T10:01:20Z",
     "actor": "USER_A",
     "identityType": "IAMUser",
@@ -51,6 +55,8 @@
   },
   {
     "eventID": "evt-cti-003",
+    "event_time": "2026-04-07T10:03:05Z",
+    "observed_time": null,
     "eventTime": "2026-04-07T10:03:05Z",
     "actor": "USER_A",
     "identityType": "IAMUser",
@@ -76,6 +82,8 @@
   },
   {
     "eventID": "evt-cti-004",
+    "event_time": "2026-04-07T10:04:10Z",
+    "observed_time": null,
     "eventTime": "2026-04-07T10:04:10Z",
     "actor": "USER_A",
     "identityType": "IAMUser",
@@ -101,6 +109,8 @@
   },
   {
     "eventID": "evt-cti-005",
+    "event_time": "2026-04-07T10:05:00Z",
+    "observed_time": null,
     "eventTime": "2026-04-07T10:05:00Z",
     "actor": "USER_A",
     "identityType": "IAMUser",
@@ -131,6 +141,8 @@
   },
   {
     "eventID": "evt-cti-006",
+    "event_time": "2026-04-07T10:08:00Z",
+    "observed_time": null,
     "eventTime": "2026-04-07T10:08:00Z",
     "actor": "USER_A",
     "identityType": "IAMUser",
@@ -156,6 +168,8 @@
   },
   {
     "eventID": "evt-cti-007",
+    "event_time": "2026-04-07T10:10:00Z",
+    "observed_time": null,
     "eventTime": "2026-04-07T10:10:00Z",
     "actor": "USER_A",
     "identityType": "IAMUser",
@@ -180,6 +194,8 @@
   },
   {
     "eventID": "evt-cti-008",
+    "event_time": "2026-04-07T10:13:00Z",
+    "observed_time": null,
     "eventTime": "2026-04-07T10:13:00Z",
     "actor": "USER_A",
     "identityType": "IAMUser",
@@ -219,6 +235,8 @@
   },
   {
     "eventID": "evt-cti-009",
+    "event_time": "2026-04-07T10:20:00Z",
+    "observed_time": null,
     "eventTime": "2026-04-07T10:20:00Z",
     "actor": "ADMIN_USER",
     "identityType": "IAMUser",
@@ -243,6 +261,8 @@
   },
   {
     "eventID": "evt-cti-010",
+    "event_time": "2026-04-07T10:25:00Z",
+    "observed_time": null,
     "eventTime": "2026-04-07T10:25:00Z",
     "actor": "ADMIN_USER",
     "identityType": "IAMUser",
@@ -273,6 +293,8 @@
   },
   {
     "eventID": "evt-cti-011",
+    "event_time": "2026-04-07T10:30:00Z",
+    "observed_time": null,
     "eventTime": "2026-04-07T10:30:00Z",
     "actor": "ADMIN_USER",
     "identityType": "IAMUser",
@@ -298,6 +320,8 @@
   },
   {
     "eventID": "evt-cti-012",
+    "event_time": "2026-04-07T10:45:00Z",
+    "observed_time": null,
     "eventTime": "2026-04-07T10:45:00Z",
     "actor": "NETWORK_ADMIN",
     "identityType": "IAMUser",
@@ -337,6 +361,8 @@
   },
   {
     "eventID": "evt-cti-013",
+    "event_time": "2026-04-07T11:00:00Z",
+    "observed_time": null,
     "eventTime": "2026-04-07T11:00:00Z",
     "actor": "USER_B",
     "identityType": "IAMUser",
@@ -362,6 +388,8 @@
   },
   {
     "eventID": "evt-cti-014",
+    "event_time": "2026-04-07T11:30:00Z",
+    "observed_time": null,
     "eventTime": "2026-04-07T11:30:00Z",
     "actor": "SECURITY_AUDITOR",
     "identityType": "IAMUser",
