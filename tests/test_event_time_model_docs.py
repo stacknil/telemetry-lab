@@ -27,6 +27,8 @@ def test_event_time_model_documents_time_field_boundaries() -> None:
     assert "OpenTelemetry Logs Data Model" in doc
     assert "Timestamp" in doc
     assert "ObservedTimestamp" in doc
+    assert "source `eventTime` into `event_time`" in doc
+    assert "source `observedTime` as `observed_time`" in doc
     assert "[window_start, window_end)" in doc
     assert "must not be used as event evidence" in doc
     assert "(docs/event-time-model.md)" in readme

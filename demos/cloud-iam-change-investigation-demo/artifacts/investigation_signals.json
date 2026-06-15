@@ -18,6 +18,8 @@
     "evidence_events": [
       {
         "eventID": "evt-cti-001",
+        "event_time": "2026-04-07T10:00:00Z",
+        "observed_time": null,
         "eventTime": "2026-04-07T10:00:00Z",
         "actor": "USER_A",
         "eventSource": "signin.amazonaws.com",
@@ -29,6 +31,8 @@
       },
       {
         "eventID": "evt-cti-002",
+        "event_time": "2026-04-07T10:01:20Z",
+        "observed_time": null,
         "eventTime": "2026-04-07T10:01:20Z",
         "actor": "USER_A",
         "eventSource": "signin.amazonaws.com",
@@ -40,6 +44,8 @@
       },
       {
         "eventID": "evt-cti-003",
+        "event_time": "2026-04-07T10:03:05Z",
+        "observed_time": null,
         "eventTime": "2026-04-07T10:03:05Z",
         "actor": "USER_A",
         "eventSource": "signin.amazonaws.com",
@@ -87,6 +93,8 @@
     "evidence_events": [
       {
         "eventID": "evt-cti-001",
+        "event_time": "2026-04-07T10:00:00Z",
+        "observed_time": null,
         "eventTime": "2026-04-07T10:00:00Z",
         "actor": "USER_A",
         "eventSource": "signin.amazonaws.com",
@@ -98,6 +106,8 @@
       },
       {
         "eventID": "evt-cti-002",
+        "event_time": "2026-04-07T10:01:20Z",
+        "observed_time": null,
         "eventTime": "2026-04-07T10:01:20Z",
         "actor": "USER_A",
         "eventSource": "signin.amazonaws.com",
@@ -109,6 +119,8 @@
       },
       {
         "eventID": "evt-cti-003",
+        "event_time": "2026-04-07T10:03:05Z",
+        "observed_time": null,
         "eventTime": "2026-04-07T10:03:05Z",
         "actor": "USER_A",
         "eventSource": "signin.amazonaws.com",
@@ -120,6 +132,8 @@
       },
       {
         "eventID": "evt-cti-005",
+        "event_time": "2026-04-07T10:05:00Z",
+        "observed_time": null,
         "eventTime": "2026-04-07T10:05:00Z",
         "actor": "USER_A",
         "eventSource": "iam.amazonaws.com",
@@ -166,6 +180,8 @@
     "evidence_events": [
       {
         "eventID": "evt-cti-006",
+        "event_time": "2026-04-07T10:08:00Z",
+        "observed_time": null,
         "eventTime": "2026-04-07T10:08:00Z",
         "actor": "USER_A",
         "eventSource": "iam.amazonaws.com",
@@ -209,6 +225,8 @@
     "evidence_events": [
       {
         "eventID": "evt-cti-005",
+        "event_time": "2026-04-07T10:05:00Z",
+        "observed_time": null,
         "eventTime": "2026-04-07T10:05:00Z",
         "actor": "USER_A",
         "eventSource": "iam.amazonaws.com",
@@ -222,6 +240,8 @@
       },
       {
         "eventID": "evt-cti-006",
+        "event_time": "2026-04-07T10:08:00Z",
+        "observed_time": null,
         "eventTime": "2026-04-07T10:08:00Z",
         "actor": "USER_A",
         "eventSource": "iam.amazonaws.com",
@@ -236,6 +256,8 @@
       },
       {
         "eventID": "evt-cti-007",
+        "event_time": "2026-04-07T10:10:00Z",
+        "observed_time": null,
         "eventTime": "2026-04-07T10:10:00Z",
         "actor": "USER_A",
         "eventSource": "cloudtrail.amazonaws.com",
@@ -284,6 +306,8 @@
     "evidence_events": [
       {
         "eventID": "evt-cti-005",
+        "event_time": "2026-04-07T10:05:00Z",
+        "observed_time": null,
         "eventTime": "2026-04-07T10:05:00Z",
         "actor": "USER_A",
         "eventSource": "iam.amazonaws.com",
@@ -297,6 +321,8 @@
       },
       {
         "eventID": "evt-cti-006",
+        "event_time": "2026-04-07T10:08:00Z",
+        "observed_time": null,
         "eventTime": "2026-04-07T10:08:00Z",
         "actor": "USER_A",
         "eventSource": "iam.amazonaws.com",
@@ -311,6 +337,8 @@
       },
       {
         "eventID": "evt-cti-008",
+        "event_time": "2026-04-07T10:13:00Z",
+        "observed_time": null,
         "eventTime": "2026-04-07T10:13:00Z",
         "actor": "USER_A",
         "eventSource": "ec2.amazonaws.com",

@@ -10,8 +10,8 @@ This model is informed by the OpenTelemetry Logs Data Model distinction between 
 
 | Field | Meaning | Used for detection ordering? | Current repository mapping |
 | --- | --- | --- | --- |
-| `event_time` | Time the source event happened. | Yes | The default input column is named `timestamp`; configs may use `time.timestamp_col` to point at a source column such as `event_time`. |
-| `observed_time` | Time a collector, loader, or intermediary observed the event. | No, unless a demo explicitly documents fallback behavior. | Optional future input or artifact field. Current core demos do not require it. |
+| `event_time` | Time the source event happened. | Yes | The default input column is named `timestamp`; configs may use `time.timestamp_col` to point at a source column such as `event_time`. The CloudTrail-like demo normalizes source `eventTime` into `event_time`. |
+| `observed_time` | Time a collector, loader, or intermediary observed the event. | No, unless a demo explicitly documents fallback behavior. | Optional input or artifact field. The CloudTrail-like demo preserves optional source `observedTime` as `observed_time` but does not use it for ordering. |
 | `window_start` / `window_end` | Deterministic analysis interval derived from `event_time`. | Yes | Feature rows, alert rows, and dedup artifacts use these boundaries. Windows are treated as `[window_start, window_end)`. |
 | `artifact_generated_at` | Time an output artifact was rendered or written. | No | Optional provenance metadata for reports, summaries, or reviewer packs. It must not be used as event evidence. |
 

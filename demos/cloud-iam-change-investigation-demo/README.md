@@ -46,6 +46,16 @@ Every input record includes this CloudTrail-like skeleton:
 - `responseElements`
 - `eventID`
 
+Optional input fields:
+
+- `observedTime`
+
+## Time Model
+
+- `eventTime` is normalized to `event_time` and drives sorting, bounded correlation, and signal timing.
+- optional `observedTime` is preserved as `observed_time` when present, but it is not used for detection ordering.
+- committed artifacts avoid `artifact_generated_at` so the demo output remains deterministic across local reruns.
+
 AWS CloudTrail documentation describes event record contents for who made a request, the service and action, request parameters, response data, errors, source IP, user agent, Region, time, and event ID. This demo uses a synthetic subset of that shape for local review only.
 
 Reference:
