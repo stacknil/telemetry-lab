@@ -219,6 +219,25 @@ def test_reviewer_pack_defines_v1_readiness_gate() -> None:
     assert "[`v1 readiness gate`](docs/reviewer-pack.md#v1-readiness-gate)" in readme
 
 
+def test_current_docs_use_v1_contract_stabilization_language() -> None:
+    current_docs = {
+        "README.md": _read_repo_file("README.md"),
+        "docs/README.md": _read_repo_file("docs/README.md"),
+        "docs/reviewer-pack.md": _read_repo_file("docs/reviewer-pack.md"),
+        "docs/reviewer-brief.md": _read_repo_file("docs/reviewer-brief.md"),
+        "docs/architecture.md": _read_repo_file("docs/architecture.md"),
+        "docs/roadmap.md": _read_repo_file("docs/roadmap.md"),
+    }
+
+    assert "Demo expansion is closed." in current_docs["docs/roadmap.md"]
+    assert "Next phase: v1 reviewer contract stabilization." in current_docs["docs/roadmap.md"]
+    assert "## v1 Reviewer Contract Stabilization" in current_docs["README.md"]
+
+    for path, text in current_docs.items():
+        assert "v1 reviewer contract stabilization" in text, path
+        assert "v0.7 / v1.0" not in text, path
+
+
 def test_architecture_doc_keeps_local_file_based_boundaries() -> None:
     architecture = _read_repo_file("docs/architecture.md")
 

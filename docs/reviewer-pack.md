@@ -30,7 +30,7 @@ The important shape is:
 
 ## Artifact Naming Contract
 
-The current artifact names are reviewer-facing contracts for the v0.7 / v1.0 consolidation path.
+The current artifact names are reviewer-facing contracts for the v1 reviewer contract stabilization phase.
 
 - Keep the demo matrix stable unless a demo is intentionally retired.
 - Prefer additive artifacts over renaming existing reviewer-visible outputs.
@@ -83,7 +83,7 @@ Use the same Python interpreter for install, tests, and demo commands.
 - [`docs/reviewer-path.md`](reviewer-path.md): demo choice by review question
 - [`docs/architecture.md`](architecture.md): local file-based workflow diagram
 - [`docs/sample-output.md`](sample-output.md): committed output counts and sample artifacts
-- [`docs/roadmap.md`](roadmap.md): v0.7 / v1.0 consolidation direction
+- [`docs/roadmap.md`](roadmap.md): v1 reviewer contract stabilization phase
 - [`tests/test_reviewer_docs.py`](../tests/test_reviewer_docs.py): regression checks for reviewer-facing docs
 
 ## Boundaries
