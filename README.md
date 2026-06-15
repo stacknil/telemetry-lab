@@ -166,18 +166,19 @@ Cooldown behavior:
 - [`docs/architecture.md`](docs/architecture.md) diagrams the local file-based detection workflow
 - [`docs/event-time-model.md`](docs/event-time-model.md) defines event, observed, window, and artifact time semantics
 - [`docs/sample-output.md`](docs/sample-output.md) summarizes the committed sample artifacts
-- [`docs/roadmap.md`](docs/roadmap.md) sketches the v0.7 / v1.0 consolidation direction
+- [`docs/roadmap.md`](docs/roadmap.md) defines the v1 reviewer contract stabilization phase
 - [`data/processed/summary.json`](data/processed/summary.json) captures the default run in machine-readable form
 - [`data/processed/richer_sample/summary.json`](data/processed/richer_sample/summary.json) captures the richer scenario pack
 - [`tests/`](tests/) keeps regression coverage close to the CLI behavior and windowing logic
 
-## v0.7 / v1.0 Direction
+## v1 Reviewer Contract Stabilization
 
+- demo expansion is closed
 - stabilize the five-demo matrix and avoid broad platform expansion
 - freeze reviewer-visible artifact names unless a rename is intentionally coordinated across docs, tests, and sample outputs
 - use [`docs/reviewer-pack.md`](docs/reviewer-pack.md) and [`docs/architecture.md`](docs/architecture.md) as the consolidation entrypoints
 - use the [`v1 readiness gate`](docs/reviewer-pack.md#v1-readiness-gate) before treating the repo as consolidated
-- avoid additional demo expansion before v1-style consolidation
+- avoid additional demo expansion during v1 reviewer contract stabilization
 
 ## Scope
 

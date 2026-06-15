@@ -8,7 +8,7 @@ This directory separates the current reviewer route from supporting design notes
 - [`reviewer-path.md`](reviewer-path.md): choose a demo by review question
 - [`reviewer-brief.md`](reviewer-brief.md): short problem, value, evidence, and boundary summary
 - [`architecture.md`](architecture.md): local file-based workflow diagram
-- [`roadmap.md`](roadmap.md): v0.7 / v1.0 consolidation direction
+- [`roadmap.md`](roadmap.md): v1 reviewer contract stabilization phase
 
 ## Supporting docs
 

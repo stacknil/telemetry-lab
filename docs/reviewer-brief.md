@@ -73,4 +73,4 @@ The other demos emit reviewer-facing artifacts such as `dedup_report.md`, `inves
 
 ## Next milestone
 
-Consolidate the current reviewer path for v0.7 / v1.0: keep the demo matrix stable, freeze reviewer-visible artifact names, maintain one top-level reviewer pack, and keep the architecture diagram aligned with actual CLI and artifact behavior.
+Demo expansion is closed. The next phase is v1 reviewer contract stabilization: keep the demo matrix stable, freeze reviewer-visible artifact names, maintain one top-level reviewer pack, and keep the architecture diagram aligned with actual CLI and artifact behavior.

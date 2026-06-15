@@ -33,7 +33,7 @@ flowchart TD
 - Detection decisions stay deterministic and inspectable.
 - The AI-assisted demo is limited to bounded JSON-only case drafting.
 - Artifacts are file-based and suitable for local regeneration or GitHub review.
-- Artifact names are reviewer-visible contracts during the v0.7 / v1.0 consolidation path.
+- Artifact names are reviewer-visible contracts during the v1 reviewer contract stabilization phase.
 - The repository does not provide production monitoring, real-time ingestion, dashboards, alert routing, case management, autonomous response, or final incident verdicts.
 
 ## Demo Boundaries
