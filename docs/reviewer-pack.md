@@ -68,6 +68,7 @@ Before treating the repo as v1-style consolidated:
 - Keep reviewer-visible artifact names stable, or update the artifact naming contract and committed sample outputs in the same change.
 - Keep `docs/reviewer-path.md`, this reviewer pack, `docs/architecture.md`, and demo READMEs aligned with actual CLI behavior.
 - Keep README, package metadata, and repository metadata aligned with the local, file-based detection workflow lab framing.
+- Run `python scripts/regenerate_artifacts.py --check` to verify committed evidence artifacts match fresh pipeline output.
 - Regenerate and inspect committed artifacts after behavior changes.
 - Run `pytest` and confirm reviewer-doc tests still cover the demo matrix, artifact contract, and architecture boundaries.
 - Do not add SIEM, dashboard, alert routing, case-management, real-time ingestion, autonomous response, or final-verdict claims.
@@ -83,6 +84,7 @@ python -m telemetry_window_demo.cli run-ai-demo
 python -m telemetry_window_demo.cli run-rule-dedup-demo
 python -m telemetry_window_demo.cli run-config-change-demo
 python -m telemetry_window_demo.cli run-cloud-iam-change-demo
+python scripts/regenerate_artifacts.py --check
 pytest
 ```
 

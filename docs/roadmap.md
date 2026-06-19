@@ -20,9 +20,10 @@ Recently added:
 1. Stabilize the demo matrix.
 2. Freeze reviewer-visible artifact names unless a rename is intentional and documented across README, reviewer docs, demo docs, tests, and sample outputs.
 3. Keep JSON schema contracts aligned with selected reviewer-facing evidence artifacts.
-4. Keep one top-level reviewer pack as the primary no-guessing entrypoint.
-5. Keep the architecture diagram aligned with actual CLI and artifact behavior.
-6. Prefer regression tests and documentation accuracy over adding new workflow surface area.
+4. Keep committed evidence artifacts aligned with regenerated pipeline output.
+5. Keep one top-level reviewer pack as the primary no-guessing entrypoint.
+6. Keep the architecture diagram aligned with actual CLI and artifact behavior.
+7. Prefer regression tests and documentation accuracy over adding new workflow surface area.
 
 The consolidation gate lives in [`docs/reviewer-pack.md`](reviewer-pack.md#v1-readiness-gate).
 
