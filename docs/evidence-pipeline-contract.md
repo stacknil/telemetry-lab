@@ -1,0 +1,39 @@
+# Evidence Pipeline Contract
+
+`telemetry-lab` v1.0 treats reviewer-facing JSON artifacts as evidence pipeline contracts. The schemas below define the current machine-readable artifact shapes for selected demo outputs without turning the repo into a SIEM, dashboard, or monitoring platform.
+
+The contract is intentionally local and file-based:
+
+- schemas live under `schemas/`
+- committed artifacts live under `demos/*/artifacts/`
+- tests validate the schemas against the committed artifacts
+- raw evidence payloads may preserve source-specific fields, but deterministic wrapper fields stay explicit
+
+## Schema Matrix
+
+| Schema | Demo artifact | What it locks |
+| --- | --- | --- |
+| `schemas/rule_hits.schema.json` | `demos/ai-assisted-detection-demo/artifacts/rule_hits.json` | deterministic rule-hit fields before case grouping |
+| `schemas/case_bundles.schema.json` | `demos/ai-assisted-detection-demo/artifacts/case_bundles.json` | bounded case bundles passed to JSON-only drafting |
+| `schemas/dedup_explanations.schema.json` | `demos/rule-evaluation-and-dedup-demo/artifacts/dedup_explanations.json` | retained/suppressed cooldown explanations |
+| `schemas/investigation_signals.schema.json` | `demos/cloud-iam-change-investigation-demo/artifacts/investigation_signals.json` | bounded CloudTrail-like investigation signals |
+| `schemas/investigation_summary.schema.json` | `demos/cloud-iam-change-investigation-demo/artifacts/investigation_summary.json` | Cloud IAM investigation summary and time-model metadata |
+
+## Contract Rules
+
+- Schema files use JSON Schema Draft 2020-12.
+- Contracted wrapper fields reject unknown properties unless the field intentionally preserves raw source evidence.
+- Timestamps use RFC 3339 / JSON Schema `date-time` strings.
+- Severity values are limited to `low`, `medium`, `high`, and `critical`.
+- The Cloud IAM schemas preserve the event-time model: `eventTime` is normalized to `event_time`, optional `observedTime` is preserved as `observed_time`, and detection ordering is documented as `event_time`.
+- These schemas describe reviewer evidence only. They do not claim production alert routing, case management, autonomous response, or final incident verdicts.
+
+## Verification
+
+Run:
+
+```bash
+python -m pytest tests/test_evidence_pipeline_schemas.py
+```
+
+The test validates each schema file and checks that the committed artifact listed in the schema matrix conforms to it.
