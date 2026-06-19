@@ -35,6 +35,7 @@ The current artifact names are reviewer-facing contracts for the v1 reviewer con
 - Keep the demo matrix stable unless a demo is intentionally retired.
 - Prefer additive artifacts over renaming existing reviewer-visible outputs.
 - If an artifact must be renamed, update the README, reviewer path, this reviewer pack, demo README, tests, and committed sample outputs in the same change.
+- For each release, add the diff described in [`docs/reviewer-artifact-diff.md`](reviewer-artifact-diff.md), using `no-artifact-change` when reviewer-facing artifacts are unchanged.
 - Do not introduce platform-style names that imply alert routing, case management, real-time ingestion, or autonomous response.
 
 ## Evidence Pipeline Contract
@@ -74,6 +75,7 @@ Before treating the repo as v1-style consolidated:
 - Keep README, package metadata, and repository metadata aligned with the local, file-based detection workflow lab framing.
 - Run `python scripts/regenerate_artifacts.py --check` to verify committed evidence artifacts match fresh pipeline output.
 - Regenerate and inspect committed artifacts after behavior changes.
+- For every release, include a reviewer-facing artifact diff with added fields, removed fields, semantic changes, and compatibility notes, or an explicit `no-artifact-change` statement.
 - Run `pytest` and confirm reviewer-doc tests still cover the demo matrix, artifact contract, and architecture boundaries.
 - Do not add SIEM, dashboard, alert routing, case-management, real-time ingestion, autonomous response, or final-verdict claims.
 
@@ -100,6 +102,7 @@ Use the same Python interpreter for install, tests, and demo commands.
 - [`docs/reviewer-brief.md`](reviewer-brief.md): short problem / value summary
 - [`docs/reviewer-path.md`](reviewer-path.md): demo choice by review question
 - [`docs/evidence-pipeline-contract.md`](evidence-pipeline-contract.md): JSON schema contracts for selected evidence artifacts
+- [`docs/reviewer-artifact-diff.md`](reviewer-artifact-diff.md): release diff contract for reviewer-facing artifact changes
 - [`docs/vocabulary.md`](vocabulary.md): cross-demo evidence workflow vocabulary
 - [`docs/architecture.md`](architecture.md): local file-based workflow diagram
 - [`docs/sample-output.md`](sample-output.md): committed output counts and sample artifacts
