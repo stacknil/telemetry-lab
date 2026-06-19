@@ -72,6 +72,11 @@ The deterministic rules are:
 - CloudTrail logging disabled near IAM change
 - security group ingress opened after identity change
 
+Each rule uses bounded correlation: evidence must fall inside the rule's fixed
+time window, match the rule's configured actor or entity scope, and match the
+rule-local event family set. The demo does not perform cross-account,
+cross-source, or whole-dataset attribution.
+
 ## ATT&CK Mapping
 
 The config intentionally keeps the mapping set small:

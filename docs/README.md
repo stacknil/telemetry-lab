@@ -8,7 +8,7 @@ This directory separates the current reviewer route from supporting design notes
 - [`reviewer-path.md`](reviewer-path.md): choose a demo by review question
 - [`reviewer-brief.md`](reviewer-brief.md): short problem, value, evidence, and boundary summary
 - [`evidence-pipeline-contract.md`](evidence-pipeline-contract.md): JSON schema contracts for reviewer-facing evidence artifacts
-- [`vocabulary.md`](vocabulary.md): cross-demo vocabulary for evidence workflow terms
+- [`vocabulary.md`](vocabulary.md): cross-demo vocabulary for evidence workflow terms and bounded correlation
 - [`architecture.md`](architecture.md): local file-based workflow diagram
 - [`roadmap.md`](roadmap.md): v1 reviewer contract stabilization phase
 

@@ -43,6 +43,8 @@ See [`docs/evidence-pipeline-contract.md`](evidence-pipeline-contract.md) for th
 
 See [`docs/vocabulary.md`](vocabulary.md) for the cross-demo meaning of `event`, `signal`, `hit`, `finding`, `case_bundle`, `summary`, `report`, and `audit_trace`.
 
+In this repo, bounded correlation means evidence is attached only within fixed time windows, fixed entity or scope keys, and fixed event families or rule-local family sets. It is not cross-host, cross-account, or cross-source global attribution.
+
 The current schema contract covers:
 
 - `schemas/rule_hits.schema.json`

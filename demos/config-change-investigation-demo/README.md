@@ -50,6 +50,9 @@ Evidence is attached only when:
 
 1. `target_system` matches the triggering change
 2. the evidence timestamp falls within the configured correlation window after the change
+3. the evidence family is one of the configured local evidence families for this demo
+
+It does not perform cross-host, cross-account, or cross-source global attribution.
 
 ## Expected Artifacts
 

@@ -251,6 +251,11 @@ def test_vocabulary_defines_cross_demo_terms() -> None:
     assert "local evidence workflow vocabulary" in vocabulary
     assert "not a SIEM object model" in vocabulary
     assert "[`docs/event-time-model.md`](event-time-model.md)" in vocabulary
+    assert "## Bounded Correlation" in vocabulary
+    assert "fixed time window" in vocabulary
+    assert "fixed entity or scope key" in vocabulary
+    assert "fixed event family" in vocabulary
+    assert "does not perform global attribution across hosts, accounts, sources" in vocabulary
 
     for term in [
         "event",
@@ -271,6 +276,25 @@ def test_vocabulary_defines_cross_demo_terms() -> None:
 
     assert "[`docs/vocabulary.md`](vocabulary.md)" in roadmap
     assert "Keep cross-demo vocabulary stable" in roadmap
+
+
+def test_bounded_correlation_boundaries_are_documented() -> None:
+    architecture = _read_repo_file("docs/architecture.md")
+    reviewer_pack = _read_repo_file("docs/reviewer-pack.md")
+    config_demo = _read_repo_file("demos/config-change-investigation-demo/README.md")
+    cloud_iam_demo = _read_repo_file(
+        "demos/cloud-iam-change-investigation-demo/README.md"
+    )
+
+    for text in [architecture, reviewer_pack]:
+        assert "fixed time windows" in text
+        assert "fixed entity or scope keys" in text
+        assert "fixed event families or rule-local family sets" in text
+
+    assert "evidence family" in config_demo
+    assert "cross-host, cross-account, or cross-source global attribution" in config_demo
+    assert "rule-local event family set" in cloud_iam_demo
+    assert "whole-dataset attribution" in cloud_iam_demo
 
 
 def test_architecture_doc_keeps_local_file_based_boundaries() -> None:
