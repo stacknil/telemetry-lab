@@ -72,6 +72,7 @@ Other demo entrypoints:
 - `python -m telemetry_window_demo.cli run-rule-dedup-demo`
 - `python -m telemetry_window_demo.cli run-config-change-demo`
 - `python -m telemetry_window_demo.cli run-cloud-iam-change-demo`
+- `python scripts/regenerate_artifacts.py --check`
 
 Useful inspection commands:
 
@@ -181,6 +182,7 @@ Cooldown behavior:
 - stabilize the five-demo matrix and avoid broad platform expansion
 - freeze reviewer-visible artifact names unless a rename is intentionally coordinated across docs, tests, and sample outputs
 - keep JSON schema contracts aligned with selected reviewer-facing evidence artifacts
+- keep committed artifacts aligned with regenerated pipeline output through `python scripts/regenerate_artifacts.py --check`
 - use [`docs/reviewer-pack.md`](docs/reviewer-pack.md) and [`docs/architecture.md`](docs/architecture.md) as the consolidation entrypoints
 - use the [`v1 readiness gate`](docs/reviewer-pack.md#v1-readiness-gate) before treating the repo as consolidated
 - avoid additional demo expansion during v1 reviewer contract stabilization

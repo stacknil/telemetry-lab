@@ -1,0 +1,59 @@
+from __future__ import annotations
+
+import importlib.util
+import sys
+from pathlib import Path
+
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+SCRIPT_PATH = REPO_ROOT / "scripts" / "regenerate_artifacts.py"
+
+
+def _load_regeneration_script():
+    spec = importlib.util.spec_from_file_location(
+        "regenerate_artifacts",
+        SCRIPT_PATH,
+    )
+    assert spec is not None
+    assert spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_regenerate_artifacts_check_matches_committed_outputs() -> None:
+    script = _load_regeneration_script()
+
+    exit_code = script.main(
+        [
+            "--check",
+            "--work-dir",
+            ".artifact-regeneration-tmp/pytest",
+            "--no-clean",
+        ]
+    )
+
+    assert exit_code == 0
+
+
+def test_regenerate_artifacts_reports_mismatched_strict_artifact(tmp_path) -> None:
+    script = _load_regeneration_script()
+    committed_root = tmp_path / "committed"
+    generated_root = tmp_path / "generated"
+    committed_root.mkdir()
+    generated_root.mkdir()
+    (committed_root / "artifact.json").write_text('{"status":"old"}\n', encoding="utf-8")
+    (generated_root / "artifact.json").write_text('{"status":"new"}\n', encoding="utf-8")
+
+    artifact_set = script.ArtifactSet(
+        name="test",
+        committed_root=committed_root,
+        generated_root=generated_root,
+        strict_paths=(Path("artifact.json"),),
+    )
+
+    differences = script.compare_artifact_set("test", artifact_set)
+
+    assert len(differences) == 1
+    assert differences[0].reason == "content differs"
