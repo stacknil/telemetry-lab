@@ -42,6 +42,22 @@ keeps the repo focused on reproducible evidence generation and review.
 - Use `report` for human-readable Markdown explanations.
 - Use `audit_trace` for structured guardrail, validation, and provenance records.
 
+## Bounded Correlation
+
+`bounded correlation` means the demo may attach supporting evidence only inside
+explicitly configured limits:
+
+- a fixed time window
+- a fixed entity or scope key, such as `target_system`, `actor`, `account`, or
+  resolved cooldown scope
+- a fixed event family, or a rule-local configured family set when a rule
+  intentionally compares more than one event family
+
+It does not perform global attribution across hosts, accounts, sources, or event
+families. It does not infer a shared root cause from unrelated telemetry, search
+the whole dataset for plausible context, or promote nearby evidence into a final
+incident verdict.
+
 ## Time Semantics
 
 Events, hits, signals, summaries, and reports should preserve the time semantics
