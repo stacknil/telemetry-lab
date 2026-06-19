@@ -41,6 +41,8 @@ The current artifact names are reviewer-facing contracts for the v1 reviewer con
 
 See [`docs/evidence-pipeline-contract.md`](evidence-pipeline-contract.md) for the v1 JSON schema contract covering selected reviewer-facing evidence artifacts.
 
+See [`docs/vocabulary.md`](vocabulary.md) for the cross-demo meaning of `event`, `signal`, `hit`, `finding`, `case_bundle`, `summary`, `report`, and `audit_trace`.
+
 The current schema contract covers:
 
 - `schemas/rule_hits.schema.json`
@@ -96,6 +98,7 @@ Use the same Python interpreter for install, tests, and demo commands.
 - [`docs/reviewer-brief.md`](reviewer-brief.md): short problem / value summary
 - [`docs/reviewer-path.md`](reviewer-path.md): demo choice by review question
 - [`docs/evidence-pipeline-contract.md`](evidence-pipeline-contract.md): JSON schema contracts for selected evidence artifacts
+- [`docs/vocabulary.md`](vocabulary.md): cross-demo evidence workflow vocabulary
 - [`docs/architecture.md`](architecture.md): local file-based workflow diagram
 - [`docs/sample-output.md`](sample-output.md): committed output counts and sample artifacts
 - [`docs/roadmap.md`](roadmap.md): v1 reviewer contract stabilization phase

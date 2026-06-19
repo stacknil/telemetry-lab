@@ -2,6 +2,8 @@
 
 `telemetry-lab` v1.0 treats reviewer-facing JSON artifacts as evidence pipeline contracts. The schemas below define the current machine-readable artifact shapes for selected demo outputs without turning the repo into a SIEM, dashboard, or monitoring platform.
 
+Use [`docs/vocabulary.md`](vocabulary.md) for the cross-demo meaning of `event`, `signal`, `hit`, `finding`, `case_bundle`, `summary`, `report`, and `audit_trace`.
+
 The contract is intentionally local and file-based:
 
 - schemas live under `schemas/`

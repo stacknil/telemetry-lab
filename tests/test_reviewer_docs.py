@@ -151,6 +151,8 @@ def test_docs_index_separates_current_route_from_history() -> None:
         "reviewer-pack.md",
         "reviewer-path.md",
         "reviewer-brief.md",
+        "evidence-pipeline-contract.md",
+        "vocabulary.md",
         "architecture.md",
         "roadmap.md",
     ]:
@@ -183,6 +185,7 @@ def test_top_level_reviewer_pack_covers_matrix_and_artifact_contract() -> None:
     assert "Artifact Naming Contract" in reviewer_pack
     assert "[`docs/README.md`](README.md)" in reviewer_pack
     assert "[`docs/reviewer-path.md`](reviewer-path.md)" in reviewer_pack
+    assert "[`docs/vocabulary.md`](vocabulary.md)" in reviewer_pack
     assert "[`docs/architecture.md`](architecture.md)" in reviewer_pack
     assert "[`docs/roadmap.md`](roadmap.md)" in reviewer_pack
     assert "current route, supporting docs, and historical release evidence" in reviewer_pack
@@ -236,6 +239,38 @@ def test_current_docs_use_v1_contract_stabilization_language() -> None:
     for path, text in current_docs.items():
         assert "v1 reviewer contract stabilization" in text, path
         assert "v0.7 / v1.0" not in text, path
+
+
+def test_vocabulary_defines_cross_demo_terms() -> None:
+    vocabulary = _read_repo_file("docs/vocabulary.md")
+    docs_index = _read_repo_file("docs/README.md")
+    readme = _read_repo_file("README.md")
+    evidence_contract = _read_repo_file("docs/evidence-pipeline-contract.md")
+    roadmap = _read_repo_file("docs/roadmap.md")
+
+    assert "local evidence workflow vocabulary" in vocabulary
+    assert "not a SIEM object model" in vocabulary
+    assert "[`docs/event-time-model.md`](event-time-model.md)" in vocabulary
+
+    for term in [
+        "event",
+        "signal",
+        "hit",
+        "finding",
+        "case_bundle",
+        "summary",
+        "report",
+        "audit_trace",
+    ]:
+        assert f"`{term}`" in vocabulary
+        assert f"`{term}`" in evidence_contract
+
+    for text in [docs_index, readme]:
+        assert "vocabulary.md" in text
+        assert "cross-demo" in text
+
+    assert "[`docs/vocabulary.md`](vocabulary.md)" in roadmap
+    assert "Keep cross-demo vocabulary stable" in roadmap
 
 
 def test_architecture_doc_keeps_local_file_based_boundaries() -> None:
