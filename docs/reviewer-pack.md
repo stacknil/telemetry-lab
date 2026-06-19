@@ -37,6 +37,18 @@ The current artifact names are reviewer-facing contracts for the v1 reviewer con
 - If an artifact must be renamed, update the README, reviewer path, this reviewer pack, demo README, tests, and committed sample outputs in the same change.
 - Do not introduce platform-style names that imply alert routing, case management, real-time ingestion, or autonomous response.
 
+## Evidence Pipeline Contract
+
+See [`docs/evidence-pipeline-contract.md`](evidence-pipeline-contract.md) for the v1 JSON schema contract covering selected reviewer-facing evidence artifacts.
+
+The current schema contract covers:
+
+- `schemas/rule_hits.schema.json`
+- `schemas/case_bundles.schema.json`
+- `schemas/dedup_explanations.schema.json`
+- `schemas/investigation_signals.schema.json`
+- `schemas/investigation_summary.schema.json`
+
 ### Stable Reviewer-Visible Artifacts
 
 | Area | Stable artifact paths |
@@ -81,6 +93,7 @@ Use the same Python interpreter for install, tests, and demo commands.
 - [`docs/README.md`](README.md): docs index for the current route, supporting docs, and historical release evidence
 - [`docs/reviewer-brief.md`](reviewer-brief.md): short problem / value summary
 - [`docs/reviewer-path.md`](reviewer-path.md): demo choice by review question
+- [`docs/evidence-pipeline-contract.md`](evidence-pipeline-contract.md): JSON schema contracts for selected evidence artifacts
 - [`docs/architecture.md`](architecture.md): local file-based workflow diagram
 - [`docs/sample-output.md`](sample-output.md): committed output counts and sample artifacts
 - [`docs/roadmap.md`](roadmap.md): v1 reviewer contract stabilization phase

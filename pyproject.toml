@@ -16,7 +16,10 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8.0"]
+dev = [
+  "jsonschema>=4.0",
+  "pytest>=8.0",
+]
 
 [tool.setuptools]
 package-dir = { "" = "src" }

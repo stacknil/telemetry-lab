@@ -13,6 +13,7 @@ Latest tagged release: [v0.6.0 — fourth demo and config-change investigation](
 - [`docs/reviewer-brief.md`](docs/reviewer-brief.md): scope, value, evidence, and boundaries
 - [`docs/reviewer-path.md`](docs/reviewer-path.md): choose the right demo by review question
 - [`docs/reviewer-pack.md`](docs/reviewer-pack.md): demo matrix, artifact contract, and v1 readiness gate
+- [`docs/evidence-pipeline-contract.md`](docs/evidence-pipeline-contract.md): JSON schema contracts for reviewer-facing evidence artifacts
 - [`docs/README.md`](docs/README.md): current route, supporting docs, and historical release evidence
 
 ## Demos
@@ -163,6 +164,7 @@ Cooldown behavior:
 - [`demos/cloud-iam-change-investigation-demo/README.md`](demos/cloud-iam-change-investigation-demo/README.md) explains the synthetic CloudTrail-like IAM investigation demo and its committed artifacts
 - [`docs/README.md`](docs/README.md) indexes current reviewer docs, supporting design notes, and historical release evidence
 - [`docs/reviewer-pack.md`](docs/reviewer-pack.md) is the top-level no-guessing reviewer pack and artifact naming contract
+- [`docs/evidence-pipeline-contract.md`](docs/evidence-pipeline-contract.md) maps v1 evidence schemas to committed JSON artifacts
 - [`docs/reviewer-brief.md`](docs/reviewer-brief.md) gives the short problem, value, evidence, and boundary summary
 - [`docs/reviewer-path.md`](docs/reviewer-path.md) maps common review questions to the right demo and artifacts
 - [`docs/architecture.md`](docs/architecture.md) diagrams the local file-based detection workflow
@@ -178,6 +180,7 @@ Cooldown behavior:
 - demo expansion is closed
 - stabilize the five-demo matrix and avoid broad platform expansion
 - freeze reviewer-visible artifact names unless a rename is intentionally coordinated across docs, tests, and sample outputs
+- keep JSON schema contracts aligned with selected reviewer-facing evidence artifacts
 - use [`docs/reviewer-pack.md`](docs/reviewer-pack.md) and [`docs/architecture.md`](docs/architecture.md) as the consolidation entrypoints
 - use the [`v1 readiness gate`](docs/reviewer-pack.md#v1-readiness-gate) before treating the repo as consolidated
 - avoid additional demo expansion during v1 reviewer contract stabilization
