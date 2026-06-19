@@ -42,3 +42,11 @@ python -m pytest tests/test_evidence_pipeline_schemas.py
 The regeneration check compares byte-stable CSV, JSON, JSONL, and Markdown artifacts with fresh pipeline output. It also regenerates PNG visual snapshots to verify that the plotting path still runs, but it does not byte-compare those images because Matplotlib rendering can vary across platforms.
 
 The schema test validates each schema file and checks that the committed artifact listed in the schema matrix conforms to it.
+
+## Release Artifact Diff
+
+Every release must include the artifact diff defined in
+[`docs/reviewer-artifact-diff.md`](reviewer-artifact-diff.md). The diff must
+cover added fields, removed fields, semantic changes, and compatibility notes
+for changed reviewer artifacts, or state `no-artifact-change` when committed
+reviewer artifacts are unchanged.

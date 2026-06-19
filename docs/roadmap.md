@@ -15,6 +15,7 @@ Recently added:
 - [`docs/reviewer-pack.md`](reviewer-pack.md) collects the top-level reviewer flow and artifact naming contract.
 - [`docs/architecture.md`](architecture.md) describes the local file-based workflow shape.
 - [`docs/vocabulary.md`](vocabulary.md) defines cross-demo evidence workflow terms.
+- [`docs/reviewer-artifact-diff.md`](reviewer-artifact-diff.md) defines the release diff contract for reviewer-facing artifact changes.
 
 ## v1 Reviewer Contract Stabilization
 
@@ -23,9 +24,10 @@ Recently added:
 3. Keep JSON schema contracts aligned with selected reviewer-facing evidence artifacts.
 4. Keep committed evidence artifacts aligned with regenerated pipeline output.
 5. Keep cross-demo vocabulary stable for evidence workflow terms.
-6. Keep one top-level reviewer pack as the primary no-guessing entrypoint.
-7. Keep the architecture diagram aligned with actual CLI and artifact behavior.
-8. Prefer regression tests and documentation accuracy over adding new workflow surface area.
+6. Include reviewer-facing artifact diffs in every release, including explicit `no-artifact-change` notes when committed reviewer artifacts are unchanged.
+7. Keep one top-level reviewer pack as the primary no-guessing entrypoint.
+8. Keep the architecture diagram aligned with actual CLI and artifact behavior.
+9. Prefer regression tests and documentation accuracy over adding new workflow surface area.
 
 The consolidation gate lives in [`docs/reviewer-pack.md`](reviewer-pack.md#v1-readiness-gate).
 

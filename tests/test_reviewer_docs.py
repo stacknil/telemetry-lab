@@ -152,6 +152,7 @@ def test_docs_index_separates_current_route_from_history() -> None:
         "reviewer-path.md",
         "reviewer-brief.md",
         "evidence-pipeline-contract.md",
+        "reviewer-artifact-diff.md",
         "vocabulary.md",
         "architecture.md",
         "roadmap.md",
@@ -185,6 +186,7 @@ def test_top_level_reviewer_pack_covers_matrix_and_artifact_contract() -> None:
     assert "Artifact Naming Contract" in reviewer_pack
     assert "[`docs/README.md`](README.md)" in reviewer_pack
     assert "[`docs/reviewer-path.md`](reviewer-path.md)" in reviewer_pack
+    assert "[`docs/reviewer-artifact-diff.md`](reviewer-artifact-diff.md)" in reviewer_pack
     assert "[`docs/vocabulary.md`](vocabulary.md)" in reviewer_pack
     assert "[`docs/architecture.md`](architecture.md)" in reviewer_pack
     assert "[`docs/roadmap.md`](roadmap.md)" in reviewer_pack
@@ -217,6 +219,8 @@ def test_reviewer_pack_defines_v1_readiness_gate() -> None:
     assert "package metadata, and repository metadata" in reviewer_pack
     assert "Regenerate and inspect committed artifacts" in reviewer_pack
     assert "Run `pytest`" in reviewer_pack
+    assert "reviewer-facing artifact diff" in reviewer_pack
+    assert "added fields, removed fields, semantic changes, and compatibility notes" in reviewer_pack
     assert "Do not add SIEM, dashboard, alert routing" in reviewer_pack
     assert "[`docs/reviewer-pack.md`](reviewer-pack.md#v1-readiness-gate)" in roadmap
     assert "[`v1 readiness gate`](docs/reviewer-pack.md#v1-readiness-gate)" in readme
@@ -276,6 +280,39 @@ def test_vocabulary_defines_cross_demo_terms() -> None:
 
     assert "[`docs/vocabulary.md`](vocabulary.md)" in roadmap
     assert "Keep cross-demo vocabulary stable" in roadmap
+
+
+def test_reviewer_artifact_diff_contract_covers_release_changes() -> None:
+    artifact_diff = _read_repo_file("docs/reviewer-artifact-diff.md")
+    docs_index = _read_repo_file("docs/README.md")
+    readme = _read_repo_file("README.md")
+    evidence_contract = _read_repo_file("docs/evidence-pipeline-contract.md")
+    roadmap = _read_repo_file("docs/roadmap.md")
+
+    assert "Every release must include a concise artifact diff" in artifact_diff
+    assert "`no-artifact-change`" in artifact_diff
+    assert "## Required Release Diff Sections" in artifact_diff
+    assert "## Compatibility Labels" in artifact_diff
+    assert "## Template" in artifact_diff
+    assert "[`docs/reviewer-pack.md`](reviewer-pack.md)" in artifact_diff
+    assert "[`docs/evidence-pipeline-contract.md`](evidence-pipeline-contract.md)" in artifact_diff
+
+    for required_term in [
+        "Added fields",
+        "Removed fields",
+        "Semantic changes",
+        "Compatibility notes",
+        "no-artifact-change",
+        "additive-compatible",
+        "semantic-change",
+        "breaking-artifact-change",
+    ]:
+        assert required_term in artifact_diff
+
+    for text in [docs_index, readme, evidence_contract, roadmap]:
+        assert "reviewer-artifact-diff.md" in text
+
+    assert "Include reviewer-facing artifact diffs in every release" in roadmap
 
 
 def test_bounded_correlation_boundaries_are_documented() -> None:
