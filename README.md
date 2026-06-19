@@ -14,6 +14,7 @@ Latest tagged release: [v0.6.0 — fourth demo and config-change investigation](
 - [`docs/reviewer-path.md`](docs/reviewer-path.md): choose the right demo by review question
 - [`docs/reviewer-pack.md`](docs/reviewer-pack.md): demo matrix, artifact contract, and v1 readiness gate
 - [`docs/evidence-pipeline-contract.md`](docs/evidence-pipeline-contract.md): JSON schema contracts for reviewer-facing evidence artifacts
+- [`docs/vocabulary.md`](docs/vocabulary.md): cross-demo vocabulary for events, hits, signals, findings, summaries, reports, and audit traces
 - [`docs/README.md`](docs/README.md): current route, supporting docs, and historical release evidence
 
 ## Demos
@@ -170,6 +171,7 @@ Cooldown behavior:
 - [`docs/reviewer-path.md`](docs/reviewer-path.md) maps common review questions to the right demo and artifacts
 - [`docs/architecture.md`](docs/architecture.md) diagrams the local file-based detection workflow
 - [`docs/event-time-model.md`](docs/event-time-model.md) defines event, observed, window, and artifact time semantics
+- [`docs/vocabulary.md`](docs/vocabulary.md) defines the cross-demo evidence workflow terms
 - [`docs/sample-output.md`](docs/sample-output.md) summarizes the committed sample artifacts
 - [`docs/roadmap.md`](docs/roadmap.md) defines the v1 reviewer contract stabilization phase
 - [`data/processed/summary.json`](data/processed/summary.json) captures the default run in machine-readable form
