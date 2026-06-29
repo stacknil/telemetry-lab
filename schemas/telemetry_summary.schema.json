@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/stacknil/telemetry-lab/schemas/telemetry_summary.schema.json",
+  "title": "Telemetry window run summary",
+  "description": "Schema for data/processed/summary.json and data/processed/richer_sample/summary.json.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "input_path",
+    "output_dir",
+    "normalized_event_count",
+    "window_count",
+    "feature_row_count",
+    "alert_count",
+    "triggered_rule_names",
+    "triggered_rule_counts",
+    "cooldown_seconds",
+    "generated_artifacts"
+  ],
+  "properties": {
+    "input_path": { "type": "string", "minLength": 1 },
+    "output_dir": { "type": "string", "minLength": 1 },
+    "normalized_event_count": { "type": "integer", "minimum": 0 },
+    "window_count": { "type": "integer", "minimum": 0 },
+    "feature_row_count": { "type": "integer", "minimum": 0 },
+    "alert_count": { "type": "integer", "minimum": 0 },
+    "triggered_rule_names": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "triggered_rule_counts": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 0
+      }
+    },
+    "cooldown_seconds": { "type": "integer", "minimum": 0 },
+    "generated_artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    }
+  }
+}

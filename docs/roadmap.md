@@ -25,7 +25,7 @@ Recently added:
 1. Stabilize the demo matrix.
 2. Treat v1.0 as a five-demo contract freeze, not a feature expansion.
 3. Freeze reviewer-visible artifact names unless a rename is intentional and documented across README, reviewer docs, demo docs, tests, and sample outputs.
-4. Keep JSON schema contracts aligned with selected reviewer-facing evidence artifacts.
+4. Keep JSON schema contracts aligned with reviewer-facing JSON evidence artifacts across the five-demo matrix.
 5. Keep committed evidence artifacts aligned with regenerated pipeline output through `python scripts/regenerate_artifacts.py --check`.
 6. Keep cross-demo vocabulary stable for evidence workflow terms.
 7. Include reviewer-facing artifact diffs in every release, including explicit `no-artifact-change` notes when committed reviewer artifacts are unchanged.

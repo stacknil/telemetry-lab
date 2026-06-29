@@ -190,7 +190,7 @@ Cooldown behavior:
 - treat v1.0 as a five-demo contract freeze, not a feature expansion
 - stabilize the five-demo matrix and avoid broad platform expansion
 - freeze reviewer-visible artifact names unless a rename is intentionally coordinated across docs, tests, and sample outputs
-- keep JSON schema contracts aligned with selected reviewer-facing evidence artifacts
+- keep JSON schema contracts aligned with reviewer-facing JSON evidence artifacts across the five-demo matrix
 - keep committed artifacts aligned with regenerated pipeline output through `python scripts/regenerate_artifacts.py --check`
 - add a reviewer-facing artifact diff for each release, using `no-artifact-change` when committed reviewer artifacts are unchanged
 - use [`docs/reviewer-pack.md`](docs/reviewer-pack.md) and [`docs/architecture.md`](docs/architecture.md) as the consolidation entrypoints
