@@ -132,7 +132,9 @@ def test_readme_links_reviewer_path_and_uses_lab_framing() -> None:
     assert "[`docs/reviewer-pack.md`](docs/reviewer-pack.md)" in readme
     assert "[`docs/reviewer-brief.md`](docs/reviewer-brief.md)" in readme
     assert "[`docs/reviewer-path.md`](docs/reviewer-path.md)" in readme
+    assert "[`docs/v1-contract-freeze.md`](docs/v1-contract-freeze.md)" in readme
     assert "[`docs/architecture.md`](docs/architecture.md)" in readme
+    assert "Release drift note" in readme
     assert "portfolio prototype" not in normalized
     assert "mvp only" not in normalized
 
@@ -151,6 +153,7 @@ def test_docs_index_separates_current_route_from_history() -> None:
         "reviewer-pack.md",
         "reviewer-path.md",
         "reviewer-brief.md",
+        "v1-contract-freeze.md",
         "evidence-pipeline-contract.md",
         "reviewer-artifact-diff.md",
         "vocabulary.md",
@@ -186,6 +189,7 @@ def test_top_level_reviewer_pack_covers_matrix_and_artifact_contract() -> None:
     assert "Artifact Naming Contract" in reviewer_pack
     assert "[`docs/README.md`](README.md)" in reviewer_pack
     assert "[`docs/reviewer-path.md`](reviewer-path.md)" in reviewer_pack
+    assert "[`docs/v1-contract-freeze.md`](v1-contract-freeze.md)" in reviewer_pack
     assert "[`docs/reviewer-artifact-diff.md`](reviewer-artifact-diff.md)" in reviewer_pack
     assert "[`docs/vocabulary.md`](vocabulary.md)" in reviewer_pack
     assert "[`docs/architecture.md`](architecture.md)" in reviewer_pack
@@ -214,6 +218,7 @@ def test_reviewer_pack_defines_v1_readiness_gate() -> None:
     readme = _read_repo_file("README.md")
 
     assert "## v1 Readiness Gate" in reviewer_pack
+    assert "v1.0 five-demo contract freeze checklist" in reviewer_pack
     assert "five-demo matrix stable" in reviewer_pack
     assert "reviewer-visible artifact names stable" in reviewer_pack
     assert "package metadata, and repository metadata" in reviewer_pack
@@ -238,6 +243,7 @@ def test_current_docs_use_v1_contract_stabilization_language() -> None:
 
     assert "Demo expansion is closed." in current_docs["docs/roadmap.md"]
     assert "Next phase: v1 reviewer contract stabilization." in current_docs["docs/roadmap.md"]
+    assert "v1.0 Five-Demo Contract Freeze" in current_docs["docs/roadmap.md"]
     assert "## v1 Reviewer Contract Stabilization" in current_docs["README.md"]
 
     for path, text in current_docs.items():
@@ -313,6 +319,38 @@ def test_reviewer_artifact_diff_contract_covers_release_changes() -> None:
         assert "reviewer-artifact-diff.md" in text
 
     assert "Include reviewer-facing artifact diffs in every release" in roadmap
+
+
+def test_v1_contract_freeze_documents_release_drift_and_gate() -> None:
+    freeze_doc = _read_repo_file("docs/v1-contract-freeze.md")
+    docs_index = _read_repo_file("docs/README.md")
+    reviewer_pack = _read_repo_file("docs/reviewer-pack.md")
+    readme = _read_repo_file("README.md")
+    roadmap = _read_repo_file("docs/roadmap.md")
+
+    assert "# v1.0 Five-Demo Contract Freeze" in freeze_doc
+    assert "## Release Drift" in freeze_doc
+    assert "latest tagged release is `v0.6.0`" in freeze_doc
+    assert "Current `main` is ahead" in freeze_doc
+    assert "No new demo should be added for v1.0" in freeze_doc
+    assert "python scripts/regenerate_artifacts.py --check" in freeze_doc
+    assert "v1.0 artifact drift gate" in freeze_doc
+    assert "Do not publish v1.0 as a feature expansion" in freeze_doc
+
+    for demo_name in [
+        "telemetry-window-demo",
+        "ai-assisted-detection-demo",
+        "rule-evaluation-and-dedup-demo",
+        "config-change-investigation-demo",
+        "cloud-iam-change-investigation-demo",
+    ]:
+        assert f"`{demo_name}`" in freeze_doc
+
+    for text in [docs_index, reviewer_pack, readme, roadmap]:
+        assert "v1-contract-freeze.md" in text
+
+    assert "Release drift note" in readme
+    assert "v1.0 Five-Demo Contract Freeze" in roadmap
 
 
 def test_bounded_correlation_boundaries_are_documented() -> None:
