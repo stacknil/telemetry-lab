@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/stacknil/telemetry-lab/schemas/cloud_iam_summary.schema.json",
+  "title": "Cloud IAM investigation summary",
+  "description": "Schema for demos/cloud-iam-change-investigation-demo/artifacts/investigation_summary.json.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "source_type",
+    "event_count",
+    "signal_count",
+    "rule_counts",
+    "attack_mapping_count",
+    "time_model",
+    "boundaries"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "cloud-iam-change-investigation-demo/v1"
+    },
+    "source_type": { "type": "string", "minLength": 1 },
+    "event_count": { "type": "integer", "minimum": 0 },
+    "signal_count": { "type": "integer", "minimum": 0 },
+    "rule_counts": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 0
+      }
+    },
+    "attack_mapping_count": { "type": "integer", "minimum": 0 },
+    "time_model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "event_time_source",
+        "observed_time_source",
+        "detection_ordering",
+        "observed_time_event_count"
+      ],
+      "properties": {
+        "event_time_source": { "type": "string", "const": "eventTime" },
+        "observed_time_source": { "type": "string", "const": "observedTime when present" },
+        "detection_ordering": { "type": "string", "const": "event_time" },
+        "observed_time_event_count": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "boundaries": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    }
+  }
+}

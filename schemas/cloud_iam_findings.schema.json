@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/stacknil/telemetry-lab/schemas/cloud_iam_findings.schema.json",
+  "title": "Cloud IAM findings",
+  "description": "Schema for demos/cloud-iam-change-investigation-demo/artifacts/investigation_signals.json as reviewer-facing Cloud IAM findings.",
+  "type": "array",
+  "minItems": 1,
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "signal_id",
+      "rule_id",
+      "rule_name",
+      "severity",
+      "signal_time",
+      "actor",
+      "primary_event_id",
+      "source_ips",
+      "evidence_event_ids",
+      "evidence_events",
+      "attack_mappings",
+      "bounded_correlation_reason",
+      "review_scope"
+    ],
+    "properties": {
+      "signal_id": { "type": "string", "pattern": "^CTI-[0-9]{3}$" },
+      "rule_id": { "type": "string", "minLength": 1 },
+      "rule_name": { "type": "string", "minLength": 1 },
+      "severity": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+      "signal_time": { "type": "string", "format": "date-time" },
+      "actor": { "type": "string", "minLength": 1 },
+      "primary_event_id": { "type": "string", "minLength": 1 },
+      "source_ips": {
+        "type": "array",
+        "minItems": 1,
+        "items": { "type": "string", "minLength": 1 }
+      },
+      "evidence_event_ids": {
+        "type": "array",
+        "minItems": 1,
+        "items": { "type": "string", "minLength": 1 }
+      },
+      "evidence_events": {
+        "type": "array",
+        "minItems": 1,
+        "items": { "$ref": "#/$defs/evidence_event" }
+      },
+      "attack_mappings": {
+        "type": "array",
+        "minItems": 1,
+        "items": { "$ref": "#/$defs/attack_mapping" }
+      },
+      "bounded_correlation_reason": { "type": "string", "minLength": 1 },
+      "review_scope": { "type": "string", "minLength": 1 }
+    }
+  },
+  "$defs": {
+    "attack_mapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "tactic", "reference"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^T[0-9]{4}(\\.[0-9]{3})?$" },
+        "name": { "type": "string", "minLength": 1 },
+        "tactic": { "type": "string", "minLength": 1 },
+        "reference": { "type": "string", "format": "uri" }
+      }
+    },
+    "evidence_event": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "eventID",
+        "event_time",
+        "observed_time",
+        "eventTime",
+        "actor",
+        "eventSource",
+        "eventName",
+        "awsRegion",
+        "sourceIPAddress",
+        "errorCode",
+        "requestParameters"
+      ],
+      "properties": {
+        "eventID": { "type": "string", "minLength": 1 },
+        "event_time": { "type": "string", "format": "date-time" },
+        "observed_time": { "type": ["string", "null"], "format": "date-time" },
+        "eventTime": { "type": "string", "format": "date-time" },
+        "actor": { "type": "string", "minLength": 1 },
+        "eventSource": { "type": "string", "minLength": 1 },
+        "eventName": { "type": "string", "minLength": 1 },
+        "awsRegion": { "type": "string", "minLength": 1 },
+        "sourceIPAddress": { "type": "string", "minLength": 1 },
+        "errorCode": { "type": ["string", "null"] },
+        "requestParameters": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    }
+  }
+}
