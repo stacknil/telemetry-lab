@@ -35,6 +35,8 @@ navigation for this matrix.
 
 ## Freeze Gate
 
+Use [`docs/v1-readiness-gate.md`](v1-readiness-gate.md) as the release-readiness gate for fixed inputs, fixed outputs, schema validation, artifact regeneration, and test pass requirements.
+
 Before a v1.0 release candidate, run the following from the repository root:
 
 ```bash

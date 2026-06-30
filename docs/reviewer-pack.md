@@ -72,6 +72,7 @@ The current schema contract covers:
 Before treating the repo as v1-style consolidated:
 
 - Use [`docs/v1-contract-freeze.md`](v1-contract-freeze.md) as the v1.0 five-demo contract freeze checklist.
+- Use [`docs/v1-readiness-gate.md`](v1-readiness-gate.md) as the v1.0 readiness gate for fixed inputs, fixed outputs, schema validation, artifact regeneration, and test pass.
 - Keep the five-demo matrix stable, or document any intentional retirement in the README, reviewer path, reviewer pack, roadmap, and tests.
 - Keep reviewer-visible artifact names stable, or update the artifact naming contract and committed sample outputs in the same change.
 - Keep `docs/reviewer-path.md`, this reviewer pack, `docs/architecture.md`, and demo READMEs aligned with actual CLI behavior.
@@ -105,6 +106,7 @@ Use the same Python interpreter for install, tests, and demo commands.
 - [`docs/reviewer-brief.md`](reviewer-brief.md): short problem / value summary
 - [`docs/reviewer-path.md`](reviewer-path.md): demo choice by review question
 - [`docs/v1-contract-freeze.md`](v1-contract-freeze.md): v1.0 five-demo contract freeze and release drift note
+- [`docs/v1-readiness-gate.md`](v1-readiness-gate.md): v1.0 readiness gate for fixed inputs, fixed outputs, schema validation, artifact regeneration, and test pass
 - [`docs/evidence-pipeline-contract.md`](evidence-pipeline-contract.md): JSON schema contracts for five-demo evidence artifacts
 - [`docs/reviewer-artifact-diff.md`](reviewer-artifact-diff.md): release diff contract for reviewer-facing artifact changes
 - [`docs/vocabulary.md`](vocabulary.md): cross-demo evidence workflow vocabulary
