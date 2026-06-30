@@ -1,0 +1,10 @@
+# Ignore reproducible outputs while keeping source, configuration, and committed
+# sample inputs in scope for filename and high-entropy checks.
+entropy_threshold = 4.5
+
+ignore_globs = [
+  ".artifact-regeneration-tmp/**",
+  ".pytest-artifacts*/**",
+  "data/processed/**",
+  "demos/*/artifacts/**",
+]
