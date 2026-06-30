@@ -135,7 +135,7 @@ def test_readme_links_reviewer_path_and_uses_lab_framing() -> None:
     assert "[`docs/v1-contract-freeze.md`](docs/v1-contract-freeze.md)" in readme
     assert "[`docs/v1-readiness-gate.md`](docs/v1-readiness-gate.md)" in readme
     assert "[`docs/architecture.md`](docs/architecture.md)" in readme
-    assert "Release drift note" in readme
+    assert "Latest tagged release: [v1.0" in readme
     assert "portfolio prototype" not in normalized
     assert "mvp only" not in normalized
 
@@ -337,9 +337,9 @@ def test_v1_contract_freeze_documents_release_drift_and_gate() -> None:
     roadmap = _read_repo_file("docs/roadmap.md")
 
     assert "# v1.0 Five-Demo Contract Freeze" in freeze_doc
-    assert "## Release Drift" in freeze_doc
-    assert "latest tagged release is `v0.6.0`" in freeze_doc
-    assert "Current `main` is ahead" in freeze_doc
+    assert "## Release Status" in freeze_doc
+    assert "latest tagged release is `v1.0`" in freeze_doc
+    assert "`v0.6.0` remains the fourth-demo compatibility baseline" in freeze_doc
     assert "No new demo should be added for v1.0" in freeze_doc
     assert "python scripts/regenerate_artifacts.py --check" in freeze_doc
     assert "v1.0 artifact drift gate" in freeze_doc
@@ -358,7 +358,6 @@ def test_v1_contract_freeze_documents_release_drift_and_gate() -> None:
     for text in [docs_index, reviewer_pack, readme, roadmap]:
         assert "v1-contract-freeze.md" in text
 
-    assert "Release drift note" in readme
     assert "v1.0 Five-Demo Contract Freeze" in roadmap
 
 
@@ -396,6 +395,15 @@ def test_v1_readiness_gate_defines_required_release_conditions() -> None:
     for text in [docs_index, reviewer_pack, readme]:
         assert "v1-readiness-gate.md" in text
 
+    for demo_name in [
+        "telemetry-window-demo",
+        "ai-assisted-detection-demo",
+        "rule-evaluation-and-dedup-demo",
+        "config-change-investigation-demo",
+        "cloud-iam-change-investigation-demo",
+    ]:
+        assert f"`{demo_name}`" in readiness_gate
+
 
 def test_v06_to_v1_artifact_diff_documents_additive_fifth_demo_contract() -> None:
     artifact_diff = _read_repo_file("docs/v0.6-to-v1-artifact-diff.md")
@@ -418,6 +426,9 @@ def test_v06_to_v1_artifact_diff_documents_additive_fifth_demo_contract() -> Non
     assert "## Verification" in artifact_diff
     assert "`investigation_hits.json`" in artifact_diff
     assert "`investigation_signals.json`" in artifact_diff
+    assert "`schemas/config_change_events.schema.json`" in artifact_diff
+    assert "`schemas/config_investigation_hits.schema.json`" in artifact_diff
+    assert "`schemas/cloudtrail_normalized_events.schema.json`" in artifact_diff
     assert "`schemas/investigation_summary.schema.json`" in artifact_diff
     assert "`schemas/cloud_iam_findings.schema.json`" in artifact_diff
     assert "`schemas/cloud_iam_summary.schema.json`" in artifact_diff
@@ -446,9 +457,9 @@ def test_v1_release_note_states_reviewer_contract_boundary() -> None:
 
     boundary = "This is a reviewer-contract release, not a production SIEM."
 
-    assert "# v1.0 Reviewer Contract Release Notes (Draft)" in release_note
+    assert "# v1.0 Reviewer Contract Release Notes" in release_note
     assert boundary in release_note
-    assert "This document does not create a `v1.0` tag or GitHub" in release_note
+    assert "Release status: v1.0 reviewer-contract release." in release_note
     assert "## Release Scope" in release_note
     assert "## Reviewer Contract" in release_note
     assert "## Artifact Compatibility" in release_note

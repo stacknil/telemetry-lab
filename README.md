@@ -6,20 +6,18 @@ A local, file-based detection workflow lab for reviewer-verifiable telemetry and
 
 Current focus: v1 reviewer contract stabilization for the five-demo matrix, with v1.0 treated as a five-demo contract freeze.
 
-Latest tagged release: [v0.6.0 — fourth demo and config-change investigation](https://github.com/stacknil/telemetry-lab/releases/latest).
-
-Release drift note: current `main` is ahead of `v0.6.0` and contains the five-demo matrix plus v1 contract-freeze docs. Until a `v1.0` tag exists, use [`docs/v1-contract-freeze.md`](docs/v1-contract-freeze.md) and [`docs/reviewer-pack.md`](docs/reviewer-pack.md) for current main-branch review.
+Latest tagged release: [v1.0 — reviewer contract release](https://github.com/stacknil/telemetry-lab/releases/tag/v1.0).
 
 ## Reviewer Start
 
 - [`docs/reviewer-brief.md`](docs/reviewer-brief.md): scope, value, evidence, and boundaries
 - [`docs/reviewer-path.md`](docs/reviewer-path.md): choose the right demo by review question
 - [`docs/reviewer-pack.md`](docs/reviewer-pack.md): demo matrix, artifact contract, and v1 readiness gate
-- [`docs/v1-contract-freeze.md`](docs/v1-contract-freeze.md): v1.0 five-demo contract freeze and release drift note
+- [`docs/v1-contract-freeze.md`](docs/v1-contract-freeze.md): v1.0 five-demo contract freeze, release status, and contract scope
 - [`docs/v1-readiness-gate.md`](docs/v1-readiness-gate.md): fixed inputs, fixed outputs, schema validation, artifact regeneration, and test pass requirements
-- [`docs/release-v1.0.md`](docs/release-v1.0.md): draft v1.0 reviewer-contract release notes and explicit non-SIEM boundary
+- [`docs/release-v1.0.md`](docs/release-v1.0.md): v1.0 reviewer-contract release notes and explicit non-SIEM boundary
 - [`docs/v0.6-to-v1-artifact-diff.md`](docs/v0.6-to-v1-artifact-diff.md): fourth-to-fifth-demo artifact contract and compatibility diff
-- [`docs/evidence-pipeline-contract.md`](docs/evidence-pipeline-contract.md): JSON schema contracts for reviewer-facing evidence artifacts
+- [`docs/evidence-pipeline-contract.md`](docs/evidence-pipeline-contract.md): JSON/JSONL schema contracts for reviewer-facing evidence artifacts
 - [`docs/reviewer-artifact-diff.md`](docs/reviewer-artifact-diff.md): release artifact diff contract for reviewer-facing outputs
 - [`docs/vocabulary.md`](docs/vocabulary.md): cross-demo vocabulary for events, hits, signals, bounded correlation, findings, summaries, reports, and audit traces
 - [`docs/README.md`](docs/README.md): current route, supporting docs, and historical release evidence
@@ -195,7 +193,7 @@ Cooldown behavior:
 - treat v1.0 as a five-demo contract freeze, not a feature expansion
 - stabilize the five-demo matrix and avoid broad platform expansion
 - freeze reviewer-visible artifact names unless a rename is intentionally coordinated across docs, tests, and sample outputs
-- keep JSON schema contracts aligned with reviewer-facing JSON evidence artifacts across the five-demo matrix
+- keep JSON schema contracts aligned with reviewer-facing JSON and JSONL evidence artifacts across the five-demo matrix
 - keep committed artifacts aligned with regenerated pipeline output through `python scripts/regenerate_artifacts.py --check`
 - add a reviewer-facing artifact diff for each release, using `no-artifact-change` when committed reviewer artifacts are unchanged
 - use [`docs/reviewer-pack.md`](docs/reviewer-pack.md) and [`docs/architecture.md`](docs/architecture.md) as the consolidation entrypoints

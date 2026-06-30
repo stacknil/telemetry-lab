@@ -19,11 +19,30 @@ SCHEMA_CONTRACTS = {
     "schemas/case_bundles.schema.json": [
         "demos/ai-assisted-detection-demo/artifacts/case_bundles.json",
     ],
+    "schemas/case_summaries.schema.json": [
+        "demos/ai-assisted-detection-demo/artifacts/case_summaries.json",
+    ],
+    "schemas/ai_audit_traces.schema.json": [
+        "demos/ai-assisted-detection-demo/artifacts/audit_traces.jsonl",
+    ],
+    "schemas/dedup_rule_hits.schema.json": [
+        "demos/rule-evaluation-and-dedup-demo/artifacts/rule_hits_before_dedup.json",
+        "demos/rule-evaluation-and-dedup-demo/artifacts/rule_hits_after_dedup.json",
+    ],
     "schemas/dedup_explanations.schema.json": [
         "demos/rule-evaluation-and-dedup-demo/artifacts/dedup_explanations.json",
     ],
+    "schemas/config_change_events.schema.json": [
+        "demos/config-change-investigation-demo/artifacts/change_events_normalized.json",
+    ],
+    "schemas/config_investigation_hits.schema.json": [
+        "demos/config-change-investigation-demo/artifacts/investigation_hits.json",
+    ],
     "schemas/investigation_summary.schema.json": [
         "demos/config-change-investigation-demo/artifacts/investigation_summary.json",
+    ],
+    "schemas/cloudtrail_normalized_events.schema.json": [
+        "demos/cloud-iam-change-investigation-demo/artifacts/normalized_cloudtrail_events.json",
     ],
     "schemas/cloud_iam_findings.schema.json": [
         "demos/cloud-iam-change-investigation-demo/artifacts/investigation_signals.json",
@@ -40,22 +59,60 @@ DEMO_SCHEMA_COVERAGE = {
     "ai-assisted-detection-demo": [
         "schemas/rule_hits.schema.json",
         "schemas/case_bundles.schema.json",
+        "schemas/case_summaries.schema.json",
+        "schemas/ai_audit_traces.schema.json",
     ],
     "rule-evaluation-and-dedup-demo": [
+        "schemas/dedup_rule_hits.schema.json",
         "schemas/dedup_explanations.schema.json",
     ],
     "config-change-investigation-demo": [
+        "schemas/config_change_events.schema.json",
+        "schemas/config_investigation_hits.schema.json",
         "schemas/investigation_summary.schema.json",
     ],
     "cloud-iam-change-investigation-demo": [
+        "schemas/cloudtrail_normalized_events.schema.json",
         "schemas/cloud_iam_findings.schema.json",
         "schemas/cloud_iam_summary.schema.json",
     ],
 }
 
+REVIEWER_JSON_ARTIFACTS = {
+    "data/processed/summary.json",
+    "data/processed/richer_sample/summary.json",
+    "demos/ai-assisted-detection-demo/artifacts/rule_hits.json",
+    "demos/ai-assisted-detection-demo/artifacts/case_bundles.json",
+    "demos/ai-assisted-detection-demo/artifacts/case_summaries.json",
+    "demos/ai-assisted-detection-demo/artifacts/audit_traces.jsonl",
+    "demos/rule-evaluation-and-dedup-demo/artifacts/rule_hits_before_dedup.json",
+    "demos/rule-evaluation-and-dedup-demo/artifacts/rule_hits_after_dedup.json",
+    "demos/rule-evaluation-and-dedup-demo/artifacts/dedup_explanations.json",
+    "demos/config-change-investigation-demo/artifacts/change_events_normalized.json",
+    "demos/config-change-investigation-demo/artifacts/investigation_hits.json",
+    "demos/config-change-investigation-demo/artifacts/investigation_summary.json",
+    "demos/cloud-iam-change-investigation-demo/artifacts/normalized_cloudtrail_events.json",
+    "demos/cloud-iam-change-investigation-demo/artifacts/investigation_signals.json",
+    "demos/cloud-iam-change-investigation-demo/artifacts/investigation_summary.json",
+}
+
 
 def _load_json(relative_path: str) -> object:
     return json.loads((REPO_ROOT / relative_path).read_text(encoding="utf-8"))
+
+
+def _load_jsonl(relative_path: str) -> list[object]:
+    return [
+        json.loads(line)
+        for line in (REPO_ROOT / relative_path).read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+
+
+def _load_artifact(relative_path: str) -> object:
+    if relative_path.endswith(".jsonl"):
+        return _load_jsonl(relative_path)
+    return _load_json(relative_path)
 
 
 def _error_summary(errors: list[object]) -> str:
@@ -73,10 +130,20 @@ def test_evidence_pipeline_schemas_validate_committed_artifacts() -> None:
         validator = Draft202012Validator(schema, format_checker=FormatChecker())
 
         for artifact_path in artifact_paths:
-            errors = sorted(
-                validator.iter_errors(_load_json(artifact_path)),
-                key=lambda error: list(error.absolute_path),
-            )
+            artifact = _load_artifact(artifact_path)
+            if artifact_path.endswith(".jsonl"):
+                assert isinstance(artifact, list)
+                errors = [
+                    error
+                    for record in artifact
+                    for error in validator.iter_errors(record)
+                ]
+                errors.sort(key=lambda error: list(error.absolute_path))
+            else:
+                errors = sorted(
+                    validator.iter_errors(artifact),
+                    key=lambda error: list(error.absolute_path),
+                )
             assert errors == [], f"{schema_path} failed for {artifact_path}\n{_error_summary(errors)}"
 
 
@@ -106,6 +173,11 @@ def test_evidence_pipeline_contract_docs_reference_schemas_and_artifacts() -> No
 
 def test_schema_contracts_cover_all_five_demos_and_named_artifacts() -> None:
     contract_schema_paths = set(SCHEMA_CONTRACTS)
+    contracted_artifact_paths = {
+        artifact_path
+        for artifact_paths in SCHEMA_CONTRACTS.values()
+        for artifact_path in artifact_paths
+    }
 
     assert set(DEMO_SCHEMA_COVERAGE) == {
         "telemetry-window-demo",
@@ -128,3 +200,7 @@ def test_schema_contracts_cover_all_five_demos_and_named_artifacts() -> None:
         "schemas/cloud_iam_findings.schema.json",
     ]:
         assert required_schema in contract_schema_paths
+
+    assert contracted_artifact_paths == REVIEWER_JSON_ARTIFACTS
+    for artifact_path in REVIEWER_JSON_ARTIFACTS:
+        assert (REPO_ROOT / artifact_path).is_file(), artifact_path

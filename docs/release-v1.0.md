@@ -1,9 +1,8 @@
-# v1.0 Reviewer Contract Release Notes (Draft)
+# v1.0 Reviewer Contract Release Notes
 
 **This is a reviewer-contract release, not a production SIEM.**
 
-Release status: Draft. This document does not create a `v1.0` tag or GitHub
-release. Final publication remains gated by
+Release status: v1.0 reviewer-contract release. Publication is gated by
 [`docs/v1-readiness-gate.md`](v1-readiness-gate.md).
 
 ## Release Scope
@@ -26,7 +25,7 @@ The v1.0 release contract requires:
 
 - fixed synthetic inputs for the five demos
 - fixed reviewer-visible output paths
-- JSON Schema validation for contracted evidence artifacts
+- JSON Schema validation for reviewer-facing JSON and JSONL evidence artifacts
 - reproducible committed artifacts
 - a passing full test suite
 
@@ -51,8 +50,7 @@ field-level and semantic diff. Future release diffs follow
 
 ## Validation Snapshot
 
-Current draft validation snapshot; refresh these results from the release
-candidate commit before publication:
+Validation snapshot from the release candidate commit:
 
 ```bash
 python scripts/regenerate_artifacts.py --check

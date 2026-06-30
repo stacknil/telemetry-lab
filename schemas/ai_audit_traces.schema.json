@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/stacknil/telemetry-lab/schemas/ai_audit_traces.schema.json",
+  "title": "AI-assisted detection audit trace records",
+  "description": "Schema for each JSONL record in demos/ai-assisted-detection-demo/artifacts/audit_traces.jsonl.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "ts",
+    "case_id",
+    "schema_version",
+    "output_schema_version",
+    "stage",
+    "validation_status",
+    "rejection_reason",
+    "rule_ids",
+    "prompt_input_digest",
+    "evidence_digest",
+    "raw_response_excerpt",
+    "validation_errors",
+    "telemetry_classification"
+  ],
+  "properties": {
+    "ts": { "type": "string", "format": "date-time" },
+    "case_id": {
+      "type": ["string", "null"],
+      "pattern": "^CASE-[0-9]{3}$"
+    },
+    "schema_version": {
+      "type": "string",
+      "const": "ai-assisted-detection-audit/v1"
+    },
+    "output_schema_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "stage": {
+      "type": "string",
+      "enum": ["case_summary_validation", "rule_metadata_validation"]
+    },
+    "validation_status": {
+      "type": "string",
+      "enum": ["accepted", "rejected"]
+    },
+    "rejection_reason": {
+      "type": ["string", "null"],
+      "minLength": 1
+    },
+    "rule_ids": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "prompt_input_digest": {
+      "type": ["string", "null"],
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "evidence_digest": {
+      "type": ["string", "null"],
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "raw_response_excerpt": {
+      "type": ["string", "null"],
+      "minLength": 1
+    },
+    "validation_errors": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "telemetry_classification": {
+      "type": "string",
+      "const": "untrusted_data"
+    }
+  }
+}

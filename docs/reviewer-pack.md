@@ -41,7 +41,7 @@ The current artifact names are reviewer-facing contracts for the v1 reviewer con
 
 ## Evidence Pipeline Contract
 
-See [`docs/evidence-pipeline-contract.md`](evidence-pipeline-contract.md) for the v1 JSON schema contract covering reviewer-facing JSON evidence artifacts across the five-demo matrix.
+See [`docs/evidence-pipeline-contract.md`](evidence-pipeline-contract.md) for the v1 JSON schema contract covering reviewer-facing JSON and JSONL evidence artifacts across the five-demo matrix.
 
 See [`docs/vocabulary.md`](vocabulary.md) for the cross-demo meaning of `event`, `signal`, `hit`, `finding`, `case_bundle`, `summary`, `report`, and `audit_trace`.
 
@@ -51,8 +51,14 @@ The current schema contract covers:
 
 - `schemas/rule_hits.schema.json`
 - `schemas/case_bundles.schema.json`
+- `schemas/case_summaries.schema.json`
+- `schemas/ai_audit_traces.schema.json`
+- `schemas/dedup_rule_hits.schema.json`
 - `schemas/dedup_explanations.schema.json`
+- `schemas/config_change_events.schema.json`
+- `schemas/config_investigation_hits.schema.json`
 - `schemas/investigation_summary.schema.json`
+- `schemas/cloudtrail_normalized_events.schema.json`
 - `schemas/cloud_iam_findings.schema.json`
 - `schemas/cloud_iam_summary.schema.json`
 - `schemas/telemetry_summary.schema.json`
@@ -106,11 +112,11 @@ Use the same Python interpreter for install, tests, and demo commands.
 - [`docs/README.md`](README.md): docs index for the current route, supporting docs, and historical release evidence
 - [`docs/reviewer-brief.md`](reviewer-brief.md): short problem / value summary
 - [`docs/reviewer-path.md`](reviewer-path.md): demo choice by review question
-- [`docs/v1-contract-freeze.md`](v1-contract-freeze.md): v1.0 five-demo contract freeze and release drift note
+- [`docs/v1-contract-freeze.md`](v1-contract-freeze.md): v1.0 five-demo contract freeze, release status, and contract scope
 - [`docs/v1-readiness-gate.md`](v1-readiness-gate.md): v1.0 readiness gate for fixed inputs, fixed outputs, schema validation, artifact regeneration, and test pass
-- [`docs/release-v1.0.md`](release-v1.0.md): draft v1.0 reviewer-contract release notes and explicit non-SIEM boundary
+- [`docs/release-v1.0.md`](release-v1.0.md): v1.0 reviewer-contract release notes and explicit non-SIEM boundary
 - [`docs/v0.6-to-v1-artifact-diff.md`](v0.6-to-v1-artifact-diff.md): fourth-to-fifth-demo artifact contract and compatibility diff
-- [`docs/evidence-pipeline-contract.md`](evidence-pipeline-contract.md): JSON schema contracts for five-demo evidence artifacts
+- [`docs/evidence-pipeline-contract.md`](evidence-pipeline-contract.md): JSON/JSONL schema contracts for five-demo evidence artifacts
 - [`docs/reviewer-artifact-diff.md`](reviewer-artifact-diff.md): release diff contract for reviewer-facing artifact changes
 - [`docs/vocabulary.md`](vocabulary.md): cross-demo evidence workflow vocabulary
 - [`docs/architecture.md`](architecture.md): local file-based workflow diagram
