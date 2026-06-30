@@ -133,6 +133,7 @@ def test_readme_links_reviewer_path_and_uses_lab_framing() -> None:
     assert "[`docs/reviewer-brief.md`](docs/reviewer-brief.md)" in readme
     assert "[`docs/reviewer-path.md`](docs/reviewer-path.md)" in readme
     assert "[`docs/v1-contract-freeze.md`](docs/v1-contract-freeze.md)" in readme
+    assert "[`docs/v1-readiness-gate.md`](docs/v1-readiness-gate.md)" in readme
     assert "[`docs/architecture.md`](docs/architecture.md)" in readme
     assert "Release drift note" in readme
     assert "portfolio prototype" not in normalized
@@ -154,6 +155,7 @@ def test_docs_index_separates_current_route_from_history() -> None:
         "reviewer-path.md",
         "reviewer-brief.md",
         "v1-contract-freeze.md",
+        "v1-readiness-gate.md",
         "evidence-pipeline-contract.md",
         "reviewer-artifact-diff.md",
         "vocabulary.md",
@@ -190,6 +192,7 @@ def test_top_level_reviewer_pack_covers_matrix_and_artifact_contract() -> None:
     assert "[`docs/README.md`](README.md)" in reviewer_pack
     assert "[`docs/reviewer-path.md`](reviewer-path.md)" in reviewer_pack
     assert "[`docs/v1-contract-freeze.md`](v1-contract-freeze.md)" in reviewer_pack
+    assert "[`docs/v1-readiness-gate.md`](v1-readiness-gate.md)" in reviewer_pack
     assert "[`docs/reviewer-artifact-diff.md`](reviewer-artifact-diff.md)" in reviewer_pack
     assert "[`docs/vocabulary.md`](vocabulary.md)" in reviewer_pack
     assert "[`docs/architecture.md`](architecture.md)" in reviewer_pack
@@ -219,6 +222,7 @@ def test_reviewer_pack_defines_v1_readiness_gate() -> None:
 
     assert "## v1 Readiness Gate" in reviewer_pack
     assert "v1.0 five-demo contract freeze checklist" in reviewer_pack
+    assert "fixed inputs, fixed outputs, schema validation, artifact regeneration, and test pass" in reviewer_pack
     assert "five-demo matrix stable" in reviewer_pack
     assert "reviewer-visible artifact names stable" in reviewer_pack
     assert "package metadata, and repository metadata" in reviewer_pack
@@ -227,8 +231,8 @@ def test_reviewer_pack_defines_v1_readiness_gate() -> None:
     assert "reviewer-facing artifact diff" in reviewer_pack
     assert "added fields, removed fields, semantic changes, and compatibility notes" in reviewer_pack
     assert "Do not add SIEM, dashboard, alert routing" in reviewer_pack
-    assert "[`docs/reviewer-pack.md`](reviewer-pack.md#v1-readiness-gate)" in roadmap
-    assert "[`v1 readiness gate`](docs/reviewer-pack.md#v1-readiness-gate)" in readme
+    assert "[`docs/v1-readiness-gate.md`](v1-readiness-gate.md)" in roadmap
+    assert "[`v1 readiness gate`](docs/v1-readiness-gate.md)" in readme
 
 
 def test_current_docs_use_v1_contract_stabilization_language() -> None:
@@ -335,6 +339,7 @@ def test_v1_contract_freeze_documents_release_drift_and_gate() -> None:
     assert "No new demo should be added for v1.0" in freeze_doc
     assert "python scripts/regenerate_artifacts.py --check" in freeze_doc
     assert "v1.0 artifact drift gate" in freeze_doc
+    assert "[`docs/v1-readiness-gate.md`](v1-readiness-gate.md)" in freeze_doc
     assert "Do not publish v1.0 as a feature expansion" in freeze_doc
 
     for demo_name in [
@@ -351,6 +356,41 @@ def test_v1_contract_freeze_documents_release_drift_and_gate() -> None:
 
     assert "Release drift note" in readme
     assert "v1.0 Five-Demo Contract Freeze" in roadmap
+
+
+def test_v1_readiness_gate_defines_required_release_conditions() -> None:
+    readiness_gate = _read_repo_file("docs/v1-readiness-gate.md")
+    docs_index = _read_repo_file("docs/README.md")
+    reviewer_pack = _read_repo_file("docs/reviewer-pack.md")
+    readme = _read_repo_file("README.md")
+
+    assert "# v1.0 Readiness Gate" in readiness_gate
+    assert "If any condition fails, v1.0 is not ready." in readiness_gate
+
+    for heading in [
+        "## Fixed Inputs",
+        "## Fixed Outputs",
+        "## Schema Validation",
+        "## Artifact Regeneration",
+        "## Test Pass",
+        "## Release Decision",
+    ]:
+        assert heading in readiness_gate
+
+    for required_phrase in [
+        "Fixed inputs",
+        "Fixed outputs",
+        "Schema validation",
+        "Artifact regeneration",
+        "Test pass",
+        "python scripts/regenerate_artifacts.py --check",
+        "python -m pytest tests/test_evidence_pipeline_schemas.py",
+        "python -m pytest",
+    ]:
+        assert required_phrase in readiness_gate
+
+    for text in [docs_index, reviewer_pack, readme]:
+        assert "v1-readiness-gate.md" in text
 
 
 def test_bounded_correlation_boundaries_are_documented() -> None:
