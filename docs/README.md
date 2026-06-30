@@ -9,6 +9,7 @@ This directory separates the current reviewer route from supporting design notes
 - [`reviewer-brief.md`](reviewer-brief.md): short problem, value, evidence, and boundary summary
 - [`v1-contract-freeze.md`](v1-contract-freeze.md): v1.0 five-demo contract freeze and release drift note
 - [`v1-readiness-gate.md`](v1-readiness-gate.md): fixed inputs, fixed outputs, schema validation, artifact regeneration, and test pass requirements
+- [`v0.6-to-v1-artifact-diff.md`](v0.6-to-v1-artifact-diff.md): additive artifact contract and compatibility diff from the fourth demo to the fifth
 - [`evidence-pipeline-contract.md`](evidence-pipeline-contract.md): JSON schema contracts for reviewer-facing evidence artifacts
 - [`reviewer-artifact-diff.md`](reviewer-artifact-diff.md): release diff contract for reviewer-facing artifact changes
 - [`vocabulary.md`](vocabulary.md): cross-demo vocabulary for evidence workflow terms and bounded correlation

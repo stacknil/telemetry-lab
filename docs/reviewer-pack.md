@@ -34,6 +34,7 @@ The current artifact names are reviewer-facing contracts for the v1 reviewer con
 
 - Keep the demo matrix stable unless a demo is intentionally retired.
 - Prefer additive artifacts over renaming existing reviewer-visible outputs.
+- Use [`docs/v0.6-to-v1-artifact-diff.md`](v0.6-to-v1-artifact-diff.md) for the concrete fourth-to-fifth-demo compatibility baseline.
 - If an artifact must be renamed, update the README, reviewer path, this reviewer pack, demo README, tests, and committed sample outputs in the same change.
 - For each release, add the diff described in [`docs/reviewer-artifact-diff.md`](reviewer-artifact-diff.md), using `no-artifact-change` when reviewer-facing artifacts are unchanged.
 - Do not introduce platform-style names that imply alert routing, case management, real-time ingestion, or autonomous response.
@@ -107,6 +108,7 @@ Use the same Python interpreter for install, tests, and demo commands.
 - [`docs/reviewer-path.md`](reviewer-path.md): demo choice by review question
 - [`docs/v1-contract-freeze.md`](v1-contract-freeze.md): v1.0 five-demo contract freeze and release drift note
 - [`docs/v1-readiness-gate.md`](v1-readiness-gate.md): v1.0 readiness gate for fixed inputs, fixed outputs, schema validation, artifact regeneration, and test pass
+- [`docs/v0.6-to-v1-artifact-diff.md`](v0.6-to-v1-artifact-diff.md): fourth-to-fifth-demo artifact contract and compatibility diff
 - [`docs/evidence-pipeline-contract.md`](evidence-pipeline-contract.md): JSON schema contracts for five-demo evidence artifacts
 - [`docs/reviewer-artifact-diff.md`](reviewer-artifact-diff.md): release diff contract for reviewer-facing artifact changes
 - [`docs/vocabulary.md`](vocabulary.md): cross-demo evidence workflow vocabulary

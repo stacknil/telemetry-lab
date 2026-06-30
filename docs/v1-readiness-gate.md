@@ -35,6 +35,7 @@ Before v1.0:
 
 - keep stable artifact paths listed in [`docs/reviewer-pack.md`](reviewer-pack.md#stable-reviewer-visible-artifacts)
 - keep output semantics aligned with [`docs/evidence-pipeline-contract.md`](evidence-pipeline-contract.md)
+- verify the `v0.6.0` fourth-demo compatibility baseline in [`docs/v0.6-to-v1-artifact-diff.md`](v0.6-to-v1-artifact-diff.md)
 - document any intentional artifact shape change in [`docs/reviewer-artifact-diff.md`](reviewer-artifact-diff.md)
 - use `no-artifact-change` when committed reviewer artifacts are unchanged for a release
 

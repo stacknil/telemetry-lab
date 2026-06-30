@@ -156,6 +156,7 @@ def test_docs_index_separates_current_route_from_history() -> None:
         "reviewer-brief.md",
         "v1-contract-freeze.md",
         "v1-readiness-gate.md",
+        "v0.6-to-v1-artifact-diff.md",
         "evidence-pipeline-contract.md",
         "reviewer-artifact-diff.md",
         "vocabulary.md",
@@ -193,6 +194,7 @@ def test_top_level_reviewer_pack_covers_matrix_and_artifact_contract() -> None:
     assert "[`docs/reviewer-path.md`](reviewer-path.md)" in reviewer_pack
     assert "[`docs/v1-contract-freeze.md`](v1-contract-freeze.md)" in reviewer_pack
     assert "[`docs/v1-readiness-gate.md`](v1-readiness-gate.md)" in reviewer_pack
+    assert "[`docs/v0.6-to-v1-artifact-diff.md`](v0.6-to-v1-artifact-diff.md)" in reviewer_pack
     assert "[`docs/reviewer-artifact-diff.md`](reviewer-artifact-diff.md)" in reviewer_pack
     assert "[`docs/vocabulary.md`](vocabulary.md)" in reviewer_pack
     assert "[`docs/architecture.md`](architecture.md)" in reviewer_pack
@@ -391,6 +393,45 @@ def test_v1_readiness_gate_defines_required_release_conditions() -> None:
 
     for text in [docs_index, reviewer_pack, readme]:
         assert "v1-readiness-gate.md" in text
+
+
+def test_v06_to_v1_artifact_diff_documents_additive_fifth_demo_contract() -> None:
+    artifact_diff = _read_repo_file("docs/v0.6-to-v1-artifact-diff.md")
+    docs_index = _read_repo_file("docs/README.md")
+    reviewer_pack = _read_repo_file("docs/reviewer-pack.md")
+    readme = _read_repo_file("README.md")
+    freeze_doc = _read_repo_file("docs/v1-contract-freeze.md")
+    readiness_gate = _read_repo_file("docs/v1-readiness-gate.md")
+    roadmap = _read_repo_file("docs/roadmap.md")
+
+    assert "# v0.6.0 to v1 Artifact Contract Diff" in artifact_diff
+    assert "additive-compatible" in artifact_diff
+    assert "No fourth-demo artifact path was removed or renamed." in artifact_diff
+    assert "The committed fourth-demo artifacts are unchanged" in artifact_diff
+    assert "## Fourth-Demo Artifacts" in artifact_diff
+    assert "## Fifth-Demo Artifacts" in artifact_diff
+    assert "## Semantic Differences" in artifact_diff
+    assert "## v1 Contract Additions" in artifact_diff
+    assert "## Consumer Guidance" in artifact_diff
+    assert "## Verification" in artifact_diff
+    assert "`investigation_hits.json`" in artifact_diff
+    assert "`investigation_signals.json`" in artifact_diff
+    assert "`schemas/investigation_summary.schema.json`" in artifact_diff
+    assert "`schemas/cloud_iam_findings.schema.json`" in artifact_diff
+    assert "`schemas/cloud_iam_summary.schema.json`" in artifact_diff
+    assert "Same basename, different demo-local contract" in artifact_diff
+    assert "No live AWS account" in artifact_diff
+    assert "final incident verdict" in artifact_diff
+
+    for text in [
+        docs_index,
+        reviewer_pack,
+        readme,
+        freeze_doc,
+        readiness_gate,
+        roadmap,
+    ]:
+        assert "v0.6-to-v1-artifact-diff.md" in text
 
 
 def test_bounded_correlation_boundaries_are_documented() -> None:
