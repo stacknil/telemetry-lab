@@ -17,6 +17,7 @@ Release drift note: current `main` is ahead of `v0.6.0` and contains the five-de
 - [`docs/reviewer-pack.md`](docs/reviewer-pack.md): demo matrix, artifact contract, and v1 readiness gate
 - [`docs/v1-contract-freeze.md`](docs/v1-contract-freeze.md): v1.0 five-demo contract freeze and release drift note
 - [`docs/v1-readiness-gate.md`](docs/v1-readiness-gate.md): fixed inputs, fixed outputs, schema validation, artifact regeneration, and test pass requirements
+- [`docs/v0.6-to-v1-artifact-diff.md`](docs/v0.6-to-v1-artifact-diff.md): fourth-to-fifth-demo artifact contract and compatibility diff
 - [`docs/evidence-pipeline-contract.md`](docs/evidence-pipeline-contract.md): JSON schema contracts for reviewer-facing evidence artifacts
 - [`docs/reviewer-artifact-diff.md`](docs/reviewer-artifact-diff.md): release artifact diff contract for reviewer-facing outputs
 - [`docs/vocabulary.md`](docs/vocabulary.md): cross-demo vocabulary for events, hits, signals, bounded correlation, findings, summaries, reports, and audit traces
@@ -173,6 +174,7 @@ Cooldown behavior:
 - [`docs/reviewer-pack.md`](docs/reviewer-pack.md) is the top-level no-guessing reviewer pack and artifact naming contract
 - [`docs/v1-contract-freeze.md`](docs/v1-contract-freeze.md) defines the v1.0 five-demo contract freeze gate
 - [`docs/v1-readiness-gate.md`](docs/v1-readiness-gate.md) defines the fixed-input, fixed-output, schema-validation, artifact-regeneration, and test-pass readiness gate
+- [`docs/v0.6-to-v1-artifact-diff.md`](docs/v0.6-to-v1-artifact-diff.md) explains the additive artifact contract from the fourth demo to the fifth
 - [`docs/evidence-pipeline-contract.md`](docs/evidence-pipeline-contract.md) maps v1 evidence schemas to committed JSON artifacts
 - [`docs/reviewer-artifact-diff.md`](docs/reviewer-artifact-diff.md) defines the release diff format for reviewer-facing artifact changes
 - [`docs/reviewer-brief.md`](docs/reviewer-brief.md) gives the short problem, value, evidence, and boundary summary

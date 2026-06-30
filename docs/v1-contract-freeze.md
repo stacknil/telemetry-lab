@@ -19,6 +19,10 @@ this document, [`docs/reviewer-pack.md`](reviewer-pack.md), and
 [`docs/reviewer-path.md`](reviewer-path.md) instead of treating `v0.6.0` release
 notes as the complete current capability set.
 
+Use [`docs/v0.6-to-v1-artifact-diff.md`](v0.6-to-v1-artifact-diff.md) for the
+concrete artifact and compatibility change from the fourth demo in `v0.6.0` to
+the fifth demo in the v1 freeze target.
+
 ## Freeze Scope
 
 The v1.0 freeze scope is the existing five-demo matrix:

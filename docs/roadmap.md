@@ -19,6 +19,7 @@ Recently added:
 - [`docs/architecture.md`](architecture.md) describes the local file-based workflow shape.
 - [`docs/vocabulary.md`](vocabulary.md) defines cross-demo evidence workflow terms.
 - [`docs/reviewer-artifact-diff.md`](reviewer-artifact-diff.md) defines the release diff contract for reviewer-facing artifact changes.
+- [`docs/v0.6-to-v1-artifact-diff.md`](v0.6-to-v1-artifact-diff.md) records the additive fourth-to-fifth-demo artifact contract.
 
 ## v1 Reviewer Contract Stabilization
 
