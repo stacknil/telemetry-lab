@@ -156,6 +156,7 @@ def test_docs_index_separates_current_route_from_history() -> None:
         "reviewer-brief.md",
         "v1-contract-freeze.md",
         "v1-readiness-gate.md",
+        "release-v1.0.md",
         "v0.6-to-v1-artifact-diff.md",
         "evidence-pipeline-contract.md",
         "reviewer-artifact-diff.md",
@@ -194,6 +195,7 @@ def test_top_level_reviewer_pack_covers_matrix_and_artifact_contract() -> None:
     assert "[`docs/reviewer-path.md`](reviewer-path.md)" in reviewer_pack
     assert "[`docs/v1-contract-freeze.md`](v1-contract-freeze.md)" in reviewer_pack
     assert "[`docs/v1-readiness-gate.md`](v1-readiness-gate.md)" in reviewer_pack
+    assert "[`docs/release-v1.0.md`](release-v1.0.md)" in reviewer_pack
     assert "[`docs/v0.6-to-v1-artifact-diff.md`](v0.6-to-v1-artifact-diff.md)" in reviewer_pack
     assert "[`docs/reviewer-artifact-diff.md`](reviewer-artifact-diff.md)" in reviewer_pack
     assert "[`docs/vocabulary.md`](vocabulary.md)" in reviewer_pack
@@ -432,6 +434,45 @@ def test_v06_to_v1_artifact_diff_documents_additive_fifth_demo_contract() -> Non
         roadmap,
     ]:
         assert "v0.6-to-v1-artifact-diff.md" in text
+
+
+def test_v1_release_note_states_reviewer_contract_boundary() -> None:
+    release_note = _read_repo_file("docs/release-v1.0.md")
+    docs_index = _read_repo_file("docs/README.md")
+    reviewer_pack = _read_repo_file("docs/reviewer-pack.md")
+    readme = _read_repo_file("README.md")
+    freeze_doc = _read_repo_file("docs/v1-contract-freeze.md")
+    readiness_gate = _read_repo_file("docs/v1-readiness-gate.md")
+
+    boundary = "This is a reviewer-contract release, not a production SIEM."
+
+    assert "# v1.0 Reviewer Contract Release Notes (Draft)" in release_note
+    assert boundary in release_note
+    assert "This document does not create a `v1.0` tag or GitHub" in release_note
+    assert "## Release Scope" in release_note
+    assert "## Reviewer Contract" in release_note
+    assert "## Artifact Compatibility" in release_note
+    assert "## Validation Snapshot" in release_note
+    assert "## Boundaries" in release_note
+    assert "python scripts/regenerate_artifacts.py --check" in release_note
+    assert "python -m pytest tests/test_evidence_pipeline_schemas.py" in release_note
+    assert "python -m pytest" in release_note
+    assert "This release does not claim production readiness." in release_note
+
+    for demo_name in [
+        "telemetry-window-demo",
+        "ai-assisted-detection-demo",
+        "rule-evaluation-and-dedup-demo",
+        "config-change-investigation-demo",
+        "cloud-iam-change-investigation-demo",
+    ]:
+        assert f"`{demo_name}`" in release_note
+
+    for text in [docs_index, reviewer_pack, readme, freeze_doc, readiness_gate]:
+        assert "release-v1.0.md" in text
+
+    assert boundary in freeze_doc
+    assert boundary in readiness_gate
 
 
 def test_bounded_correlation_boundaries_are_documented() -> None:
