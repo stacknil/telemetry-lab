@@ -1,27 +1,25 @@
 # v1.0 Five-Demo Contract Freeze
 
-`telemetry-lab` is preparing a v1.0 contract freeze around the current
-five-demo matrix. This milestone is not about adding another demo or expanding
-the project into a SIEM, dashboard, or monitoring platform. It is about making
-the current local, file-based detection workflow lab reviewer-verifiable from a
+`telemetry-lab` v1.0 freezes the reviewer contract around the current five-demo
+matrix. This milestone is not about adding another demo or expanding the
+project into a SIEM, dashboard, or monitoring platform. It is about making the
+current local, file-based detection workflow lab reviewer-verifiable from a
 stable contract surface.
 
-## Release Drift
+## Release Status
 
-The latest tagged release is `v0.6.0`, published as
-`v0.6.0 - fourth demo and config-change investigation`. Current `main` is ahead
-of that release: it includes the five-demo matrix, the synthetic CloudTrail-like
-IAM investigation demo, and the v1 reviewer contract stabilization docs and
-checks.
+The latest tagged release is `v1.0`, published as a reviewer-contract release
+for the five-demo matrix. It includes the synthetic CloudTrail-like IAM
+investigation demo, the v1 reviewer contract stabilization docs, schema
+coverage for reviewer-facing JSON and JSONL artifacts, and the artifact
+regeneration gate.
 
-Until a `v1.0` tag is created, reviewers who inspect current `main` should use
-this document, [`docs/reviewer-pack.md`](reviewer-pack.md), and
-[`docs/reviewer-path.md`](reviewer-path.md) instead of treating `v0.6.0` release
-notes as the complete current capability set.
+`v0.6.0` remains the fourth-demo compatibility baseline. It was published as
+`v0.6.0 - fourth demo and config-change investigation`.
 
 Use [`docs/v0.6-to-v1-artifact-diff.md`](v0.6-to-v1-artifact-diff.md) for the
 concrete artifact and compatibility change from the fourth demo in `v0.6.0` to
-the fifth demo in the v1 freeze target.
+the fifth demo in the v1 release.
 
 ## Freeze Scope
 
@@ -79,8 +77,8 @@ committed sample outputs in the same change.
 
 ## Release Notes Requirement
 
-Use [`docs/release-v1.0.md`](release-v1.0.md) as the maintained v1.0 release-note
-draft. The final release notes must state exactly:
+Use [`docs/release-v1.0.md`](release-v1.0.md) as the maintained v1.0 release
+notes. The release notes must state exactly:
 
 > This is a reviewer-contract release, not a production SIEM.
 

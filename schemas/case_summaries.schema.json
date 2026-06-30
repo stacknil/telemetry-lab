@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/stacknil/telemetry-lab/schemas/case_summaries.schema.json",
+  "title": "AI-assisted detection case summaries",
+  "description": "Schema for demos/ai-assisted-detection-demo/artifacts/case_summaries.json.",
+  "type": "array",
+  "minItems": 1,
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "case_id",
+      "summary",
+      "likely_causes",
+      "uncertainty_notes",
+      "suggested_next_steps",
+      "human_verification",
+      "scope_guardrail"
+    ],
+    "properties": {
+      "case_id": { "type": "string", "pattern": "^CASE-[0-9]{3}$" },
+      "summary": { "type": "string", "minLength": 1 },
+      "likely_causes": {
+        "type": "array",
+        "minItems": 1,
+        "maxItems": 3,
+        "items": { "type": "string", "minLength": 1 }
+      },
+      "uncertainty_notes": {
+        "type": "array",
+        "minItems": 1,
+        "items": { "type": "string", "minLength": 1 }
+      },
+      "suggested_next_steps": {
+        "type": "array",
+        "minItems": 1,
+        "maxItems": 4,
+        "items": { "type": "string", "minLength": 1 }
+      },
+      "human_verification": { "type": "string", "const": "required" },
+      "scope_guardrail": {
+        "type": "string",
+        "const": "no_final_incident_decision|no_rule_changes|no_automated_actions"
+      }
+    }
+  }
+}

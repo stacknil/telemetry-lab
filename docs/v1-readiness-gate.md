@@ -4,6 +4,16 @@
 
 This gate is a release-readiness checklist, not a feature roadmap. It does not authorize new demos, live ingestion, dashboards, alert routing, case management, autonomous response, or final incident verdicts.
 
+## Five-Demo Matrix
+
+The fixed v1.0 matrix is:
+
+1. `telemetry-window-demo`
+2. `ai-assisted-detection-demo`
+3. `rule-evaluation-and-dedup-demo`
+4. `config-change-investigation-demo`
+5. `cloud-iam-change-investigation-demo`
+
 ## Required Conditions
 
 v1.0 requires all of the following:
@@ -41,7 +51,7 @@ Before v1.0:
 
 ## Schema Validation
 
-Reviewer-facing JSON evidence artifacts must validate against schemas under `schemas/`.
+Reviewer-facing JSON and JSONL evidence artifacts must validate against schemas under `schemas/`.
 
 Before v1.0:
 
@@ -49,7 +59,7 @@ Before v1.0:
 python -m pytest tests/test_evidence_pipeline_schemas.py
 ```
 
-This verifies that schema files are valid JSON Schema Draft 2020-12 documents and that committed JSON artifacts conform to the schema matrix.
+This verifies that schema files are valid JSON Schema Draft 2020-12 documents and that committed JSON artifacts and JSONL records conform to the schema matrix.
 
 ## Artifact Regeneration
 

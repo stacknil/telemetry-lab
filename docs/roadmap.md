@@ -6,7 +6,7 @@ Next phase: v1 reviewer contract stabilization.
 
 The concrete milestone is [`v1.0 Five-Demo Contract Freeze`](v1-contract-freeze.md).
 
-The repo now has five reviewer-verifiable demos and a clear [`docs/reviewer-path.md`](reviewer-path.md). The priority is to keep the demo matrix stable, preserve artifact names, make release drift explicit, and make review faster without implying a SIEM, dashboard, or production monitoring platform.
+The repo now has five reviewer-verifiable demos and a clear [`docs/reviewer-path.md`](reviewer-path.md). The priority is to keep the demo matrix stable, preserve artifact names, keep release evidence explicit, and make review faster without implying a SIEM, dashboard, or production monitoring platform.
 
 Recently added:
 
@@ -26,7 +26,7 @@ Recently added:
 1. Stabilize the demo matrix.
 2. Treat v1.0 as a five-demo contract freeze, not a feature expansion.
 3. Freeze reviewer-visible artifact names unless a rename is intentional and documented across README, reviewer docs, demo docs, tests, and sample outputs.
-4. Keep JSON schema contracts aligned with reviewer-facing JSON evidence artifacts across the five-demo matrix.
+4. Keep JSON schema contracts aligned with reviewer-facing JSON and JSONL evidence artifacts across the five-demo matrix.
 5. Keep committed evidence artifacts aligned with regenerated pipeline output through `python scripts/regenerate_artifacts.py --check`.
 6. Keep cross-demo vocabulary stable for evidence workflow terms.
 7. Include reviewer-facing artifact diffs in every release, including explicit `no-artifact-change` notes when committed reviewer artifacts are unchanged.
