@@ -85,4 +85,4 @@ python -m pytest tests/test_evidence_pipeline_schemas.py
 python -m pytest
 ```
 
-The v1.0 release notes should include the command results and should state whether the reviewer-facing artifact diff is `no-artifact-change` or documents intentional compatibility changes.
+The v1.0 release notes in [`docs/release-v1.0.md`](release-v1.0.md) should include the command results, should state whether the reviewer-facing artifact diff is `no-artifact-change` or documents intentional compatibility changes, and must retain the exact boundary statement: "This is a reviewer-contract release, not a production SIEM."

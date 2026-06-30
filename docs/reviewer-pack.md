@@ -108,6 +108,7 @@ Use the same Python interpreter for install, tests, and demo commands.
 - [`docs/reviewer-path.md`](reviewer-path.md): demo choice by review question
 - [`docs/v1-contract-freeze.md`](v1-contract-freeze.md): v1.0 five-demo contract freeze and release drift note
 - [`docs/v1-readiness-gate.md`](v1-readiness-gate.md): v1.0 readiness gate for fixed inputs, fixed outputs, schema validation, artifact regeneration, and test pass
+- [`docs/release-v1.0.md`](release-v1.0.md): draft v1.0 reviewer-contract release notes and explicit non-SIEM boundary
 - [`docs/v0.6-to-v1-artifact-diff.md`](v0.6-to-v1-artifact-diff.md): fourth-to-fifth-demo artifact contract and compatibility diff
 - [`docs/evidence-pipeline-contract.md`](evidence-pipeline-contract.md): JSON schema contracts for five-demo evidence artifacts
 - [`docs/reviewer-artifact-diff.md`](reviewer-artifact-diff.md): release diff contract for reviewer-facing artifact changes

@@ -79,7 +79,12 @@ committed sample outputs in the same change.
 
 ## Release Notes Requirement
 
-The v1.0 release notes should include:
+Use [`docs/release-v1.0.md`](release-v1.0.md) as the maintained v1.0 release-note
+draft. The final release notes must state exactly:
+
+> This is a reviewer-contract release, not a production SIEM.
+
+The v1.0 release notes should also include:
 
 - a `no new demo` statement
 - the five-demo matrix
