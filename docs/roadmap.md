@@ -4,6 +4,8 @@ Demo expansion is closed.
 
 Next phase: v1 reviewer contract stabilization.
 
+v1.1 theme: Operator Reproduction Release.
+
 The concrete milestone is [`v1.0 Five-Demo Contract Freeze`](v1-contract-freeze.md).
 
 The repo now has five reviewer-verifiable demos and a clear [`docs/reviewer-path.md`](reviewer-path.md). The priority is to keep the demo matrix stable, preserve artifact names, keep release evidence explicit, and make review faster without implying a SIEM, dashboard, or production monitoring platform.
@@ -20,6 +22,20 @@ Recently added:
 - [`docs/vocabulary.md`](vocabulary.md) defines cross-demo evidence workflow terms.
 - [`docs/reviewer-artifact-diff.md`](reviewer-artifact-diff.md) defines the release diff contract for reviewer-facing artifact changes.
 - [`docs/v0.6-to-v1-artifact-diff.md`](v0.6-to-v1-artifact-diff.md) records the additive fourth-to-fifth-demo artifact contract.
+- [`docs/operator-reproduction.md`](operator-reproduction.md) records the shortest clone-to-regeneration path.
+- `scripts/check_release_contract.py` wraps artifact regeneration, schema validation, and the full test suite.
+
+## v1.1 Operator Reproduction Release
+
+The v1.1 release theme is operator reproduction, not demo expansion.
+
+Deliverable focus:
+
+1. Keep the five-demo matrix unchanged.
+2. Make clone-to-artifact-regeneration instructions short and explicit.
+3. Provide issue templates for schema drift, artifact regeneration failures, and demo boundary questions.
+4. Provide one reviewer-friendly release contract gate command.
+5. Keep README verification commands copy/paste runnable.
 
 ## v1 Reviewer Contract Stabilization
 
@@ -40,7 +56,7 @@ The consolidation gate lives in [`docs/v1-readiness-gate.md`](v1-readiness-gate.
 
 The optional final demo slot has been used by `cloud-iam-change-investigation-demo`.
 
-Further work before v1 should focus on reviewer contract stability, documentation accuracy, tests, and committed artifact reproducibility rather than adding more workflow surface area.
+Further work should focus on reviewer contract stability, documentation accuracy, tests, and committed artifact reproducibility rather than adding more workflow surface area.
 
 ## Non-Directions
 

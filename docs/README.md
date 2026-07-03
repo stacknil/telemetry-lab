@@ -5,6 +5,7 @@ This directory separates the current reviewer route from supporting design notes
 ## Current reviewer route
 
 - [`reviewer-pack.md`](reviewer-pack.md): top-level reviewer pack, demo matrix, artifact naming contract, and v1 readiness gate
+- [`operator-reproduction.md`](operator-reproduction.md): shortest local path from clone to artifact regeneration
 - [`reviewer-path.md`](reviewer-path.md): choose a demo by review question
 - [`reviewer-brief.md`](reviewer-brief.md): short problem, value, evidence, and boundary summary
 - [`v1-contract-freeze.md`](v1-contract-freeze.md): v1.0 five-demo contract freeze, release status, and contract scope

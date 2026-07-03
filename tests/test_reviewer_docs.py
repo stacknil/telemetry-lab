@@ -93,6 +93,12 @@ def _read_pyproject() -> dict[str, object]:
     return tomllib.loads(_read_repo_file("pyproject.toml"))
 
 
+def _read_issue_template(name: str) -> str:
+    return (REPO_ROOT / ".github" / "ISSUE_TEMPLATE" / name).read_text(
+        encoding="utf-8"
+    )
+
+
 def test_reviewer_path_keeps_detection_lab_positioning() -> None:
     reviewer_path = _read_repo_file("docs/reviewer-path.md")
     reviewer_brief = _read_repo_file("docs/reviewer-brief.md")
@@ -152,6 +158,7 @@ def test_docs_index_separates_current_route_from_history() -> None:
 
     for current_doc in [
         "reviewer-pack.md",
+        "operator-reproduction.md",
         "reviewer-path.md",
         "reviewer-brief.md",
         "v1-contract-freeze.md",
@@ -251,6 +258,8 @@ def test_current_docs_use_v1_contract_stabilization_language() -> None:
 
     assert "Demo expansion is closed." in current_docs["docs/roadmap.md"]
     assert "Next phase: v1 reviewer contract stabilization." in current_docs["docs/roadmap.md"]
+    assert "v1.1 theme: Operator Reproduction Release." in current_docs["docs/roadmap.md"]
+    assert "v1.1 is an Operator Reproduction Release, not a new-demo release" in current_docs["README.md"]
     assert "v1.0 Five-Demo Contract Freeze" in current_docs["docs/roadmap.md"]
     assert "## v1 Reviewer Contract Stabilization" in current_docs["README.md"]
 
@@ -515,3 +524,54 @@ def test_architecture_doc_keeps_local_file_based_boundaries() -> None:
 
     for _, demo_name, _ in REVIEWER_DEMO_MATRIX:
         assert f"`{demo_name}`" in architecture
+
+
+def test_operator_reproduction_doc_and_readme_define_short_gate() -> None:
+    operator_doc = _read_repo_file("docs/operator-reproduction.md")
+    docs_index = _read_repo_file("docs/README.md")
+    readme = _read_repo_file("README.md")
+    roadmap = _read_repo_file("docs/roadmap.md")
+
+    assert "# Operator Reproduction" in operator_doc
+    assert "git clone https://github.com/stacknil/telemetry-lab.git" in operator_doc
+    assert "python -m pip install -e \".[dev]\"" in operator_doc
+    assert "python scripts/regenerate_artifacts.py --check" in operator_doc
+    assert "python -m pytest tests/test_evidence_pipeline_schemas.py" in operator_doc
+    assert "python -m pytest" in operator_doc
+    assert "python scripts/check_release_contract.py" in operator_doc
+    assert "does not add a new demo" in operator_doc
+    assert "does not claim production readiness" in operator_doc
+
+    assert "If you want to verify v1.0 locally, run these three commands." in readme
+    assert "docs/operator-reproduction.md" in readme
+    assert "operator-reproduction.md" in docs_index
+    assert "scripts/check_release_contract.py" in roadmap
+
+
+def test_operator_issue_templates_keep_reviewer_contract_scope() -> None:
+    issue_template_dir = REPO_ROOT / ".github" / "ISSUE_TEMPLATE"
+    templates = {
+        "schema-drift-report.md": _read_issue_template("schema-drift-report.md"),
+        "artifact-regeneration-failure.md": _read_issue_template(
+            "artifact-regeneration-failure.md"
+        ),
+        "demo-boundary-question.md": _read_issue_template("demo-boundary-question.md"),
+    }
+    feature_template = _read_issue_template("feature_request.yml")
+
+    assert issue_template_dir.is_dir()
+    for name, text in templates.items():
+        assert (issue_template_dir / name).is_file()
+        assert "reviewer-contract" in text
+        assert "No real account IDs, credentials" in text or "No live AWS account" in text
+        assert "dashboard" in text
+        assert "case" in text.lower()
+
+    assert "python -m pytest tests/test_evidence_pipeline_schemas.py" in templates[
+        "schema-drift-report.md"
+    ]
+    assert "python scripts/regenerate_artifacts.py --check" in templates[
+        "artifact-regeneration-failure.md"
+    ]
+    assert "No new demo expansion for v1.1." in templates["demo-boundary-question.md"]
+    assert "next demo" not in feature_template.lower()
