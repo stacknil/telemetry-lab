@@ -1,5 +1,5 @@
 name: Feature request
-description: Suggest a small improvement or next demo for the repository
+description: Suggest a small reviewer-contract or reproduction improvement
 title: "[Feature]: "
 body:
   - type: textarea
@@ -7,7 +7,7 @@ body:
     attributes:
       label: What would you like to add or improve?
       description: Keep it concrete and close to the repository's current scope.
-      placeholder: Add a host-centric investigation demo that reuses the current sample outputs.
+      placeholder: Make the local reproduction path easier to verify from a fresh clone.
     validations:
       required: true
 
@@ -16,7 +16,7 @@ body:
     attributes:
       label: Why does it help?
       description: Explain how this improves the demo, docs, or portfolio narrative.
-      placeholder: It would make the rule outputs easier to connect to an analyst workflow.
+      placeholder: It would reduce reviewer guesswork without changing the demo matrix.
     validations:
       required: true
 
@@ -25,4 +25,4 @@ body:
     attributes:
       label: Scope guardrails
       description: Call out anything this request should not turn into.
-      placeholder: Keep it file-based; no hosted dashboard or alert-routing work.
+      placeholder: Keep it file-based; no new demos, hosted dashboard, or alert-routing work.
