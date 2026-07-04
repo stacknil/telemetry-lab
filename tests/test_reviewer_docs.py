@@ -164,6 +164,7 @@ def test_docs_index_separates_current_route_from_history() -> None:
         "v1-contract-freeze.md",
         "v1-readiness-gate.md",
         "release-v1.0.md",
+        "release-v1.1.md",
         "v0.6-to-v1-artifact-diff.md",
         "evidence-pipeline-contract.md",
         "reviewer-artifact-diff.md",
@@ -535,6 +536,15 @@ def test_operator_reproduction_doc_and_readme_define_short_gate() -> None:
     assert "# Operator Reproduction" in operator_doc
     assert "git clone https://github.com/stacknil/telemetry-lab.git" in operator_doc
     assert "python -m pip install -e \".[dev]\"" in operator_doc
+    assert "## Run The Five Demos" in operator_doc
+    for demo_command in [
+        "python -m telemetry_window_demo.cli run --config configs/default.yaml",
+        "python -m telemetry_window_demo.cli run-ai-demo",
+        "python -m telemetry_window_demo.cli run-rule-dedup-demo",
+        "python -m telemetry_window_demo.cli run-config-change-demo",
+        "python -m telemetry_window_demo.cli run-cloud-iam-change-demo",
+    ]:
+        assert demo_command in operator_doc
     assert "python scripts/regenerate_artifacts.py --check" in operator_doc
     assert "python -m pytest tests/test_evidence_pipeline_schemas.py" in operator_doc
     assert "python -m pytest" in operator_doc
@@ -542,6 +552,7 @@ def test_operator_reproduction_doc_and_readme_define_short_gate() -> None:
     assert "does not add a new demo" in operator_doc
     assert "does not claim production readiness" in operator_doc
 
+    assert "## Verify Locally In 3 Commands" in readme
     assert "If you want to verify v1.0 locally, run these three commands." in readme
     assert "docs/operator-reproduction.md" in readme
     assert "operator-reproduction.md" in docs_index
@@ -556,6 +567,9 @@ def test_operator_issue_templates_keep_reviewer_contract_scope() -> None:
             "artifact-regeneration-failure.md"
         ),
         "demo-boundary-question.md": _read_issue_template("demo-boundary-question.md"),
+        "docs-reproduction-question.md": _read_issue_template(
+            "docs-reproduction-question.md"
+        ),
     }
     feature_template = _read_issue_template("feature_request.yml")
 
@@ -574,4 +588,43 @@ def test_operator_issue_templates_keep_reviewer_contract_scope() -> None:
         "artifact-regeneration-failure.md"
     ]
     assert "No new demo expansion for v1.1." in templates["demo-boundary-question.md"]
+    assert "documentation mismatch" in templates["docs-reproduction-question.md"]
+    assert "This is not a request for a new demo." in templates[
+        "docs-reproduction-question.md"
+    ]
     assert "next demo" not in feature_template.lower()
+
+
+def test_v11_release_note_keeps_operator_reproduction_scope() -> None:
+    release_note = _read_repo_file("docs/release-v1.1.md")
+    docs_index = _read_repo_file("docs/README.md")
+    readme = _read_repo_file("README.md")
+    roadmap = _read_repo_file("docs/roadmap.md")
+
+    assert "# v1.1 Operator Reproduction Release Notes (Draft)" in release_note
+    assert "Theme: operator reproduction and issue triage, no demo expansion." in release_note
+    assert "Release status: draft" in release_note
+    assert "python scripts/check_release_contract.py" in release_note
+    assert "documentation reproduction questions" in release_note
+
+    for demo_name in [
+        "telemetry-window-demo",
+        "ai-assisted-detection-demo",
+        "rule-evaluation-and-dedup-demo",
+        "config-change-investigation-demo",
+        "cloud-iam-change-investigation-demo",
+    ]:
+        assert f"`{demo_name}`" in release_note
+
+    for forbidden_scope in [
+        "No demo expansion.",
+        "No live ingestion.",
+        "No production SIEM or dashboard.",
+        "No alert routing or case-management service.",
+        "No autonomous response.",
+        "No final incident verdict.",
+    ]:
+        assert forbidden_scope in release_note
+
+    for text in [docs_index, readme, roadmap]:
+        assert "release-v1.1.md" in text

@@ -22,7 +22,8 @@ Recently added:
 - [`docs/vocabulary.md`](vocabulary.md) defines cross-demo evidence workflow terms.
 - [`docs/reviewer-artifact-diff.md`](reviewer-artifact-diff.md) defines the release diff contract for reviewer-facing artifact changes.
 - [`docs/v0.6-to-v1-artifact-diff.md`](v0.6-to-v1-artifact-diff.md) records the additive fourth-to-fifth-demo artifact contract.
-- [`docs/operator-reproduction.md`](operator-reproduction.md) records the shortest clone-to-regeneration path.
+- [`docs/operator-reproduction.md`](operator-reproduction.md) records the shortest clone-to-five-demo-verification path.
+- [`docs/release-v1.1.md`](release-v1.1.md) drafts the operator reproduction and issue triage release notes.
 - `scripts/check_release_contract.py` wraps artifact regeneration, schema validation, and the full test suite.
 
 ## v1.1 Operator Reproduction Release
@@ -33,7 +34,7 @@ Deliverable focus:
 
 1. Keep the five-demo matrix unchanged.
 2. Make clone-to-artifact-regeneration instructions short and explicit.
-3. Provide issue templates for schema drift, artifact regeneration failures, and demo boundary questions.
+3. Provide issue templates for schema drift, artifact regeneration failures, demo boundary questions, and documentation reproduction questions.
 4. Provide one reviewer-friendly release contract gate command.
 5. Keep README verification commands copy/paste runnable.
 
