@@ -18,6 +18,7 @@ Latest tagged release: [v1.0 — reviewer contract release](https://github.com/s
 - [`docs/v1-contract-freeze.md`](docs/v1-contract-freeze.md): v1.0 five-demo contract freeze, release status, and contract scope
 - [`docs/v1-readiness-gate.md`](docs/v1-readiness-gate.md): fixed inputs, fixed outputs, schema validation, artifact regeneration, and test pass requirements
 - [`docs/release-v1.0.md`](docs/release-v1.0.md): v1.0 reviewer-contract release notes and explicit non-SIEM boundary
+- [`docs/case-study-v1-contract-freeze.md`](docs/case-study-v1-contract-freeze.md): what v1.0 freezes and why the repository is not a SIEM
 - [`docs/v0.6-to-v1-artifact-diff.md`](docs/v0.6-to-v1-artifact-diff.md): fourth-to-fifth-demo artifact contract and compatibility diff
 - [`docs/evidence-pipeline-contract.md`](docs/evidence-pipeline-contract.md): JSON/JSONL schema contracts for reviewer-facing evidence artifacts
 - [`docs/reviewer-artifact-diff.md`](docs/reviewer-artifact-diff.md): release artifact diff contract for reviewer-facing outputs
