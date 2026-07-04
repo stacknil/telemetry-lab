@@ -141,7 +141,7 @@ def test_readme_links_reviewer_path_and_uses_lab_framing() -> None:
     assert "[`docs/v1-contract-freeze.md`](docs/v1-contract-freeze.md)" in readme
     assert "[`docs/v1-readiness-gate.md`](docs/v1-readiness-gate.md)" in readme
     assert "[`docs/architecture.md`](docs/architecture.md)" in readme
-    assert "Latest tagged release: [v1.0" in readme
+    assert "Latest tagged release: [v1.1" in readme
     assert "portfolio prototype" not in normalized
     assert "mvp only" not in normalized
 
@@ -348,7 +348,7 @@ def test_v1_contract_freeze_documents_release_drift_and_gate() -> None:
 
     assert "# v1.0 Five-Demo Contract Freeze" in freeze_doc
     assert "## Release Status" in freeze_doc
-    assert "latest tagged release is `v1.0`" in freeze_doc
+    assert "latest tagged release is `v1.1`" in freeze_doc
     assert "`v0.6.0` remains the fourth-demo compatibility baseline" in freeze_doc
     assert "No new demo should be added for v1.0" in freeze_doc
     assert "python scripts/regenerate_artifacts.py --check" in freeze_doc
@@ -601,11 +601,17 @@ def test_v11_release_note_keeps_operator_reproduction_scope() -> None:
     readme = _read_repo_file("README.md")
     roadmap = _read_repo_file("docs/roadmap.md")
 
-    assert "# v1.1 Operator Reproduction Release Notes (Draft)" in release_note
+    assert "# v1.1 Operator Reproduction Release Notes" in release_note
     assert "Theme: operator reproduction and issue triage, no demo expansion." in release_note
-    assert "Release status: draft" in release_note
+    assert "Release status: published as tag `v1.1`." in release_note
     assert "python scripts/check_release_contract.py" in release_note
     assert "documentation reproduction questions" in release_note
+    assert "23 committed artifacts matched" in release_note
+    assert "182 passed" in release_note
+    assert "`no-artifact-change`" in release_note
+    assert "Package identity mismatch must be resolved before v1.2" in release_note
+    assert "telemetry-window-demo==0.1.0" in release_note
+    assert "package identity mismatch" in roadmap
 
     for demo_name in [
         "telemetry-window-demo",
