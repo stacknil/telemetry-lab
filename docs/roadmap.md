@@ -38,6 +38,22 @@ Deliverable focus:
 4. Provide one reviewer-friendly release contract gate command.
 5. Keep README verification commands copy/paste runnable.
 
+## External Review Surface
+
+Open review issues should stay sparse and tied to committed evidence. The
+current public review entry should name one artifact, one schema, the expected
+field-level output, and the acceptance criteria for a bounded documentation or
+schema-contract correction.
+
+Parked review directions:
+
+- Clean-clone operator reproduction feedback, only when it names exact command
+  output or a documentation mismatch.
+- Synthetic edge-case additions, only when the input and expected artifact or
+  schema rejection are already bounded to one existing demo.
+- Human-verification boundary examples, only when they use existing committed
+  artifacts and do not imply an incident verdict or production workflow.
+
 ## v1.2 Blocker
 
 - Resolve the package identity mismatch between the repository/release name
