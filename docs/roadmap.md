@@ -23,7 +23,7 @@ Recently added:
 - [`docs/reviewer-artifact-diff.md`](reviewer-artifact-diff.md) defines the release diff contract for reviewer-facing artifact changes.
 - [`docs/v0.6-to-v1-artifact-diff.md`](v0.6-to-v1-artifact-diff.md) records the additive fourth-to-fifth-demo artifact contract.
 - [`docs/operator-reproduction.md`](operator-reproduction.md) records the shortest clone-to-five-demo-verification path.
-- [`docs/release-v1.1.md`](release-v1.1.md) drafts the operator reproduction and issue triage release notes.
+- [`docs/release-v1.1.md`](release-v1.1.md) records the operator reproduction and issue triage release.
 - `scripts/check_release_contract.py` wraps artifact regeneration, schema validation, and the full test suite.
 
 ## v1.1 Operator Reproduction Release
@@ -37,6 +37,12 @@ Deliverable focus:
 3. Provide issue templates for schema drift, artifact regeneration failures, demo boundary questions, and documentation reproduction questions.
 4. Provide one reviewer-friendly release contract gate command.
 5. Keep README verification commands copy/paste runnable.
+
+## v1.2 Blocker
+
+- Resolve the package identity mismatch between the repository/release name
+  (`telemetry-lab` / `v1.1`) and the current `pyproject.toml` metadata
+  (`telemetry-window-demo==0.1.0`) before tagging v1.2.
 
 ## v1 Reviewer Contract Stabilization
 

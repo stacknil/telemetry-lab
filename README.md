@@ -4,9 +4,9 @@
 
 A local, file-based detection workflow lab for reviewer-verifiable telemetry and detection demos.
 
-Current focus: v1 reviewer contract stabilization for the five-demo matrix. v1.1 is scoped as an Operator Reproduction Release, not another demo expansion.
+Current focus: v1 reviewer contract stabilization for the five-demo matrix. v1.1 is an Operator Reproduction Release, not another demo expansion.
 
-Latest tagged release: [v1.0 — reviewer contract release](https://github.com/stacknil/telemetry-lab/releases/tag/v1.0).
+Latest tagged release: [v1.1 — operator reproduction release](https://github.com/stacknil/telemetry-lab/releases/tag/v1.1).
 
 ## Reviewer Start
 
@@ -14,7 +14,7 @@ Latest tagged release: [v1.0 — reviewer contract release](https://github.com/s
 - [`docs/reviewer-path.md`](docs/reviewer-path.md): choose the right demo by review question
 - [`docs/reviewer-pack.md`](docs/reviewer-pack.md): demo matrix, artifact contract, and v1 readiness gate
 - [`docs/operator-reproduction.md`](docs/operator-reproduction.md): shortest local path from clone to verifying all five demos
-- [`docs/release-v1.1.md`](docs/release-v1.1.md): draft v1.1 operator reproduction and issue triage release notes
+- [`docs/release-v1.1.md`](docs/release-v1.1.md): v1.1 operator reproduction and issue triage release notes
 - [`docs/v1-contract-freeze.md`](docs/v1-contract-freeze.md): v1.0 five-demo contract freeze, release status, and contract scope
 - [`docs/v1-readiness-gate.md`](docs/v1-readiness-gate.md): fixed inputs, fixed outputs, schema validation, artifact regeneration, and test pass requirements
 - [`docs/release-v1.0.md`](docs/release-v1.0.md): v1.0 reviewer-contract release notes and explicit non-SIEM boundary
@@ -189,7 +189,7 @@ Cooldown behavior:
 - [`demos/cloud-iam-change-investigation-demo/README.md`](demos/cloud-iam-change-investigation-demo/README.md) explains the synthetic CloudTrail-like IAM investigation demo and its committed artifacts
 - [`docs/README.md`](docs/README.md) indexes current reviewer docs, supporting design notes, and historical release evidence
 - [`docs/operator-reproduction.md`](docs/operator-reproduction.md) gives the shortest local path from clone to running the five demos, artifact regeneration, schema tests, and full tests
-- [`docs/release-v1.1.md`](docs/release-v1.1.md) drafts the v1.1 operator reproduction and issue triage release notes
+- [`docs/release-v1.1.md`](docs/release-v1.1.md) records the v1.1 operator reproduction and issue triage release
 - [`docs/reviewer-pack.md`](docs/reviewer-pack.md) is the top-level no-guessing reviewer pack and artifact naming contract
 - [`docs/v1-contract-freeze.md`](docs/v1-contract-freeze.md) defines the v1.0 five-demo contract freeze gate
 - [`docs/v1-readiness-gate.md`](docs/v1-readiness-gate.md) defines the fixed-input, fixed-output, schema-validation, artifact-regeneration, and test-pass readiness gate

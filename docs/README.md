@@ -11,7 +11,7 @@ This directory separates the current reviewer route from supporting design notes
 - [`v1-contract-freeze.md`](v1-contract-freeze.md): v1.0 five-demo contract freeze, release status, and contract scope
 - [`v1-readiness-gate.md`](v1-readiness-gate.md): fixed inputs, fixed outputs, schema validation, artifact regeneration, and test pass requirements
 - [`release-v1.0.md`](release-v1.0.md): v1.0 reviewer-contract release notes with the explicit non-SIEM boundary
-- [`release-v1.1.md`](release-v1.1.md): draft v1.1 operator reproduction and issue triage release notes
+- [`release-v1.1.md`](release-v1.1.md): v1.1 operator reproduction and issue triage release notes
 - [`v0.6-to-v1-artifact-diff.md`](v0.6-to-v1-artifact-diff.md): additive artifact contract and compatibility diff from the fourth demo to the fifth
 - [`evidence-pipeline-contract.md`](evidence-pipeline-contract.md): JSON/JSONL schema contracts for reviewer-facing evidence artifacts
 - [`reviewer-artifact-diff.md`](reviewer-artifact-diff.md): release diff contract for reviewer-facing artifact changes

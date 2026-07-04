@@ -1,9 +1,8 @@
-# v1.1 Operator Reproduction Release Notes (Draft)
+# v1.1 Operator Reproduction Release Notes
 
 Theme: operator reproduction and issue triage, no demo expansion.
 
-Release status: draft until a `v1.1` tag or GitHub release is explicitly
-published.
+Release status: published as tag `v1.1`.
 
 ## Scope
 
@@ -51,17 +50,31 @@ or private data.
 
 ## Validation Snapshot
 
-Refresh this snapshot from the final release commit before publishing v1.1:
+The final release candidate was verified from clean Windows and Linux clones:
 
-```bash
-python scripts/check_release_contract.py
-```
+| Environment | Python | Artifact gate | Schema tests | Full tests |
+| --- | --- | --- | --- | --- |
+| Windows | 3.14.3 | 23 committed artifacts matched; 6 visual snapshots regenerated as smoke checks | 3 passed | 182 passed |
+| Linux (Ubuntu) | 3.12.3 | 23 committed artifacts matched; 6 visual snapshots regenerated as smoke checks | 3 passed | 182 passed |
 
-Expected gate sequence:
+The normalized SHA-256 manifests for all 30 tracked artifact paths were
+identical across the two clones. Text artifacts were normalized from CRLF to
+LF before hashing; binary artifacts were hashed byte-for-byte.
 
-- artifact regeneration
-- schema validation
-- full test suite
+## Artifact Diff
+
+`no-artifact-change`: v1.1 does not change committed reviewer-facing artifact
+content, field meaning, schemas, or filenames. It adds operator reproduction,
+release-gate, and issue-triage surfaces around the frozen v1.0 artifact
+contract.
+
+## v1.2 Blocker
+
+Package identity mismatch must be resolved before v1.2: the repository and
+release identity is `telemetry-lab` / `v1.1`, while `pyproject.toml` still
+declares `telemetry-window-demo==0.1.0`. Resolve the project name and version as
+one coordinated metadata change before a v1.2 tag or any package publication.
+No package registry publication is part of v1.1.
 
 ## Boundaries
 

@@ -8,11 +8,12 @@ stable contract surface.
 
 ## Release Status
 
-The latest tagged release is `v1.0`, published as a reviewer-contract release
-for the five-demo matrix. It includes the synthetic CloudTrail-like IAM
-investigation demo, the v1 reviewer contract stabilization docs, schema
-coverage for reviewer-facing JSON and JSONL artifacts, and the artifact
-regeneration gate.
+`v1.0` remains the reviewer-contract baseline for the five-demo matrix. The
+latest tagged release is `v1.1`, which adds operator reproduction and issue
+triage around that frozen contract without changing the demo or artifact
+matrix. The baseline includes the synthetic CloudTrail-like IAM investigation
+demo, schema coverage for reviewer-facing JSON and JSONL artifacts, and the
+artifact regeneration gate.
 
 `v0.6.0` remains the fourth-demo compatibility baseline. It was published as
 `v0.6.0 - fourth demo and config-change investigation`.
