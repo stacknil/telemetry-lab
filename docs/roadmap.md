@@ -6,6 +6,8 @@ Next phase: v1 reviewer contract stabilization.
 
 v1.1 theme: Operator Reproduction Release.
 
+v1.2 theme: Architecture Cohesion Release.
+
 The concrete milestone is [`v1.0 Five-Demo Contract Freeze`](v1-contract-freeze.md).
 
 The repo now has five reviewer-verifiable demos and a clear [`docs/reviewer-path.md`](reviewer-path.md). The priority is to keep the demo matrix stable, preserve artifact names, keep release evidence explicit, and make review faster without implying a SIEM, dashboard, or production monitoring platform.
@@ -24,7 +26,22 @@ Recently added:
 - [`docs/v0.6-to-v1-artifact-diff.md`](v0.6-to-v1-artifact-diff.md) records the additive fourth-to-fifth-demo artifact contract.
 - [`docs/operator-reproduction.md`](operator-reproduction.md) records the shortest clone-to-five-demo-verification path.
 - [`docs/release-v1.1.md`](release-v1.1.md) records the operator reproduction and issue triage release.
+- [`docs/release-v1.2.md`](release-v1.2.md) records the architecture cohesion release.
+- [`docs/schema-compatibility-matrix.md`](schema-compatibility-matrix.md) records schema versions, artifact paths, and compatibility labels.
 - `scripts/check_release_contract.py` wraps artifact regeneration, schema validation, and the full test suite.
+
+## v1.2 Architecture Cohesion Release
+
+The v1.2 release theme is architecture cohesion, not demo expansion.
+
+Deliverable focus:
+
+1. Resolve repository, package, and version identity: `telemetry-lab`, `telemetry_lab`, and `1.2.0`.
+2. Establish the unified CLI: `telemetry-lab run window`, `telemetry-lab run ai-assisted`, `telemetry-lab run dedup`, `telemetry-lab run config-change`, `telemetry-lab run cloud-iam`, and `telemetry-lab verify`.
+3. Generate `run_manifest.json` for each synthetic-local run with input and config digests.
+4. Add property tests for window boundaries and dedup cooldown invariants.
+5. Document notebooks as auxiliary exploration while the core pipeline remains headless.
+6. Add a schema compatibility matrix for reviewer-facing JSON and JSONL artifacts.
 
 ## v1.1 Operator Reproduction Release
 
@@ -56,9 +73,8 @@ Parked review directions:
 
 ## v1.2 Blocker
 
-- Resolve the package identity mismatch between the repository/release name
-  (`telemetry-lab` / `v1.1`) and the current `pyproject.toml` metadata
-  (`telemetry-window-demo==0.1.0`) before tagging v1.2.
+- Before tagging v1.2, confirm package identity remains aligned across
+  repository metadata, `pyproject.toml`, console scripts, docs, and tests.
 
 ## v1 Reviewer Contract Stabilization
 

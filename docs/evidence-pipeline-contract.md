@@ -15,6 +15,7 @@ The contract is intentionally local and file-based:
 
 | Schema | Demo artifact | What it locks |
 | --- | --- | --- |
+| `schemas/run_manifest.schema.json` | `data/processed/run_manifest.json`, `data/processed/richer_sample/run_manifest.json`, `demos/ai-assisted-detection-demo/artifacts/run_manifest.json`, `demos/rule-evaluation-and-dedup-demo/artifacts/run_manifest.json`, `demos/config-change-investigation-demo/artifacts/run_manifest.json`, `demos/cloud-iam-change-investigation-demo/artifacts/run_manifest.json` | synthetic-local run provenance, tool version, demo ID, input/config digests, and artifact schema versions |
 | `schemas/telemetry_summary.schema.json` | `data/processed/summary.json`, `data/processed/richer_sample/summary.json` | telemetry-window run counts, rule counts, cooldown, and generated artifact references |
 | `schemas/rule_hits.schema.json` | `demos/ai-assisted-detection-demo/artifacts/rule_hits.json` | deterministic rule-hit fields before case grouping |
 | `schemas/case_bundles.schema.json` | `demos/ai-assisted-detection-demo/artifacts/case_bundles.json` | bounded case bundles passed to JSON-only drafting |
@@ -32,6 +33,7 @@ The contract is intentionally local and file-based:
 ## Contract Rules
 
 - Schema files use JSON Schema Draft 2020-12.
+- Every primary demo run writes `run_manifest.json` with `execution_mode: synthetic-local`.
 - Contracted wrapper fields reject unknown properties unless the field intentionally preserves raw source evidence.
 - Timestamps use RFC 3339 / JSON Schema `date-time` strings.
 - Severity values are limited to `low`, `medium`, `high`, and `critical`.
@@ -50,6 +52,10 @@ python -m pytest tests/test_evidence_pipeline_schemas.py
 The regeneration check compares byte-stable CSV, JSON, JSONL, and Markdown artifacts with fresh pipeline output. It also regenerates PNG visual snapshots to verify that the plotting path still runs, but it does not byte-compare those images because Matplotlib rendering can vary across platforms.
 
 The schema test validates each schema file and checks that every committed JSON artifact and JSONL record listed in the schema matrix conforms to it.
+
+## Compatibility Matrix
+
+See [`docs/schema-compatibility-matrix.md`](schema-compatibility-matrix.md) for the v1.1-to-v1.2 compatibility labels. v1.2 is additive for `run_manifest.json` and updates `summary.json` generated artifact references to include the new manifest.
 
 ## Release Artifact Diff
 

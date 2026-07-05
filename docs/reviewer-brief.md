@@ -16,21 +16,21 @@ Telemetry and detection projects often look impressive in screenshots but are ha
 
 ## Reviewer Evidence
 
-- Reproducible command: `python -m telemetry_window_demo.cli run --config configs/default.yaml`
-- Deterministic outputs: feature tables, alert tables, `summary.json`, PNG timelines, dedup reports, investigation reports, and bounded AI case reports.
+- Reproducible command: `telemetry-lab run window --config configs/default.yaml`
+- Deterministic outputs: feature tables, alert tables, `summary.json`, `run_manifest.json`, PNG timelines, dedup reports, investigation reports, and bounded AI case reports.
 - Tests / CI: pytest coverage for windowing, CLI behavior, demo pipelines, artifact validation, and deterministic guardrails; GitHub Actions CI is enabled.
-- Release evidence: reviewer packs and release notes through the current `v0.6.0` milestone.
+- Release evidence: reviewer packs and release notes through the v1.2 architecture cohesion draft.
 - Non-goals: production monitoring, real-time ingestion, alert routing, autonomous response, dashboards, or final incident verdicts.
 
 ## Quick run
 
 ```bash
 python -m pip install -e ".[dev]"
-python -m telemetry_window_demo.cli run --config configs/default.yaml
-python -m telemetry_window_demo.cli run-rule-dedup-demo
-python -m telemetry_window_demo.cli run-config-change-demo
-python -m telemetry_window_demo.cli run-cloud-iam-change-demo
-python -m telemetry_window_demo.cli run-ai-demo
+telemetry-lab run window --config configs/default.yaml
+telemetry-lab run dedup
+telemetry-lab run config-change
+telemetry-lab run cloud-iam
+telemetry-lab run ai-assisted
 ```
 
 ## Sample output
@@ -40,6 +40,7 @@ The default `run --config configs/default.yaml` path regenerates:
 - `data/processed/features.csv`
 - `data/processed/alerts.csv`
 - `data/processed/summary.json`
+- `data/processed/run_manifest.json`
 - three PNG timelines under `data/processed/`
 
 The current committed default sample reports:

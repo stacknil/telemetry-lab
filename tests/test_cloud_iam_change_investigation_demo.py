@@ -8,11 +8,11 @@ from pathlib import Path
 import pytest
 import yaml
 
-from telemetry_window_demo.cloud_iam_change_investigation_demo import (
+from telemetry_lab.cloud_iam_change_investigation_demo import (
     default_demo_root,
     run_demo,
 )
-from telemetry_window_demo.cloud_iam_change_investigation_demo.pipeline import (
+from telemetry_lab.cloud_iam_change_investigation_demo.pipeline import (
     CLOUDTRAIL_REQUIRED_FIELDS,
     evaluate_cloud_iam_signals,
     format_timestamp,

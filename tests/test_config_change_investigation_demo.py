@@ -7,8 +7,8 @@ from pathlib import Path
 import pytest
 import yaml
 
-from telemetry_window_demo.config_change_investigation_demo import default_demo_root, run_demo
-from telemetry_window_demo.config_change_investigation_demo.pipeline import (
+from telemetry_lab.config_change_investigation_demo import default_demo_root, run_demo
+from telemetry_lab.config_change_investigation_demo.pipeline import (
     build_investigations,
     evaluate_risky_config_changes,
     load_jsonl,

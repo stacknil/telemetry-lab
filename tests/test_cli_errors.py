@@ -3,7 +3,7 @@ from __future__ import annotations
 import pytest
 import yaml
 
-from telemetry_window_demo.cli import main
+from telemetry_lab.cli import main
 
 
 def test_main_reports_config_errors_without_traceback(tmp_path, capsys) -> None:

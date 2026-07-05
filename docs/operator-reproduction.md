@@ -19,17 +19,18 @@ schema validation, and tests.
 ## Run The Five Demos
 
 ```bash
-python -m telemetry_window_demo.cli run --config configs/default.yaml
-python -m telemetry_window_demo.cli run-ai-demo
-python -m telemetry_window_demo.cli run-rule-dedup-demo
-python -m telemetry_window_demo.cli run-config-change-demo
-python -m telemetry_window_demo.cli run-cloud-iam-change-demo
+telemetry-lab run window --config configs/default.yaml
+telemetry-lab run ai-assisted
+telemetry-lab run dedup
+telemetry-lab run config-change
+telemetry-lab run cloud-iam
 ```
 
 Expected operator checkpoints:
 
 - `data/processed/summary.json` reports `41` events, `24` windows, and `12`
   alerts for `telemetry-window-demo`.
+- Every run writes `run_manifest.json` with `execution_mode: synthetic-local`.
 - `demos/ai-assisted-detection-demo/artifacts/case_report.md` reports `3`
   deterministic cases.
 - `demos/rule-evaluation-and-dedup-demo/artifacts/dedup_report.md` reports
@@ -48,7 +49,7 @@ python scripts/regenerate_artifacts.py --check
 Expected result:
 
 - five demo jobs run from committed synthetic inputs
-- `23` byte-stable committed artifacts match regenerated output
+- `29` byte-stable committed artifacts match regenerated output
 - `6` PNG visual snapshots regenerate as smoke checks without byte comparison
 
 If this command fails, open an artifact regeneration issue with the command,
@@ -72,7 +73,7 @@ python -m pytest
 
 ## Release Contract Gate
 
-The v1.0 reviewer contract is the exact three-command gate:
+The reviewer contract is the exact three-command gate:
 
 ```bash
 python scripts/regenerate_artifacts.py --check
@@ -83,10 +84,16 @@ python -m pytest
 For the same sequence with clearer step labels:
 
 ```bash
-python scripts/check_release_contract.py
+telemetry-lab verify
 ```
 
 The wrapper stops at the first failed step and reports which gate failed.
+
+The script form remains available:
+
+```bash
+python scripts/check_release_contract.py
+```
 
 ## What This Does Not Prove
 

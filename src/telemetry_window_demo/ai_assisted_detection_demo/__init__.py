@@ -1,5 +1,1 @@
-"""AI-assisted detection demo pipeline."""
-
-from .pipeline import default_demo_root, run_demo
-
-__all__ = ["default_demo_root", "run_demo"]
+from telemetry_lab.ai_assisted_detection_demo import *  # noqa: F403

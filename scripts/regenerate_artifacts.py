@@ -190,7 +190,7 @@ def copy_generated_artifacts(artifact_set: ArtifactSet) -> None:
 def build_jobs() -> list[RegenerationJob]:
     return [
         RegenerationJob(
-            name="telemetry-window-demo default sample",
+            name="telemetry-lab window default sample",
             run=lambda job_root: _run_window_pipeline_job(
                 job_root,
                 config_path=REPO_ROOT / "configs" / "default.yaml",
@@ -198,7 +198,7 @@ def build_jobs() -> list[RegenerationJob]:
             ),
         ),
         RegenerationJob(
-            name="telemetry-window-demo richer sample",
+            name="telemetry-lab window richer sample",
             run=lambda job_root: _run_window_pipeline_job(
                 job_root,
                 config_path=REPO_ROOT / "configs" / "richer_sample.yaml",
@@ -217,6 +217,7 @@ def build_jobs() -> list[RegenerationJob]:
                     "case_summaries.json",
                     "case_report.md",
                     "audit_traces.jsonl",
+                    "run_manifest.json",
                 ),
             ),
         ),
@@ -231,6 +232,7 @@ def build_jobs() -> list[RegenerationJob]:
                     "rule_hits_after_dedup.json",
                     "dedup_explanations.json",
                     "dedup_report.md",
+                    "run_manifest.json",
                 ),
             ),
         ),
@@ -245,6 +247,7 @@ def build_jobs() -> list[RegenerationJob]:
                     "investigation_hits.json",
                     "investigation_summary.json",
                     "investigation_report.md",
+                    "run_manifest.json",
                 ),
             ),
         ),
@@ -259,6 +262,7 @@ def build_jobs() -> list[RegenerationJob]:
                     "investigation_signals.json",
                     "investigation_summary.json",
                     "investigation_report.md",
+                    "run_manifest.json",
                 ),
             ),
         ),
@@ -271,8 +275,8 @@ def _run_window_pipeline_job(
     config_path: Path,
     committed_root: Path,
 ) -> ArtifactSet:
-    from telemetry_window_demo.cli import run_command
-    from telemetry_window_demo.io import load_config
+    from telemetry_lab.cli import run_command
+    from telemetry_lab.io import load_config
 
     config = load_config(config_path)
     generated_repo = job_root / "repo"
@@ -298,6 +302,7 @@ def _run_window_pipeline_job(
             Path("features.csv"),
             Path("alerts.csv"),
             Path("summary.json"),
+            Path("run_manifest.json"),
         ),
         visual_snapshot_paths=(
             Path("event_count_timeline.png"),
@@ -325,13 +330,13 @@ def _run_demo_job(
 
 
 def _run_ai_demo(artifacts_dir: Path) -> None:
-    from telemetry_window_demo.ai_assisted_detection_demo import default_demo_root, run_demo
+    from telemetry_lab.ai_assisted_detection_demo import default_demo_root, run_demo
 
     run_demo(demo_root=default_demo_root(), artifacts_dir=artifacts_dir)
 
 
 def _run_rule_dedup_demo(artifacts_dir: Path) -> None:
-    from telemetry_window_demo.rule_evaluation_and_dedup_demo import (
+    from telemetry_lab.rule_evaluation_and_dedup_demo import (
         default_demo_root,
         run_demo,
     )
@@ -340,7 +345,7 @@ def _run_rule_dedup_demo(artifacts_dir: Path) -> None:
 
 
 def _run_config_change_demo(artifacts_dir: Path) -> None:
-    from telemetry_window_demo.config_change_investigation_demo import (
+    from telemetry_lab.config_change_investigation_demo import (
         default_demo_root,
         run_demo,
     )
@@ -349,7 +354,7 @@ def _run_config_change_demo(artifacts_dir: Path) -> None:
 
 
 def _run_cloud_iam_demo(artifacts_dir: Path) -> None:
-    from telemetry_window_demo.cloud_iam_change_investigation_demo import (
+    from telemetry_lab.cloud_iam_change_investigation_demo import (
         default_demo_root,
         run_demo,
     )

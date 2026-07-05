@@ -7,8 +7,8 @@ from typing import Any
 import pytest
 import yaml
 
-from telemetry_window_demo.cli import run_command
-from telemetry_window_demo.io import load_config
+from telemetry_lab.cli import run_command
+from telemetry_lab.io import load_config
 
 
 def _base_config(tmp_path: Path) -> dict[str, Any]:

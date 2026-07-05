@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from telemetry_window_demo.io import (
+from telemetry_lab.io import (
     load_alert_table,
     load_config,
     load_events,
@@ -408,4 +408,3 @@ def test_load_alert_table_rejects_missing_rule_name(tmp_path) -> None:
     message = str(excinfo.value)
     assert "Missing text values" in message
     assert "rule_name" in message
-

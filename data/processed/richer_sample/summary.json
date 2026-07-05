@@ -26,6 +26,7 @@
     "data/processed/richer_sample/features.csv",
     "data/processed/richer_sample/alerts.csv",
     "data/processed/richer_sample/summary.json",
+    "data/processed/richer_sample/run_manifest.json",
     "data/processed/richer_sample/event_count_timeline.png",
     "data/processed/richer_sample/error_rate_timeline.png",
     "data/processed/richer_sample/alerts_timeline.png"

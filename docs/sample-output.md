@@ -5,11 +5,12 @@ The CLI validates plot CSV inputs before rendering: required columns must be pre
 
 ## Default Sample
 
-Running `python -m telemetry_window_demo.cli run --config configs/default.yaml` produces:
+Running `telemetry-lab run window --config configs/default.yaml` produces:
 
 - a window feature table at `data/processed/features.csv`
 - an alert table at `data/processed/alerts.csv`
 - a machine-readable summary at `data/processed/summary.json`
+- a synthetic-local run manifest at `data/processed/run_manifest.json`
 - three timeline plots under `data/processed/`
 
 On the bundled default sample dataset, the current repo state produces:
@@ -29,11 +30,12 @@ The default summary currently reports these triggered rule counts:
 
 ## Richer Sample
 
-Running `python -m telemetry_window_demo.cli run --config configs/richer_sample.yaml` produces:
+Running `telemetry-lab run window --config configs/richer_sample.yaml` produces:
 
 - a window feature table at `data/processed/richer_sample/features.csv`
 - an alert table at `data/processed/richer_sample/alerts.csv`
 - a machine-readable summary at `data/processed/richer_sample/summary.json`
+- a synthetic-local run manifest at `data/processed/richer_sample/run_manifest.json`
 - three timeline plots under `data/processed/richer_sample/`
 
 On the richer bundled sample dataset, the current repo state produces:

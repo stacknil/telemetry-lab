@@ -23,7 +23,7 @@ def test_repo_sentinel_ignores_generated_artifacts_only() -> None:
     ]
 
     in_scope_paths = [
-        "src/telemetry_window_demo/cli.py",
+        "src/telemetry_lab/cli.py",
         "configs/default.yaml",
         "data/raw/sample_events.jsonl",
         "demos/config-change-investigation-demo/config/investigation.yaml",

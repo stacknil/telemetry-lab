@@ -20,8 +20,8 @@ The demo starts from configuration changes, policy denials, and follow-on teleme
 From the repository root:
 
 ```bash
-python -m pip install -e .
-python -m telemetry_window_demo.cli run-config-change-demo
+python -m pip install -e ".[dev]"
+telemetry-lab run config-change
 ```
 
 Generated artifacts are written to `demos/config-change-investigation-demo/artifacts/`.
@@ -60,6 +60,7 @@ It does not perform cross-host, cross-account, or cross-source global attributio
 - `artifacts/investigation_hits.json`
 - `artifacts/investigation_summary.json`
 - `artifacts/investigation_report.md`
+- `artifacts/run_manifest.json`
 
 ## Expected Run Summary
 
@@ -78,6 +79,7 @@ The bundled sample run should report:
 - `investigation_hits.json`: full investigation records, including the triggering change and attached evidence
 - `investigation_summary.json`: reduced machine-readable summaries for each investigation
 - `investigation_report.md`: a short reviewer report showing the trigger, evidence counts, and bounded-correlation explanation
+- `run_manifest.json`: synthetic-local run manifest with tool version, input/config digests, and artifact schema versions
 
 ## Reviewer Walkthrough
 

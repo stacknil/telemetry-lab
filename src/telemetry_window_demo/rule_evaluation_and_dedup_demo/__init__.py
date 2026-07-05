@@ -1,3 +1,1 @@
-from .pipeline import default_demo_root, run_demo
-
-__all__ = ["default_demo_root", "run_demo"]
+from telemetry_lab.rule_evaluation_and_dedup_demo import *  # noqa: F403

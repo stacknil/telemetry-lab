@@ -20,8 +20,8 @@ Instead of only showing the final retained alerts, this demo shows:
 From the repository root:
 
 ```bash
-python -m pip install -e .
-python -m telemetry_window_demo.cli run-rule-dedup-demo
+python -m pip install -e ".[dev]"
+telemetry-lab run dedup
 ```
 
 Generated artifacts are written to `demos/rule-evaluation-and-dedup-demo/artifacts/`.
@@ -58,6 +58,7 @@ That means repeated hits for the same rule can still be kept separately when the
 - `artifacts/rule_hits_after_dedup.json`
 - `artifacts/dedup_explanations.json`
 - `artifacts/dedup_report.md`
+- `artifacts/run_manifest.json`
 
 ## Expected Run Summary
 
@@ -75,6 +76,7 @@ The bundled sample run should report:
 - `rule_hits_after_dedup.json`: only the retained alerts, including which suppressed hits each retained alert now represents
 - `dedup_explanations.json`: one explanation record per raw hit, marked as either `retained` or `suppressed`
 - `dedup_report.md`: a short reviewer-facing report with run counts, per-group summary, retained alert explanations, and suppressed hit reasons
+- `run_manifest.json`: synthetic-local run manifest with tool version, input/config digests, and artifact schema versions
 
 ## Reviewer Walkthrough
 
