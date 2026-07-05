@@ -7,7 +7,7 @@ from pathlib import Path
 
 import yaml
 
-from telemetry_window_demo.io import load_config
+from telemetry_lab.io import load_config
 
 
 def _cli_env(repo_root: Path) -> dict[str, str]:
@@ -29,7 +29,7 @@ def test_readme_summarize_command_runs_as_module() -> None:
         [
             sys.executable,
             "-m",
-            "telemetry_window_demo.cli",
+            "telemetry_lab.cli",
             "summarize",
             "--input",
             "data/raw/sample_events.jsonl",
@@ -59,8 +59,9 @@ def test_readme_default_run_command_writes_expected_artifacts(tmp_path) -> None:
         [
             sys.executable,
             "-m",
-            "telemetry_window_demo.cli",
+            "telemetry_lab.cli",
             "run",
+            "window",
             "--config",
             str(config_path),
         ],
@@ -77,6 +78,7 @@ def test_readme_default_run_command_writes_expected_artifacts(tmp_path) -> None:
     assert (output_dir / "features.csv").is_file()
     assert (output_dir / "alerts.csv").is_file()
     assert (output_dir / "summary.json").is_file()
+    assert (output_dir / "run_manifest.json").is_file()
     assert (output_dir / "event_count_timeline.png").is_file()
 
 
@@ -88,7 +90,7 @@ def test_plot_command_runs_as_module(tmp_path) -> None:
         [
             sys.executable,
             "-m",
-            "telemetry_window_demo.cli",
+            "telemetry_lab.cli",
             "plot",
             "--features",
             "data/processed/features.csv",
@@ -112,6 +114,36 @@ def test_plot_command_runs_as_module(tmp_path) -> None:
 
 
 def test_cloud_iam_demo_command_runs_as_module() -> None:
+    repo_root = Path(__file__).resolve().parents[1]
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "telemetry_lab.cli",
+            "run",
+            "cloud-iam",
+        ],
+        cwd=repo_root,
+        env=_cli_env(repo_root),
+        text=True,
+        capture_output=True,
+        timeout=30,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert "[OK] Loaded 14 CloudTrail-like events" in result.stdout
+    assert "[OK] Built 5 investigation signals" in result.stdout
+    assert (
+        repo_root
+        / "demos"
+        / "cloud-iam-change-investigation-demo"
+        / "artifacts"
+        / "run_manifest.json"
+    ).is_file()
+
+
+def test_legacy_cli_module_remains_compatible() -> None:
     repo_root = Path(__file__).resolve().parents[1]
 
     result = subprocess.run(

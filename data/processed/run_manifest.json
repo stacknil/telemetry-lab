@@ -1,0 +1,11 @@
+{
+  "tool_version": "1.2.0",
+  "demo_id": "window",
+  "input_digest": "sha256:c08795a6a3c361a3339414c5a8441fb74c58f027c96931dbdc0da28560e132ac",
+  "config_digest": "sha256:a6107a2a732e8f4bf03572e9e86697ce1daa0eed1871724d0b44ec677f924b37",
+  "artifact_schema_versions": {
+    "run_manifest": "run-manifest/v1",
+    "telemetry_summary": "telemetry-summary/v1"
+  },
+  "execution_mode": "synthetic-local"
+}

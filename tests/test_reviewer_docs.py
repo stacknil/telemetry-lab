@@ -14,6 +14,7 @@ REVIEWER_DEMO_MATRIX = [
             "data/processed/features.csv",
             "data/processed/alerts.csv",
             "data/processed/summary.json",
+            "data/processed/run_manifest.json",
         ],
     ),
     (
@@ -56,12 +57,14 @@ STABLE_REVIEWER_ARTIFACTS = [
     "data/processed/features.csv",
     "data/processed/alerts.csv",
     "data/processed/summary.json",
+    "data/processed/run_manifest.json",
     "data/processed/event_count_timeline.png",
     "data/processed/error_rate_timeline.png",
     "data/processed/alerts_timeline.png",
     "data/processed/richer_sample/features.csv",
     "data/processed/richer_sample/alerts.csv",
     "data/processed/richer_sample/summary.json",
+    "data/processed/richer_sample/run_manifest.json",
     "data/processed/richer_sample/event_count_timeline.png",
     "data/processed/richer_sample/error_rate_timeline.png",
     "data/processed/richer_sample/alerts_timeline.png",
@@ -70,18 +73,22 @@ STABLE_REVIEWER_ARTIFACTS = [
     "demos/ai-assisted-detection-demo/artifacts/case_summaries.json",
     "demos/ai-assisted-detection-demo/artifacts/case_report.md",
     "demos/ai-assisted-detection-demo/artifacts/audit_traces.jsonl",
+    "demos/ai-assisted-detection-demo/artifacts/run_manifest.json",
     "demos/rule-evaluation-and-dedup-demo/artifacts/rule_hits_before_dedup.json",
     "demos/rule-evaluation-and-dedup-demo/artifacts/rule_hits_after_dedup.json",
     "demos/rule-evaluation-and-dedup-demo/artifacts/dedup_explanations.json",
     "demos/rule-evaluation-and-dedup-demo/artifacts/dedup_report.md",
+    "demos/rule-evaluation-and-dedup-demo/artifacts/run_manifest.json",
     "demos/config-change-investigation-demo/artifacts/change_events_normalized.json",
     "demos/config-change-investigation-demo/artifacts/investigation_hits.json",
     "demos/config-change-investigation-demo/artifacts/investigation_summary.json",
     "demos/config-change-investigation-demo/artifacts/investigation_report.md",
+    "demos/config-change-investigation-demo/artifacts/run_manifest.json",
     "demos/cloud-iam-change-investigation-demo/artifacts/normalized_cloudtrail_events.json",
     "demos/cloud-iam-change-investigation-demo/artifacts/investigation_signals.json",
     "demos/cloud-iam-change-investigation-demo/artifacts/investigation_summary.json",
     "demos/cloud-iam-change-investigation-demo/artifacts/investigation_report.md",
+    "demos/cloud-iam-change-investigation-demo/artifacts/run_manifest.json",
 ]
 
 
@@ -165,8 +172,10 @@ def test_docs_index_separates_current_route_from_history() -> None:
         "v1-readiness-gate.md",
         "release-v1.0.md",
         "release-v1.1.md",
+        "release-v1.2.md",
         "v0.6-to-v1-artifact-diff.md",
         "evidence-pipeline-contract.md",
+        "schema-compatibility-matrix.md",
         "reviewer-artifact-diff.md",
         "vocabulary.md",
         "architecture.md",
@@ -190,6 +199,13 @@ def test_package_metadata_uses_detection_lab_framing() -> None:
         "A local, file-based detection workflow lab for "
         "reviewer-verifiable telemetry and detection demos."
     )
+    assert pyproject["project"]["name"] == "telemetry-lab"
+    assert pyproject["project"]["version"] == "1.2.0"
+    assert pyproject["project"]["scripts"]["telemetry-lab"] == "telemetry_lab.cli:main"
+    assert (
+        pyproject["project"]["scripts"]["telemetry-window-demo"]
+        == "telemetry_window_demo.cli:main"
+    )
     assert "small prototype" not in description.lower()
     assert "monitoring platform" not in description.lower()
 
@@ -204,11 +220,13 @@ def test_top_level_reviewer_pack_covers_matrix_and_artifact_contract() -> None:
     assert "[`docs/v1-contract-freeze.md`](v1-contract-freeze.md)" in reviewer_pack
     assert "[`docs/v1-readiness-gate.md`](v1-readiness-gate.md)" in reviewer_pack
     assert "[`docs/release-v1.0.md`](release-v1.0.md)" in reviewer_pack
+    assert "[`docs/release-v1.2.md`](release-v1.2.md)" in reviewer_pack
     assert "[`docs/v0.6-to-v1-artifact-diff.md`](v0.6-to-v1-artifact-diff.md)" in reviewer_pack
     assert "[`docs/reviewer-artifact-diff.md`](reviewer-artifact-diff.md)" in reviewer_pack
     assert "[`docs/vocabulary.md`](vocabulary.md)" in reviewer_pack
     assert "[`docs/architecture.md`](architecture.md)" in reviewer_pack
     assert "[`docs/roadmap.md`](roadmap.md)" in reviewer_pack
+    assert "[`docs/schema-compatibility-matrix.md`](schema-compatibility-matrix.md)" in reviewer_pack
     assert "current route, supporting docs, and historical release evidence" in reviewer_pack
 
     for question, demo_name, artifact_paths in REVIEWER_DEMO_MATRIX:
@@ -260,7 +278,9 @@ def test_current_docs_use_v1_contract_stabilization_language() -> None:
     assert "Demo expansion is closed." in current_docs["docs/roadmap.md"]
     assert "Next phase: v1 reviewer contract stabilization." in current_docs["docs/roadmap.md"]
     assert "v1.1 theme: Operator Reproduction Release." in current_docs["docs/roadmap.md"]
+    assert "v1.2 theme: Architecture Cohesion Release." in current_docs["docs/roadmap.md"]
     assert "v1.1 is an Operator Reproduction Release, not a new-demo release" in current_docs["README.md"]
+    assert "v1.2 is an Architecture Cohesion Release, not a new-demo release" in current_docs["README.md"]
     assert "v1.0 Five-Demo Contract Freeze" in current_docs["docs/roadmap.md"]
     assert "## v1 Reviewer Contract Stabilization" in current_docs["README.md"]
 
@@ -311,6 +331,8 @@ def test_reviewer_artifact_diff_contract_covers_release_changes() -> None:
     docs_index = _read_repo_file("docs/README.md")
     readme = _read_repo_file("README.md")
     evidence_contract = _read_repo_file("docs/evidence-pipeline-contract.md")
+    reviewer_pack = _read_repo_file("docs/reviewer-pack.md")
+    schema_matrix = _read_repo_file("docs/schema-compatibility-matrix.md")
     roadmap = _read_repo_file("docs/roadmap.md")
 
     assert "Every release must include a concise artifact diff" in artifact_diff
@@ -337,6 +359,14 @@ def test_reviewer_artifact_diff_contract_covers_release_changes() -> None:
         assert "reviewer-artifact-diff.md" in text
 
     assert "Include reviewer-facing artifact diffs in every release" in roadmap
+    assert "Schema Compatibility Matrix" in schema_matrix
+    assert "`schemas/run_manifest.schema.json`" in schema_matrix
+    assert "`run-manifest/v1`" in schema_matrix
+    assert "`additive-compatible`" in schema_matrix
+    assert "`execution_mode`" in schema_matrix
+    assert "`synthetic-local`" in schema_matrix
+    for text in [docs_index, readme, evidence_contract, reviewer_pack]:
+        assert "schema-compatibility-matrix.md" in text
 
 
 def test_v1_contract_freeze_documents_release_drift_and_gate() -> None:
@@ -522,6 +552,9 @@ def test_architecture_doc_keeps_local_file_based_boundaries() -> None:
     assert "local, file-based detection workflow lab" in architecture
     assert "Artifact names are reviewer-visible contracts" in architecture
     assert "does not provide production monitoring" in architecture
+    assert "telemetry-lab run window" in architecture
+    assert "telemetry_lab" in architecture
+    assert "Notebooks are auxiliary exploration only" in architecture
 
     for _, demo_name, _ in REVIEWER_DEMO_MATRIX:
         assert f"`{demo_name}`" in architecture
@@ -538,22 +571,23 @@ def test_operator_reproduction_doc_and_readme_define_short_gate() -> None:
     assert "python -m pip install -e \".[dev]\"" in operator_doc
     assert "## Run The Five Demos" in operator_doc
     for demo_command in [
-        "python -m telemetry_window_demo.cli run --config configs/default.yaml",
-        "python -m telemetry_window_demo.cli run-ai-demo",
-        "python -m telemetry_window_demo.cli run-rule-dedup-demo",
-        "python -m telemetry_window_demo.cli run-config-change-demo",
-        "python -m telemetry_window_demo.cli run-cloud-iam-change-demo",
+        "telemetry-lab run window --config configs/default.yaml",
+        "telemetry-lab run ai-assisted",
+        "telemetry-lab run dedup",
+        "telemetry-lab run config-change",
+        "telemetry-lab run cloud-iam",
     ]:
         assert demo_command in operator_doc
     assert "python scripts/regenerate_artifacts.py --check" in operator_doc
     assert "python -m pytest tests/test_evidence_pipeline_schemas.py" in operator_doc
     assert "python -m pytest" in operator_doc
+    assert "telemetry-lab verify" in operator_doc
     assert "python scripts/check_release_contract.py" in operator_doc
     assert "does not add a new demo" in operator_doc
     assert "does not claim production readiness" in operator_doc
 
     assert "## Verify Locally In 3 Commands" in readme
-    assert "If you want to verify v1.0 locally, run these three commands." in readme
+    assert "If you want to verify the reviewer contract locally" in readme
     assert "docs/operator-reproduction.md" in readme
     assert "operator-reproduction.md" in docs_index
     assert "scripts/check_release_contract.py" in roadmap
@@ -611,7 +645,7 @@ def test_v11_release_note_keeps_operator_reproduction_scope() -> None:
     assert "`no-artifact-change`" in release_note
     assert "Package identity mismatch must be resolved before v1.2" in release_note
     assert "telemetry-window-demo==0.1.0" in release_note
-    assert "package identity mismatch" in roadmap
+    assert "package identity remains aligned" in roadmap
 
     for demo_name in [
         "telemetry-window-demo",
@@ -634,3 +668,35 @@ def test_v11_release_note_keeps_operator_reproduction_scope() -> None:
 
     for text in [docs_index, readme, roadmap]:
         assert "release-v1.1.md" in text
+
+
+def test_v12_release_note_documents_architecture_cohesion_scope() -> None:
+    release_note = _read_repo_file("docs/release-v1.2.md")
+    docs_index = _read_repo_file("docs/README.md")
+    readme = _read_repo_file("README.md")
+    roadmap = _read_repo_file("docs/roadmap.md")
+
+    assert "# v1.2 Architecture Cohesion Release Notes" in release_note
+    assert "Theme: architecture cohesion, no demo expansion." in release_note
+    assert "telemetry-lab==1.2.0" in release_note
+    assert "telemetry_lab" in release_note
+    assert "telemetry_window_demo" in release_note
+    assert "telemetry-lab run window --config configs/default.yaml" in release_note
+    assert "telemetry-lab verify" in release_note
+    assert "run_manifest.json" in release_note
+    assert "execution_mode: synthetic-local" in release_note
+    assert "property tests for window half-open boundary indexes" in release_note
+    assert "Notebooks are auxiliary exploration only" in release_note
+
+    for forbidden_scope in [
+        "No demo expansion.",
+        "No live ingestion.",
+        "No production SIEM or dashboard.",
+        "No alert routing or case-management service.",
+        "No autonomous response.",
+        "No final incident verdict.",
+    ]:
+        assert forbidden_scope in release_note
+
+    for text in [docs_index, readme, roadmap]:
+        assert "release-v1.2.md" in text

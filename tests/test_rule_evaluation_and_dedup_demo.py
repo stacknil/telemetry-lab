@@ -1,12 +1,15 @@
 from __future__ import annotations
 
 import json
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
+from hypothesis import given, settings
+from hypothesis import strategies as st
 
-from telemetry_window_demo.rule_evaluation_and_dedup_demo import default_demo_root, run_demo
-from telemetry_window_demo.rule_evaluation_and_dedup_demo.pipeline import (
+from telemetry_lab.rule_evaluation_and_dedup_demo import default_demo_root, run_demo
+from telemetry_lab.rule_evaluation_and_dedup_demo.pipeline import (
     deduplicate_rule_hits,
     group_rule_hits_by_cooldown_key,
     load_json,
@@ -41,6 +44,23 @@ def _make_hit(hit_id: str, alert_time: str) -> dict[str, str]:
         "window_end": alert_time,
         "entity": "account:carol",
         "message": "login_fail_count reached 8, threshold is 8",
+    }
+
+
+def _make_property_hit(hit_id: str, offset_seconds: int) -> dict[str, str]:
+    alert_time = datetime(2026, 3, 18, 10, 0, tzinfo=UTC) + timedelta(
+        seconds=offset_seconds
+    )
+    window_start = alert_time - timedelta(seconds=60)
+    return {
+        "hit_id": hit_id,
+        "rule_name": "login_fail_burst",
+        "severity": "high",
+        "alert_time": alert_time.isoformat().replace("+00:00", "Z"),
+        "window_start": window_start.isoformat().replace("+00:00", "Z"),
+        "window_end": alert_time.isoformat().replace("+00:00", "Z"),
+        "entity": "account:property",
+        "message": "login_fail_count reached threshold",
     }
 
 
@@ -130,3 +150,59 @@ def test_run_demo_rejects_file_artifacts_dir(tmp_path) -> None:
 
     with pytest.raises(ValueError, match="Output directory path is not a directory"):
         run_demo(demo_root=default_demo_root(), artifacts_dir=artifacts_dir)
+
+
+@given(
+    offsets=st.lists(
+        st.integers(min_value=0, max_value=1200),
+        min_size=1,
+        max_size=25,
+    ).map(sorted),
+    cooldown_seconds=st.integers(min_value=1, max_value=300),
+)
+@settings(max_examples=80, deadline=None)
+def test_deduplicate_rule_hits_property_respects_cooldown_invariants(
+    offsets: list[int],
+    cooldown_seconds: int,
+) -> None:
+    hits = normalize_rule_hits(
+        [
+            _make_property_hit(f"PROP-{index:03d}", offset)
+            for index, offset in enumerate(offsets, start=1)
+        ]
+    )
+
+    retained_hits, explanations = deduplicate_rule_hits(
+        hits,
+        cooldown_seconds=cooldown_seconds,
+    )
+
+    retained_ids = {str(hit["hit_id"]) for hit in retained_hits}
+    retained_explanation_ids = {
+        str(explanation["hit_id"])
+        for explanation in explanations
+        if explanation["status"] == "retained"
+    }
+    assert len(explanations) == len(hits)
+    assert retained_ids == retained_explanation_ids
+
+    retained_times = [
+        parse_timestamp(str(hit["alert_time"]))
+        for hit in sorted(retained_hits, key=lambda hit: str(hit["alert_time"]))
+    ]
+    for previous, current in zip(retained_times, retained_times[1:]):
+        assert int((current - previous).total_seconds()) >= cooldown_seconds
+
+    represented_ids = [
+        str(hit_id)
+        for retained_hit in retained_hits
+        for hit_id in retained_hit["represented_hit_ids"]
+    ]
+    assert sorted(represented_ids) == sorted(str(hit["hit_id"]) for hit in hits)
+
+    for explanation in explanations:
+        if explanation["status"] == "retained":
+            assert explanation["suppressed_by_hit_id"] is None
+            continue
+        assert explanation["suppressed_by_hit_id"] in retained_ids
+        assert explanation["seconds_since_last_retained"] < cooldown_seconds

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from telemetry_window_demo.cli import main
+from telemetry_lab.cli import main
 
 
 def test_summarize_honors_configured_timestamp_column(tmp_path, capsys) -> None:

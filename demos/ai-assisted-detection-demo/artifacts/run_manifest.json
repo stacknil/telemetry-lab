@@ -1,0 +1,14 @@
+{
+  "tool_version": "1.2.0",
+  "demo_id": "ai-assisted",
+  "input_digest": "sha256:e45f71682c89734e625119a3edd166591f1a0cdf6e3b24c7b87c23d809154b55",
+  "config_digest": "sha256:183924db1f5800b56ec2794198d65489c49c0824823b52ef373bb30011886408",
+  "artifact_schema_versions": {
+    "ai_audit_traces": "ai-assisted-detection-audit/v1",
+    "case_bundles": "case-bundles/v1",
+    "case_summaries": "ai-assisted-case-summary/v1",
+    "rule_hits": "rule-hits/v1",
+    "run_manifest": "run-manifest/v1"
+  },
+  "execution_mode": "synthetic-local"
+}

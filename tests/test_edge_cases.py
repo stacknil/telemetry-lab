@@ -5,10 +5,10 @@ from collections import Counter
 import pandas as pd
 import pytest
 
-from telemetry_window_demo.features import compute_window_features
-from telemetry_window_demo.preprocess import normalize_events
-from telemetry_window_demo.rules import ALERT_COLUMNS, apply_rules
-from telemetry_window_demo.windowing import build_windows
+from telemetry_lab.features import compute_window_features
+from telemetry_lab.preprocess import normalize_events
+from telemetry_lab.rules import ALERT_COLUMNS, apply_rules
+from telemetry_lab.windowing import build_windows
 
 
 def _event(

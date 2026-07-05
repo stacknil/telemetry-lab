@@ -10,7 +10,7 @@ Start with the stable demo matrix in [`docs/reviewer-path.md`](reviewer-path.md)
 
 | Review question | Demo | Primary evidence |
 | --- | --- | --- |
-| How are raw events converted to alert features? | `telemetry-window-demo` | `data/processed/features.csv`, `data/processed/alerts.csv`, `data/processed/summary.json` |
+| How are raw events converted to alert features? | `telemetry-window-demo` | `data/processed/features.csv`, `data/processed/alerts.csv`, `data/processed/summary.json`, `data/processed/run_manifest.json` |
 | How is AI constrained? | `ai-assisted-detection-demo` | `demos/ai-assisted-detection-demo/artifacts/case_summaries.json`, `demos/ai-assisted-detection-demo/artifacts/audit_traces.jsonl`, guardrails in `demos/ai-assisted-detection-demo/README.md` |
 | How are duplicate alerts reduced? | `rule-evaluation-and-dedup-demo` | `demos/rule-evaluation-and-dedup-demo/artifacts/rule_hits_before_dedup.json`, `demos/rule-evaluation-and-dedup-demo/artifacts/rule_hits_after_dedup.json`, `demos/rule-evaluation-and-dedup-demo/artifacts/dedup_explanations.json` |
 | How are risky config changes investigated? | `config-change-investigation-demo` | `demos/config-change-investigation-demo/artifacts/investigation_hits.json`, `demos/config-change-investigation-demo/artifacts/investigation_report.md` |
@@ -43,6 +43,8 @@ The current artifact names are reviewer-facing contracts for the v1 reviewer con
 
 See [`docs/evidence-pipeline-contract.md`](evidence-pipeline-contract.md) for the v1 JSON schema contract covering reviewer-facing JSON and JSONL evidence artifacts across the five-demo matrix.
 
+See [`docs/schema-compatibility-matrix.md`](schema-compatibility-matrix.md) for schema versions, artifact paths, and v1.1-to-v1.2 compatibility labels.
+
 See [`docs/vocabulary.md`](vocabulary.md) for the cross-demo meaning of `event`, `signal`, `hit`, `finding`, `case_bundle`, `summary`, `report`, and `audit_trace`.
 
 In this repo, bounded correlation means evidence is attached only within fixed time windows, fixed entity or scope keys, and fixed event families or rule-local family sets. It is not cross-host, cross-account, or cross-source global attribution.
@@ -62,17 +64,18 @@ The current schema contract covers:
 - `schemas/cloud_iam_findings.schema.json`
 - `schemas/cloud_iam_summary.schema.json`
 - `schemas/telemetry_summary.schema.json`
+- `schemas/run_manifest.schema.json`
 
 ### Stable Reviewer-Visible Artifacts
 
 | Area | Stable artifact paths |
 | --- | --- |
-| Default telemetry sample | `data/processed/features.csv`, `data/processed/alerts.csv`, `data/processed/summary.json`, `data/processed/event_count_timeline.png`, `data/processed/error_rate_timeline.png`, `data/processed/alerts_timeline.png` |
-| Richer telemetry sample | `data/processed/richer_sample/features.csv`, `data/processed/richer_sample/alerts.csv`, `data/processed/richer_sample/summary.json`, `data/processed/richer_sample/event_count_timeline.png`, `data/processed/richer_sample/error_rate_timeline.png`, `data/processed/richer_sample/alerts_timeline.png` |
-| AI-assisted detection demo | `demos/ai-assisted-detection-demo/artifacts/rule_hits.json`, `demos/ai-assisted-detection-demo/artifacts/case_bundles.json`, `demos/ai-assisted-detection-demo/artifacts/case_summaries.json`, `demos/ai-assisted-detection-demo/artifacts/case_report.md`, `demos/ai-assisted-detection-demo/artifacts/audit_traces.jsonl` |
-| Rule dedup demo | `demos/rule-evaluation-and-dedup-demo/artifacts/rule_hits_before_dedup.json`, `demos/rule-evaluation-and-dedup-demo/artifacts/rule_hits_after_dedup.json`, `demos/rule-evaluation-and-dedup-demo/artifacts/dedup_explanations.json`, `demos/rule-evaluation-and-dedup-demo/artifacts/dedup_report.md` |
-| Config-change investigation demo | `demos/config-change-investigation-demo/artifacts/change_events_normalized.json`, `demos/config-change-investigation-demo/artifacts/investigation_hits.json`, `demos/config-change-investigation-demo/artifacts/investigation_summary.json`, `demos/config-change-investigation-demo/artifacts/investigation_report.md` |
-| Cloud IAM change investigation demo | `demos/cloud-iam-change-investigation-demo/artifacts/normalized_cloudtrail_events.json`, `demos/cloud-iam-change-investigation-demo/artifacts/investigation_signals.json`, `demos/cloud-iam-change-investigation-demo/artifacts/investigation_summary.json`, `demos/cloud-iam-change-investigation-demo/artifacts/investigation_report.md` |
+| Default telemetry sample | `data/processed/features.csv`, `data/processed/alerts.csv`, `data/processed/summary.json`, `data/processed/run_manifest.json`, `data/processed/event_count_timeline.png`, `data/processed/error_rate_timeline.png`, `data/processed/alerts_timeline.png` |
+| Richer telemetry sample | `data/processed/richer_sample/features.csv`, `data/processed/richer_sample/alerts.csv`, `data/processed/richer_sample/summary.json`, `data/processed/richer_sample/run_manifest.json`, `data/processed/richer_sample/event_count_timeline.png`, `data/processed/richer_sample/error_rate_timeline.png`, `data/processed/richer_sample/alerts_timeline.png` |
+| AI-assisted detection demo | `demos/ai-assisted-detection-demo/artifacts/rule_hits.json`, `demos/ai-assisted-detection-demo/artifacts/case_bundles.json`, `demos/ai-assisted-detection-demo/artifacts/case_summaries.json`, `demos/ai-assisted-detection-demo/artifacts/case_report.md`, `demos/ai-assisted-detection-demo/artifacts/audit_traces.jsonl`, `demos/ai-assisted-detection-demo/artifacts/run_manifest.json` |
+| Rule dedup demo | `demos/rule-evaluation-and-dedup-demo/artifacts/rule_hits_before_dedup.json`, `demos/rule-evaluation-and-dedup-demo/artifacts/rule_hits_after_dedup.json`, `demos/rule-evaluation-and-dedup-demo/artifacts/dedup_explanations.json`, `demos/rule-evaluation-and-dedup-demo/artifacts/dedup_report.md`, `demos/rule-evaluation-and-dedup-demo/artifacts/run_manifest.json` |
+| Config-change investigation demo | `demos/config-change-investigation-demo/artifacts/change_events_normalized.json`, `demos/config-change-investigation-demo/artifacts/investigation_hits.json`, `demos/config-change-investigation-demo/artifacts/investigation_summary.json`, `demos/config-change-investigation-demo/artifacts/investigation_report.md`, `demos/config-change-investigation-demo/artifacts/run_manifest.json` |
+| Cloud IAM change investigation demo | `demos/cloud-iam-change-investigation-demo/artifacts/normalized_cloudtrail_events.json`, `demos/cloud-iam-change-investigation-demo/artifacts/investigation_signals.json`, `demos/cloud-iam-change-investigation-demo/artifacts/investigation_summary.json`, `demos/cloud-iam-change-investigation-demo/artifacts/investigation_report.md`, `demos/cloud-iam-change-investigation-demo/artifacts/run_manifest.json` |
 
 ## v1 Readiness Gate
 
@@ -96,11 +99,11 @@ From the repository root:
 
 ```bash
 python -m pip install -e ".[dev]"
-python -m telemetry_window_demo.cli run --config configs/default.yaml
-python -m telemetry_window_demo.cli run-ai-demo
-python -m telemetry_window_demo.cli run-rule-dedup-demo
-python -m telemetry_window_demo.cli run-config-change-demo
-python -m telemetry_window_demo.cli run-cloud-iam-change-demo
+telemetry-lab run window --config configs/default.yaml
+telemetry-lab run ai-assisted
+telemetry-lab run dedup
+telemetry-lab run config-change
+telemetry-lab run cloud-iam
 python scripts/regenerate_artifacts.py --check
 pytest
 ```
@@ -115,8 +118,10 @@ Use the same Python interpreter for install, tests, and demo commands.
 - [`docs/v1-contract-freeze.md`](v1-contract-freeze.md): v1.0 five-demo contract freeze, release status, and contract scope
 - [`docs/v1-readiness-gate.md`](v1-readiness-gate.md): v1.0 readiness gate for fixed inputs, fixed outputs, schema validation, artifact regeneration, and test pass
 - [`docs/release-v1.0.md`](release-v1.0.md): v1.0 reviewer-contract release notes and explicit non-SIEM boundary
+- [`docs/release-v1.2.md`](release-v1.2.md): v1.2 architecture cohesion release notes
 - [`docs/v0.6-to-v1-artifact-diff.md`](v0.6-to-v1-artifact-diff.md): fourth-to-fifth-demo artifact contract and compatibility diff
 - [`docs/evidence-pipeline-contract.md`](evidence-pipeline-contract.md): JSON/JSONL schema contracts for five-demo evidence artifacts
+- [`docs/schema-compatibility-matrix.md`](schema-compatibility-matrix.md): schema versions and compatibility notes for reviewer artifacts
 - [`docs/reviewer-artifact-diff.md`](reviewer-artifact-diff.md): release diff contract for reviewer-facing artifact changes
 - [`docs/vocabulary.md`](vocabulary.md): cross-demo evidence workflow vocabulary
 - [`docs/architecture.md`](architecture.md): local file-based workflow diagram

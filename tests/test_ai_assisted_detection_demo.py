@@ -8,9 +8,9 @@ from typing import Any
 import pytest
 import yaml
 
-from telemetry_window_demo.ai_assisted_detection_demo import default_demo_root, run_demo
-from telemetry_window_demo.ai_assisted_detection_demo.llm import DemoStructuredCaseLlm
-from telemetry_window_demo.ai_assisted_detection_demo.pipeline import (
+from telemetry_lab.ai_assisted_detection_demo import default_demo_root, run_demo
+from telemetry_lab.ai_assisted_detection_demo.llm import DemoStructuredCaseLlm
+from telemetry_lab.ai_assisted_detection_demo.pipeline import (
     JsonOutputError,
     SchemaValidationError,
     SemanticValidationError,

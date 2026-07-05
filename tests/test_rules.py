@@ -3,7 +3,7 @@ from __future__ import annotations
 import pandas as pd
 import pytest
 
-from telemetry_window_demo.rules import apply_rules
+from telemetry_lab.rules import apply_rules
 
 
 def _rule_validation_features() -> pd.DataFrame:
@@ -298,4 +298,3 @@ def test_apply_rules_keeps_different_rules_during_same_cooldown_window() -> None
 def test_apply_rules_rejects_invalid_direct_rule_config(rules_config, message) -> None:
     with pytest.raises(ValueError, match=message):
         apply_rules(_rule_validation_features(), rules_config)
-

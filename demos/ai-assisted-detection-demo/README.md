@@ -53,8 +53,8 @@ For a no-run reviewer pack, see [docs/ai-assisted-detection-examples.md](../../d
 From the repository root:
 
 ```bash
-python -m pip install -e .
-python -m telemetry_window_demo.cli run-ai-demo
+python -m pip install -e ".[dev]"
+telemetry-lab run ai-assisted
 ```
 
 Generated artifacts are written to `demos/ai-assisted-detection-demo/artifacts/`.
@@ -72,6 +72,7 @@ Generated artifacts are written to `demos/ai-assisted-detection-demo/artifacts/`
 - `artifacts/case_summaries.json`
 - `artifacts/case_report.md`
 - `artifacts/audit_traces.jsonl`
+- `artifacts/run_manifest.json`
 
 ## Expected run summary
 
@@ -92,6 +93,7 @@ The bundled sample run should report:
 - `case_report.md`: analyst-facing report with run counts, accepted summaries, and explicit notes for rejected case summaries
 - `case_report.md`: includes a top-level run integrity section that surfaces rule/config degradation
 - `audit_traces.jsonl`: stable per-record audit log for accepted and rejected paths, using `schema_version = ai-assisted-detection-audit/v1` and including `ts`, `case_id`, `validation_status`, `rejection_reason`, `rule_ids`, `prompt_input_digest`, `evidence_digest`, and bounded response excerpts
+- `run_manifest.json`: synthetic-local run manifest with tool version, input/config digests, and artifact schema versions
 
 ## Rejection behavior
 

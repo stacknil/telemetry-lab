@@ -1,6 +1,5 @@
-"""Windowed telemetry analytics demo."""
+"""Backward-compatible import namespace for telemetry-lab."""
+
+from telemetry_lab import __version__
 
 __all__ = ["__version__"]
-
-__version__ = "0.1.0"
-

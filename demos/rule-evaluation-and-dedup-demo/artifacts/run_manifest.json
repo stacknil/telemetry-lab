@@ -1,0 +1,12 @@
+{
+  "tool_version": "1.2.0",
+  "demo_id": "dedup",
+  "input_digest": "sha256:06c005b433bdc28f08cd6fdc7028c0242960b09f5187a723445f40bf135977a4",
+  "config_digest": "sha256:aa18d8ca4edab237dcec5c23c1dc7e9433f23a7d156df5a592e353c6fc9b74ad",
+  "artifact_schema_versions": {
+    "dedup_explanations": "dedup-explanations/v1",
+    "dedup_rule_hits": "dedup-rule-hits/v1",
+    "run_manifest": "run-manifest/v1"
+  },
+  "execution_mode": "synthetic-local"
+}

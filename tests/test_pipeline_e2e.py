@@ -7,11 +7,15 @@ from pathlib import Path
 import pandas as pd
 import yaml
 
-from telemetry_window_demo.cli import run_command
-from telemetry_window_demo.io import load_alert_table, load_config, load_feature_table
+from telemetry_lab.cli import run_command
+from telemetry_lab.io import load_alert_table, load_config, load_feature_table
 
 
 def _load_summary(path: Path) -> dict[str, object]:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _load_manifest(path: Path) -> dict[str, object]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
@@ -40,6 +44,7 @@ def test_default_pipeline_reproduces_sample_outputs(tmp_path, capsys) -> None:
     generated_features = load_feature_table(generated_output_dir / "features.csv")
     generated_alerts = load_alert_table(generated_output_dir / "alerts.csv")
     generated_summary = _load_summary(generated_output_dir / "summary.json")
+    generated_manifest = _load_manifest(generated_output_dir / "run_manifest.json")
     expected_features = load_feature_table(expected_output_dir / "features.csv")
     expected_alerts = load_alert_table(expected_output_dir / "alerts.csv")
     expected_summary = _load_summary(expected_output_dir / "summary.json")
@@ -61,10 +66,19 @@ def test_default_pipeline_reproduces_sample_outputs(tmp_path, capsys) -> None:
         "features.csv",
         "alerts.csv",
         "summary.json",
+        "run_manifest.json",
         "event_count_timeline.png",
         "error_rate_timeline.png",
         "alerts_timeline.png",
     }
+    assert generated_manifest["tool_version"] == "1.2.0"
+    assert generated_manifest["demo_id"] == "window"
+    assert generated_manifest["execution_mode"] == "synthetic-local"
+    assert generated_manifest["input_digest"].startswith("sha256:")
+    assert generated_manifest["config_digest"].startswith("sha256:")
+    assert generated_manifest["artifact_schema_versions"]["run_manifest"] == (
+        "run-manifest/v1"
+    )
 
     for file_name in (
         "event_count_timeline.png",
@@ -123,6 +137,7 @@ def test_richer_sample_pipeline_reproduces_sample_outputs(tmp_path, capsys) -> N
         "features.csv",
         "alerts.csv",
         "summary.json",
+        "run_manifest.json",
         "event_count_timeline.png",
         "error_rate_timeline.png",
         "alerts_timeline.png",
@@ -170,11 +185,13 @@ def test_pipeline_writes_summary_when_rules_are_null(tmp_path, capsys) -> None:
         "features.csv",
         "alerts.csv",
         "summary.json",
+        "run_manifest.json",
         "event_count_timeline.png",
         "error_rate_timeline.png",
         "alerts_timeline.png",
     }
     assert (generated_output_dir / "summary.json").exists()
+    assert (generated_output_dir / "run_manifest.json").exists()
 
     stdout = capsys.readouterr().out
     assert "[OK] Loaded 41 events" in stdout

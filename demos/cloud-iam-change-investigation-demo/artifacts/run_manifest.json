@@ -1,0 +1,13 @@
+{
+  "tool_version": "1.2.0",
+  "demo_id": "cloud-iam",
+  "input_digest": "sha256:96c39405358a7ecd940e84742df41dc5636e829824a21103657e0aa4123cab66",
+  "config_digest": "sha256:820e9a4beca0aeaf92485b5fd7177b1e3c7f6bd7cbe469cb0afc39e2ac51cce7",
+  "artifact_schema_versions": {
+    "cloud_iam_findings": "cloud-iam-findings/v1",
+    "cloud_iam_summary": "cloud-iam-summary/v1",
+    "cloudtrail_normalized_events": "cloudtrail-normalized-events/v1",
+    "run_manifest": "run-manifest/v1"
+  },
+  "execution_mode": "synthetic-local"
+}

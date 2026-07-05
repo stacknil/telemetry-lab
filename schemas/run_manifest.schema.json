@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/stacknil/telemetry-lab/schemas/run_manifest.schema.json",
+  "title": "Telemetry lab run manifest",
+  "description": "Schema for per-run synthetic-local provenance manifests across telemetry-lab demos.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "tool_version",
+    "demo_id",
+    "input_digest",
+    "config_digest",
+    "artifact_schema_versions",
+    "execution_mode"
+  ],
+  "properties": {
+    "tool_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "demo_id": {
+      "type": "string",
+      "enum": [
+        "window",
+        "ai-assisted",
+        "dedup",
+        "config-change",
+        "cloud-iam"
+      ]
+    },
+    "input_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "config_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "artifact_schema_versions": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^[a-z0-9][a-z0-9._-]*/v[0-9]+$"
+      }
+    },
+    "execution_mode": {
+      "type": "string",
+      "const": "synthetic-local"
+    }
+  }
+}

@@ -26,6 +26,7 @@
     "data/processed/features.csv",
     "data/processed/alerts.csv",
     "data/processed/summary.json",
+    "data/processed/run_manifest.json",
     "data/processed/event_count_timeline.png",
     "data/processed/error_rate_timeline.png",
     "data/processed/alerts_timeline.png"

@@ -4,7 +4,7 @@
 
 A local, file-based detection workflow lab for reviewer-verifiable telemetry and detection demos.
 
-Current focus: v1 reviewer contract stabilization for the five-demo matrix. v1.1 is an Operator Reproduction Release, not another demo expansion.
+Current focus: v1.2 Architecture Cohesion for the five-demo matrix. v1.2 resolves package identity, unifies the CLI, and adds run manifests without adding another demo.
 
 Latest tagged release: [v1.1 — operator reproduction release](https://github.com/stacknil/telemetry-lab/releases/tag/v1.1).
 
@@ -15,12 +15,14 @@ Latest tagged release: [v1.1 — operator reproduction release](https://github.c
 - [`docs/reviewer-pack.md`](docs/reviewer-pack.md): demo matrix, artifact contract, and v1 readiness gate
 - [`docs/operator-reproduction.md`](docs/operator-reproduction.md): shortest local path from clone to verifying all five demos
 - [`docs/release-v1.1.md`](docs/release-v1.1.md): v1.1 operator reproduction and issue triage release notes
+- [`docs/release-v1.2.md`](docs/release-v1.2.md): v1.2 architecture cohesion release notes
 - [`docs/v1-contract-freeze.md`](docs/v1-contract-freeze.md): v1.0 five-demo contract freeze, release status, and contract scope
 - [`docs/v1-readiness-gate.md`](docs/v1-readiness-gate.md): fixed inputs, fixed outputs, schema validation, artifact regeneration, and test pass requirements
 - [`docs/release-v1.0.md`](docs/release-v1.0.md): v1.0 reviewer-contract release notes and explicit non-SIEM boundary
 - [`docs/case-study-v1-contract-freeze.md`](docs/case-study-v1-contract-freeze.md): what v1.0 freezes and why the repository is not a SIEM
 - [`docs/v0.6-to-v1-artifact-diff.md`](docs/v0.6-to-v1-artifact-diff.md): fourth-to-fifth-demo artifact contract and compatibility diff
 - [`docs/evidence-pipeline-contract.md`](docs/evidence-pipeline-contract.md): JSON/JSONL schema contracts for reviewer-facing evidence artifacts
+- [`docs/schema-compatibility-matrix.md`](docs/schema-compatibility-matrix.md): schema versions, artifact paths, and v1.1-to-v1.2 compatibility notes
 - [`docs/reviewer-artifact-diff.md`](docs/reviewer-artifact-diff.md): release artifact diff contract for reviewer-facing outputs
 - [`docs/vocabulary.md`](docs/vocabulary.md): cross-demo vocabulary for events, hits, signals, bounded correlation, findings, summaries, reports, and audit traces
 - [`docs/README.md`](docs/README.md): current route, supporting docs, and historical release evidence
@@ -35,15 +37,17 @@ Latest tagged release: [v1.1 — operator reproduction release](https://github.c
 
 | Demo | Input | Deterministic core | LLM role | Main artifacts | Guardrails / non-goals |
 | --- | --- | --- | --- | --- | --- |
-| [telemetry-window-demo](#telemetry-window-demo) | JSONL / CSV events | Windows<br>Features<br>Alert thresholds | None | `features.csv`<br>`alerts.csv`<br>`summary.json`<br>3 PNG plots | Local demo only<br>No realtime<br>No case management |
-| [ai-assisted-detection-demo](demos/ai-assisted-detection-demo/README.md) | JSONL auth / web / process | Normalize<br>Rules<br>Grouping<br>ATT&CK mapping | JSON-only case drafting | `rule_hits.json`<br>`case_bundles.json`<br>`case_summaries.json`<br>`case_report.md`<br>`audit_traces.jsonl` | Human verification required<br>No autonomous response<br>No final verdict |
-| [rule-evaluation-and-dedup-demo](demos/rule-evaluation-and-dedup-demo/README.md) | JSON raw rule hits | Scope resolution<br>Cooldown grouping<br>Suppression reasoning | None | `rule_hits_before_dedup.json`<br>`rule_hits_after_dedup.json`<br>`dedup_explanations.json`<br>`dedup_report.md` | No realtime<br>No dashboard<br>No AI stage |
-| [config-change-investigation-demo](demos/config-change-investigation-demo/README.md) | JSONL config changes<br>Policy denials<br>Follow-on events | Normalize<br>Risky-change rules<br>Bounded correlation | None | `change_events_normalized.json`<br>`investigation_hits.json`<br>`investigation_summary.json`<br>`investigation_report.md` | No realtime<br>No dashboard<br>No AI stage |
-| [cloud-iam-change-investigation-demo](demos/cloud-iam-change-investigation-demo/README.md) | Synthetic CloudTrail-like JSONL | Validate<br>IAM rules<br>Bounded correlation<br>ATT&CK mapping | None | `normalized_cloudtrail_events.json`<br>`investigation_signals.json`<br>`investigation_summary.json`<br>`investigation_report.md` | Synthetic only<br>No live AWS<br>No final verdict |
+| [telemetry-window-demo](#telemetry-window-demo) | JSONL / CSV events | Windows<br>Features<br>Alert thresholds | None | `features.csv`<br>`alerts.csv`<br>`summary.json`<br>`run_manifest.json`<br>3 PNG plots | Local demo only<br>No realtime<br>No case management |
+| [ai-assisted-detection-demo](demos/ai-assisted-detection-demo/README.md) | JSONL auth / web / process | Normalize<br>Rules<br>Grouping<br>ATT&CK mapping | JSON-only case drafting | `rule_hits.json`<br>`case_bundles.json`<br>`case_summaries.json`<br>`case_report.md`<br>`audit_traces.jsonl`<br>`run_manifest.json` | Human verification required<br>No autonomous response<br>No final verdict |
+| [rule-evaluation-and-dedup-demo](demos/rule-evaluation-and-dedup-demo/README.md) | JSON raw rule hits | Scope resolution<br>Cooldown grouping<br>Suppression reasoning | None | `rule_hits_before_dedup.json`<br>`rule_hits_after_dedup.json`<br>`dedup_explanations.json`<br>`dedup_report.md`<br>`run_manifest.json` | No realtime<br>No dashboard<br>No AI stage |
+| [config-change-investigation-demo](demos/config-change-investigation-demo/README.md) | JSONL config changes<br>Policy denials<br>Follow-on events | Normalize<br>Risky-change rules<br>Bounded correlation | None | `change_events_normalized.json`<br>`investigation_hits.json`<br>`investigation_summary.json`<br>`investigation_report.md`<br>`run_manifest.json` | No realtime<br>No dashboard<br>No AI stage |
+| [cloud-iam-change-investigation-demo](demos/cloud-iam-change-investigation-demo/README.md) | Synthetic CloudTrail-like JSONL | Validate<br>IAM rules<br>Bounded correlation<br>ATT&CK mapping | None | `normalized_cloudtrail_events.json`<br>`investigation_signals.json`<br>`investigation_summary.json`<br>`investigation_report.md`<br>`run_manifest.json` | Synthetic only<br>No live AWS<br>No final verdict |
 
 ## What This Repo Is
 
 `telemetry-lab` is a small portfolio repository for constrained detection workflows. It is not a SIEM, dashboard, or monitoring platform; it is organized as five local, file-based demos that are reproducible from committed sample data and intentionally scoped for public review rather than production use.
+
+The installable project identity is `telemetry-lab==1.2.0`, with the primary import package `telemetry_lab` and console script `telemetry-lab`. The older `telemetry_window_demo` module path and `telemetry-window-demo` console script remain as compatibility entrypoints.
 
 ### telemetry-window-demo
 
@@ -68,8 +72,8 @@ Latest tagged release: [v1.1 — operator reproduction release](https://github.c
 ## Quick Run
 
 ```bash
-python -m pip install -e .
-python -m telemetry_window_demo.cli run --config configs/default.yaml
+python -m pip install -e ".[dev]"
+telemetry-lab run window --config configs/default.yaml
 ```
 
 Use the same Python interpreter for install, tests, and demo commands. On machines with multiple Python installs, replace `python` with the intended interpreter path.
@@ -77,7 +81,7 @@ To run the test suite in a fresh environment, install the dev extra with `python
 
 ## Verify Locally In 3 Commands
 
-If you want to verify v1.0 locally, run these three commands.
+If you want to verify the reviewer contract locally, run these three commands.
 
 ```bash
 python scripts/regenerate_artifacts.py --check
@@ -88,20 +92,20 @@ python -m pytest
 For the same reviewer-friendly gate with labeled steps, run:
 
 ```bash
-python scripts/check_release_contract.py
+telemetry-lab verify
 ```
 
 Other demo entrypoints:
 
-- `python -m telemetry_window_demo.cli run-ai-demo`
-- `python -m telemetry_window_demo.cli run-rule-dedup-demo`
-- `python -m telemetry_window_demo.cli run-config-change-demo`
-- `python -m telemetry_window_demo.cli run-cloud-iam-change-demo`
+- `telemetry-lab run ai-assisted`
+- `telemetry-lab run dedup`
+- `telemetry-lab run config-change`
+- `telemetry-lab run cloud-iam`
 - `python scripts/regenerate_artifacts.py --check`
 
 Useful inspection commands:
 
-- `python -m telemetry_window_demo.cli summarize --input data/raw/sample_events.jsonl`
+- `telemetry-lab summarize --input data/raw/sample_events.jsonl`
 
 For CSV inputs, pass a `.csv` file to `--input`; use `--timestamp-col` when the timestamp column is not named `timestamp`.
 
@@ -110,6 +114,7 @@ The `run --config configs/default.yaml` command reads `data/raw/sample_events.js
 - `data/processed/features.csv`
 - `data/processed/alerts.csv`
 - `data/processed/summary.json`
+- `data/processed/run_manifest.json`
 - `data/processed/event_count_timeline.png`
 - `data/processed/error_rate_timeline.png`
 - `data/processed/alerts_timeline.png`
@@ -132,11 +137,11 @@ Why it is worth a quick look:
 
 For a quick coherence pass across the demos:
 
-1. Run `python -m telemetry_window_demo.cli run --config configs/default.yaml` and confirm `data/processed/summary.json` reports `41` events, `24` windows, and `12` alerts.
-2. Run `python -m telemetry_window_demo.cli run-rule-dedup-demo` and confirm `demos/rule-evaluation-and-dedup-demo/artifacts/dedup_report.md` shows `10` raw hits reduced to `6` retained alerts with `4` suppressions.
-3. Run `python -m telemetry_window_demo.cli run-config-change-demo` and confirm `demos/config-change-investigation-demo/artifacts/investigation_report.md` shows `4` normalized changes, `3` risky changes, and `3` investigations.
-4. Run `python -m telemetry_window_demo.cli run-cloud-iam-change-demo` and confirm `demos/cloud-iam-change-investigation-demo/artifacts/investigation_report.md` shows `14` CloudTrail-like events and `5` investigation signals.
-5. Run `python -m telemetry_window_demo.cli run-ai-demo` and confirm `demos/ai-assisted-detection-demo/artifacts/case_report.md` shows `3` deterministic cases with human verification and no final incident verdict.
+1. Run `telemetry-lab run window --config configs/default.yaml` and confirm `data/processed/summary.json` reports `41` events, `24` windows, and `12` alerts.
+2. Run `telemetry-lab run dedup` and confirm `demos/rule-evaluation-and-dedup-demo/artifacts/dedup_report.md` shows `10` raw hits reduced to `6` retained alerts with `4` suppressions.
+3. Run `telemetry-lab run config-change` and confirm `demos/config-change-investigation-demo/artifacts/investigation_report.md` shows `4` normalized changes, `3` risky changes, and `3` investigations.
+4. Run `telemetry-lab run cloud-iam` and confirm `demos/cloud-iam-change-investigation-demo/artifacts/investigation_report.md` shows `14` CloudTrail-like events and `5` investigation signals.
+5. Run `telemetry-lab run ai-assisted` and confirm `demos/ai-assisted-detection-demo/artifacts/case_report.md` shows `3` deterministic cases with human verification and no final incident verdict.
 
 ## Demo Variants
 
@@ -191,11 +196,13 @@ Cooldown behavior:
 - [`docs/README.md`](docs/README.md) indexes current reviewer docs, supporting design notes, and historical release evidence
 - [`docs/operator-reproduction.md`](docs/operator-reproduction.md) gives the shortest local path from clone to running the five demos, artifact regeneration, schema tests, and full tests
 - [`docs/release-v1.1.md`](docs/release-v1.1.md) records the v1.1 operator reproduction and issue triage release
+- [`docs/release-v1.2.md`](docs/release-v1.2.md) records the v1.2 architecture cohesion release
 - [`docs/reviewer-pack.md`](docs/reviewer-pack.md) is the top-level no-guessing reviewer pack and artifact naming contract
 - [`docs/v1-contract-freeze.md`](docs/v1-contract-freeze.md) defines the v1.0 five-demo contract freeze gate
 - [`docs/v1-readiness-gate.md`](docs/v1-readiness-gate.md) defines the fixed-input, fixed-output, schema-validation, artifact-regeneration, and test-pass readiness gate
 - [`docs/v0.6-to-v1-artifact-diff.md`](docs/v0.6-to-v1-artifact-diff.md) explains the additive artifact contract from the fourth demo to the fifth
 - [`docs/evidence-pipeline-contract.md`](docs/evidence-pipeline-contract.md) maps v1 evidence schemas to committed JSON artifacts
+- [`docs/schema-compatibility-matrix.md`](docs/schema-compatibility-matrix.md) maps schema versions to committed artifacts and compatibility labels
 - [`docs/reviewer-artifact-diff.md`](docs/reviewer-artifact-diff.md) defines the release diff format for reviewer-facing artifact changes
 - [`docs/reviewer-brief.md`](docs/reviewer-brief.md) gives the short problem, value, evidence, and boundary summary
 - [`docs/reviewer-path.md`](docs/reviewer-path.md) maps common review questions to the right demo and artifacts
@@ -211,11 +218,13 @@ Cooldown behavior:
 ## v1 Reviewer Contract Stabilization
 
 - demo expansion is closed
+- v1.2 is an Architecture Cohesion Release, not a new-demo release
 - v1.1 is an Operator Reproduction Release, not a new-demo release
 - treat v1.0 as a five-demo contract freeze, not a feature expansion
 - stabilize the five-demo matrix and avoid broad platform expansion
 - freeze reviewer-visible artifact names unless a rename is intentionally coordinated across docs, tests, and sample outputs
 - keep JSON schema contracts aligned with reviewer-facing JSON and JSONL evidence artifacts across the five-demo matrix
+- keep `run_manifest.json` aligned across the five demo run modes with `execution_mode: synthetic-local`
 - keep committed artifacts aligned with regenerated pipeline output through `python scripts/regenerate_artifacts.py --check`
 - add a reviewer-facing artifact diff for each release, using `no-artifact-change` when committed reviewer artifacts are unchanged
 - use [`docs/reviewer-pack.md`](docs/reviewer-pack.md) and [`docs/architecture.md`](docs/architecture.md) as the consolidation entrypoints

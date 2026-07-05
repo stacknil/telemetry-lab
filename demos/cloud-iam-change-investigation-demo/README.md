@@ -21,8 +21,8 @@ The demo starts from one JSONL file, then:
 From the repository root:
 
 ```bash
-python -m pip install -e .
-python -m telemetry_window_demo.cli run-cloud-iam-change-demo
+python -m pip install -e ".[dev]"
+telemetry-lab run cloud-iam
 ```
 
 Generated artifacts are written to `demos/cloud-iam-change-investigation-demo/artifacts/`.
@@ -95,6 +95,7 @@ These mappings are reviewer context, not a verdict.
 - `artifacts/investigation_signals.json`
 - `artifacts/investigation_summary.json`
 - `artifacts/investigation_report.md`
+- `artifacts/run_manifest.json`
 
 ## Expected Run Summary
 

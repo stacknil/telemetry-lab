@@ -13,6 +13,14 @@ SCHEMA_CONTRACTS = {
         "data/processed/summary.json",
         "data/processed/richer_sample/summary.json",
     ],
+    "schemas/run_manifest.schema.json": [
+        "data/processed/run_manifest.json",
+        "data/processed/richer_sample/run_manifest.json",
+        "demos/ai-assisted-detection-demo/artifacts/run_manifest.json",
+        "demos/rule-evaluation-and-dedup-demo/artifacts/run_manifest.json",
+        "demos/config-change-investigation-demo/artifacts/run_manifest.json",
+        "demos/cloud-iam-change-investigation-demo/artifacts/run_manifest.json",
+    ],
     "schemas/rule_hits.schema.json": [
         "demos/ai-assisted-detection-demo/artifacts/rule_hits.json",
     ],
@@ -54,24 +62,29 @@ SCHEMA_CONTRACTS = {
 
 DEMO_SCHEMA_COVERAGE = {
     "telemetry-window-demo": [
+        "schemas/run_manifest.schema.json",
         "schemas/telemetry_summary.schema.json",
     ],
     "ai-assisted-detection-demo": [
+        "schemas/run_manifest.schema.json",
         "schemas/rule_hits.schema.json",
         "schemas/case_bundles.schema.json",
         "schemas/case_summaries.schema.json",
         "schemas/ai_audit_traces.schema.json",
     ],
     "rule-evaluation-and-dedup-demo": [
+        "schemas/run_manifest.schema.json",
         "schemas/dedup_rule_hits.schema.json",
         "schemas/dedup_explanations.schema.json",
     ],
     "config-change-investigation-demo": [
+        "schemas/run_manifest.schema.json",
         "schemas/config_change_events.schema.json",
         "schemas/config_investigation_hits.schema.json",
         "schemas/investigation_summary.schema.json",
     ],
     "cloud-iam-change-investigation-demo": [
+        "schemas/run_manifest.schema.json",
         "schemas/cloudtrail_normalized_events.schema.json",
         "schemas/cloud_iam_findings.schema.json",
         "schemas/cloud_iam_summary.schema.json",
@@ -80,20 +93,26 @@ DEMO_SCHEMA_COVERAGE = {
 
 REVIEWER_JSON_ARTIFACTS = {
     "data/processed/summary.json",
+    "data/processed/run_manifest.json",
     "data/processed/richer_sample/summary.json",
+    "data/processed/richer_sample/run_manifest.json",
     "demos/ai-assisted-detection-demo/artifacts/rule_hits.json",
     "demos/ai-assisted-detection-demo/artifacts/case_bundles.json",
     "demos/ai-assisted-detection-demo/artifacts/case_summaries.json",
     "demos/ai-assisted-detection-demo/artifacts/audit_traces.jsonl",
+    "demos/ai-assisted-detection-demo/artifacts/run_manifest.json",
     "demos/rule-evaluation-and-dedup-demo/artifacts/rule_hits_before_dedup.json",
     "demos/rule-evaluation-and-dedup-demo/artifacts/rule_hits_after_dedup.json",
     "demos/rule-evaluation-and-dedup-demo/artifacts/dedup_explanations.json",
+    "demos/rule-evaluation-and-dedup-demo/artifacts/run_manifest.json",
     "demos/config-change-investigation-demo/artifacts/change_events_normalized.json",
     "demos/config-change-investigation-demo/artifacts/investigation_hits.json",
     "demos/config-change-investigation-demo/artifacts/investigation_summary.json",
+    "demos/config-change-investigation-demo/artifacts/run_manifest.json",
     "demos/cloud-iam-change-investigation-demo/artifacts/normalized_cloudtrail_events.json",
     "demos/cloud-iam-change-investigation-demo/artifacts/investigation_signals.json",
     "demos/cloud-iam-change-investigation-demo/artifacts/investigation_summary.json",
+    "demos/cloud-iam-change-investigation-demo/artifacts/run_manifest.json",
 }
 
 
@@ -193,6 +212,7 @@ def test_schema_contracts_cover_all_five_demos_and_named_artifacts() -> None:
             assert (REPO_ROOT / schema_path).is_file(), schema_path
 
     for required_schema in [
+        "schemas/run_manifest.schema.json",
         "schemas/rule_hits.schema.json",
         "schemas/case_bundles.schema.json",
         "schemas/dedup_explanations.schema.json",
