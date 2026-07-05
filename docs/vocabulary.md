@@ -58,6 +58,14 @@ families. It does not infer a shared root cause from unrelated telemetry, search
 the whole dataset for plausible context, or promote nearby evidence into a final
 incident verdict.
 
+`evidence_counts` (as used in `investigation_summary.json`) reports how many
+`policy_denials` and `follow_on_events` fell inside the bounded correlation
+window and scope for that investigation, not how many exist in total. A count
+of `0` means bounded correlation found no attached evidence for that
+investigation, not that the triggering change was reviewed as low-risk or
+cleared. Severity is set from the triggering change itself, so `evidence_counts`
+of `0`/`0` can still appear alongside a `high` or `critical` `severity`.
+
 ## Time Semantics
 
 Events, hits, signals, summaries, and reports should preserve the time semantics

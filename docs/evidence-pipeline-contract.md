@@ -40,6 +40,34 @@ The contract is intentionally local and file-based:
 - The Cloud IAM schemas preserve the event-time model: `eventTime` is normalized to `event_time`, optional `observedTime` is preserved as `observed_time`, and detection ordering is documented as `event_time`.
 - These schemas describe reviewer evidence only. They do not claim production alert routing, case management, autonomous response, or final incident verdicts.
 
+## Traced Example: `CCI-003`
+
+This walks one committed object through the contract end to end, from artifact
+to schema, as a worked reviewer example.
+
+- Artifact: `demos/config-change-investigation-demo/artifacts/investigation_summary.json`
+- Schema: `schemas/investigation_summary.schema.json`
+- Object: `investigation_id: "CCI-003"` (`target_system: "vault-gateway"`, triggered by `cfg-004`)
+
+Field-by-field check against the schema:
+
+| Field | Value | Schema rule | Result |
+| --- | --- | --- | --- |
+| `investigation_id` | `"CCI-003"` | `pattern: ^CCI-[0-9]{3}$` | matches |
+| `severity` | `"high"` | `enum: [low, medium, high, critical]` | matches |
+| `evidence_counts.policy_denials` | `0` | integer, `minimum: 0` | matches |
+| `evidence_counts.follow_on_events` | `0` | integer, `minimum: 0` | matches |
+
+`CCI-003` satisfies every field in the schema. Its `evidence_counts` of `0`/`0`
+is a valid, schema-conformant value, not a gap: it means bounded correlation
+found no policy denials or follow-on events for `vault-gateway` inside the
+configured window, while `severity: "high"` still reflects the risk of the
+triggering change itself (see `evidence_counts` in
+[`docs/vocabulary.md`](vocabulary.md#bounded-correlation)). This keeps the
+artifact a bounded evidence summary rather than an incident verdict: it does
+not claim `vault-gateway` was cleared, only that no additional evidence was
+attached under the demo's bounded correlation rules.
+
 ## Verification
 
 Run:
