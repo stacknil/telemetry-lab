@@ -63,8 +63,9 @@ incident verdict.
 window and scope for that investigation, not how many exist in total. A count
 of `0` means bounded correlation found no attached evidence for that
 investigation, not that the triggering change was reviewed as low-risk or
-cleared. Severity is set from the triggering change itself, so `evidence_counts`
-of `0`/`0` can still appear alongside a `high` or `critical` `severity`.
+cleared. Severity is set from the matched risky-change rule, so
+`evidence_counts` of `0`/`0` can still appear alongside a `high` or `critical`
+`severity`.
 
 ## Time Semantics
 

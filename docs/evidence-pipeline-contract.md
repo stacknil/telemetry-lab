@@ -61,8 +61,8 @@ Field-by-field check against the schema:
 `CCI-003` satisfies every field in the schema. Its `evidence_counts` of `0`/`0`
 is a valid, schema-conformant value, not a gap: it means bounded correlation
 found no policy denials or follow-on events for `vault-gateway` inside the
-configured window, while `severity: "high"` still reflects the risk of the
-triggering change itself (see `evidence_counts` in
+configured window, while `severity: "high"` still reflects the matched
+risky-change rule for the triggering change (see `evidence_counts` in
 [`docs/vocabulary.md`](vocabulary.md#bounded-correlation)). This keeps the
 artifact a bounded evidence summary rather than an incident verdict: it does
 not claim `vault-gateway` was cleared, only that no additional evidence was
