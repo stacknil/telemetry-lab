@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 
 from jsonschema import Draft202012Validator, FormatChecker
@@ -164,6 +165,37 @@ def test_evidence_pipeline_schemas_validate_committed_artifacts() -> None:
                     key=lambda error: list(error.absolute_path),
                 )
             assert errors == [], f"{schema_path} failed for {artifact_path}\n{_error_summary(errors)}"
+
+
+def test_cci_003_traces_to_investigation_summary_schema() -> None:
+    """Reviewer trace for issue #76: CCI-003 -> investigation_summary schema."""
+    schema = _load_json("schemas/investigation_summary.schema.json")
+    Draft202012Validator.check_schema(schema)
+    # The top-level schema describes the array artifact; validate one traced
+    # record against the per-item schema so this reads as a single-object trace.
+    validator = Draft202012Validator(schema["items"], format_checker=FormatChecker())
+
+    artifact = _load_json(
+        "demos/config-change-investigation-demo/artifacts/investigation_summary.json"
+    )
+    records = {record["investigation_id"]: record for record in artifact}
+    assert "CCI-003" in records, "CCI-003 is missing from investigation_summary.json"
+
+    cci_003 = records["CCI-003"]
+    assert cci_003["target_system"] == "vault-gateway"
+    assert cci_003["triggering_change_id"] == "cfg-004"
+
+    errors = sorted(
+        validator.iter_errors(cci_003), key=lambda error: list(error.absolute_path)
+    )
+    assert errors == [], f"CCI-003 failed schema validation\n{_error_summary(errors)}"
+
+    assert re.fullmatch(r"CCI-[0-9]{3}", cci_003["investigation_id"])
+    assert cci_003["severity"] in {"low", "medium", "high", "critical"}
+    assert cci_003["evidence_counts"]["policy_denials"] >= 0
+    assert cci_003["evidence_counts"]["follow_on_events"] >= 0
+    assert isinstance(cci_003["evidence_counts"]["policy_denials"], int)
+    assert isinstance(cci_003["evidence_counts"]["follow_on_events"], int)
 
 
 def test_evidence_pipeline_contract_docs_reference_schemas_and_artifacts() -> None:
