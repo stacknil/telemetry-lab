@@ -1,8 +1,11 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import sys
 from pathlib import Path
+
+from telemetry_lab.manifest import digest_files
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -35,6 +38,26 @@ def test_regenerate_artifacts_check_matches_committed_outputs() -> None:
     )
 
     assert exit_code == 0
+
+
+def test_window_regeneration_hashes_the_shipped_config_bytes(tmp_path) -> None:
+    script = _load_regeneration_script()
+    config_path = REPO_ROOT / "configs" / "default.yaml"
+
+    artifacts = script._run_window_pipeline_job(
+        tmp_path,
+        config_path=config_path,
+        committed_root=REPO_ROOT / "data" / "processed",
+    )
+    manifest = json.loads(
+        (artifacts.generated_root / "run_manifest.json").read_text(
+            encoding="utf-8"
+        )
+    )
+
+    assert manifest["config_digest"] == digest_files(
+        {config_path.name: config_path}
+    )
 
 
 def test_regenerate_artifacts_reports_mismatched_strict_artifact(tmp_path) -> None:
