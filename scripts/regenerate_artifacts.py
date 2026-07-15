@@ -13,8 +13,6 @@ from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
 
-import yaml
-
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SRC_ROOT = REPO_ROOT / "src"
@@ -285,10 +283,7 @@ def _run_window_pipeline_job(
     shutil.copytree(REPO_ROOT / "data" / "raw", generated_repo / "data" / "raw")
 
     generated_config_path = generated_config_dir / config_path.name
-    generated_config_path.write_text(
-        yaml.safe_dump(config, sort_keys=False),
-        encoding="utf-8",
-    )
+    shutil.copyfile(config_path, generated_config_path)
     with _pushd(generated_repo), redirect_stdout(io.StringIO()):
         run_command(SimpleNamespace(config=str(generated_config_path)))
 

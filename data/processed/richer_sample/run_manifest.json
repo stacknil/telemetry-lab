@@ -2,7 +2,7 @@
   "tool_version": "1.2.0",
   "demo_id": "window",
   "input_digest": "sha256:e8771283a83c146a2cffce5fe316c1408200b6d7717cbb6d074334aa891672f3",
-  "config_digest": "sha256:6bffef106b0fcdb04d54e3aac8fe5b4b800bf228ad03fe988861486691c76f65",
+  "config_digest": "sha256:e7cb0264262cc997edf8f6b987dc0466098f23150d0c6204fb5fd7c245df1d7d",
   "artifact_schema_versions": {
     "run_manifest": "run-manifest/v1",
     "telemetry_summary": "telemetry-summary/v1"
