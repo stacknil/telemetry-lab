@@ -148,7 +148,7 @@ def test_readme_links_reviewer_path_and_uses_lab_framing() -> None:
     assert "[`docs/v1-contract-freeze.md`](docs/v1-contract-freeze.md)" in readme
     assert "[`docs/v1-readiness-gate.md`](docs/v1-readiness-gate.md)" in readme
     assert "[`docs/architecture.md`](docs/architecture.md)" in readme
-    assert "Latest tagged release: [v1.1" in readme
+    assert "Latest tagged release: [v1.2" in readme
     assert "portfolio prototype" not in normalized
     assert "mvp only" not in normalized
 
@@ -378,7 +378,7 @@ def test_v1_contract_freeze_documents_release_drift_and_gate() -> None:
 
     assert "# v1.0 Five-Demo Contract Freeze" in freeze_doc
     assert "## Release Status" in freeze_doc
-    assert "latest tagged release is `v1.1`" in freeze_doc
+    assert "latest tagged release is `v1.2`" in freeze_doc
     assert "`v0.6.0` remains the fourth-demo compatibility baseline" in freeze_doc
     assert "No new demo should be added for v1.0" in freeze_doc
     assert "python scripts/regenerate_artifacts.py --check" in freeze_doc
@@ -645,7 +645,7 @@ def test_v11_release_note_keeps_operator_reproduction_scope() -> None:
     assert "`no-artifact-change`" in release_note
     assert "Package identity mismatch must be resolved before v1.2" in release_note
     assert "telemetry-window-demo==0.1.0" in release_note
-    assert "package identity remains aligned" in roadmap
+    assert "v1.2 is published with aligned repository metadata" in roadmap
 
     for demo_name in [
         "telemetry-window-demo",
@@ -683,6 +683,10 @@ def test_v12_release_note_documents_architecture_cohesion_scope() -> None:
     assert "telemetry_window_demo" in release_note
     assert "telemetry-lab run window --config configs/default.yaml" in release_note
     assert "telemetry-lab verify" in release_note
+    assert "Release status: published as tag `v1.2`." in release_note
+    assert "29 committed artifacts matched" in release_note
+    assert "190 passed" in release_note
+    assert "config_digest" in release_note
     assert "run_manifest.json" in release_note
     assert "execution_mode: synthetic-local" in release_note
     assert "property tests for window half-open boundary indexes" in release_note

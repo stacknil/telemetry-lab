@@ -6,7 +6,7 @@ A local, file-based detection workflow lab for reviewer-verifiable telemetry and
 
 Current focus: v1.2 Architecture Cohesion for the five-demo matrix. v1.2 resolves package identity, unifies the CLI, and adds run manifests without adding another demo.
 
-Latest tagged release: [v1.1 — operator reproduction release](https://github.com/stacknil/telemetry-lab/releases/tag/v1.1).
+Latest tagged release: [v1.2 — architecture cohesion release](https://github.com/stacknil/telemetry-lab/releases/tag/v1.2).
 
 ## Reviewer Start
 

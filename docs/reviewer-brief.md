@@ -19,7 +19,7 @@ Telemetry and detection projects often look impressive in screenshots but are ha
 - Reproducible command: `telemetry-lab run window --config configs/default.yaml`
 - Deterministic outputs: feature tables, alert tables, `summary.json`, `run_manifest.json`, PNG timelines, dedup reports, investigation reports, and bounded AI case reports.
 - Tests / CI: pytest coverage for windowing, CLI behavior, demo pipelines, artifact validation, and deterministic guardrails; GitHub Actions CI is enabled.
-- Release evidence: reviewer packs and release notes through the v1.2 architecture cohesion draft.
+- Release evidence: reviewer packs and the published v1.2 architecture cohesion release notes.
 - Non-goals: production monitoring, real-time ingestion, alert routing, autonomous response, dashboards, or final incident verdicts.
 
 ## Quick run

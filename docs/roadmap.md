@@ -71,10 +71,10 @@ Parked review directions:
 - Human-verification boundary examples, only when they use existing committed
   artifacts and do not imply an incident verdict or production workflow.
 
-## v1.2 Blocker
+## v1.2 Release Outcome
 
-- Before tagging v1.2, confirm package identity remains aligned across
-  repository metadata, `pyproject.toml`, console scripts, docs, and tests.
+- v1.2 is published with aligned repository metadata, `pyproject.toml`, console
+  scripts, docs, tests, and shipped manifest configuration digests.
 
 ## v1 Reviewer Contract Stabilization
 
