@@ -5,7 +5,7 @@ import json
 import sys
 from pathlib import Path
 
-from telemetry_lab.manifest import digest_files
+from telemetry_lab.manifest import digest_file_bytes, digest_files
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -58,6 +58,14 @@ def test_window_regeneration_hashes_the_shipped_config_bytes(tmp_path) -> None:
     assert manifest["config_digest"] == digest_files(
         {config_path.name: config_path}
     )
+    assert manifest["input_file_digests"] == {
+        "data/raw/sample_events.jsonl": digest_file_bytes(
+            REPO_ROOT / "data" / "raw" / "sample_events.jsonl"
+        )
+    }
+    assert manifest["config_file_digests"] == {
+        "configs/default.yaml": digest_file_bytes(config_path)
+    }
 
 
 def test_regenerate_artifacts_reports_mismatched_strict_artifact(tmp_path) -> None:

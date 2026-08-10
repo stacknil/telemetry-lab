@@ -167,6 +167,61 @@ def test_evidence_pipeline_schemas_validate_committed_artifacts() -> None:
             assert errors == [], f"{schema_path} failed for {artifact_path}\n{_error_summary(errors)}"
 
 
+def test_run_manifest_schema_keeps_legacy_v12_shape_compatible() -> None:
+    schema = _load_json("schemas/run_manifest.schema.json")
+    Draft202012Validator.check_schema(schema)
+    validator = Draft202012Validator(schema, format_checker=FormatChecker())
+    legacy_manifest = {
+        "tool_version": "1.2.0",
+        "demo_id": "window",
+        "input_digest": "sha256:" + "0" * 64,
+        "config_digest": "sha256:" + "1" * 64,
+        "artifact_schema_versions": {"run_manifest": "run-manifest/v1"},
+        "execution_mode": "synthetic-local",
+    }
+
+    errors = sorted(
+        validator.iter_errors(legacy_manifest),
+        key=lambda error: list(error.absolute_path),
+    )
+
+    assert errors == []
+
+
+def test_committed_manifests_preserve_v12_aggregate_digests() -> None:
+    expected = {
+        "data/processed/run_manifest.json": (
+            "sha256:c08795a6a3c361a3339414c5a8441fb74c58f027c96931dbdc0da28560e132ac",
+            "sha256:b02cfeb006b05c52f075c3aa454045cd4c46b25be5576e37e184c3f02bf9328b",
+        ),
+        "data/processed/richer_sample/run_manifest.json": (
+            "sha256:e8771283a83c146a2cffce5fe316c1408200b6d7717cbb6d074334aa891672f3",
+            "sha256:e7cb0264262cc997edf8f6b987dc0466098f23150d0c6204fb5fd7c245df1d7d",
+        ),
+        "demos/ai-assisted-detection-demo/artifacts/run_manifest.json": (
+            "sha256:e45f71682c89734e625119a3edd166591f1a0cdf6e3b24c7b87c23d809154b55",
+            "sha256:183924db1f5800b56ec2794198d65489c49c0824823b52ef373bb30011886408",
+        ),
+        "demos/rule-evaluation-and-dedup-demo/artifacts/run_manifest.json": (
+            "sha256:06c005b433bdc28f08cd6fdc7028c0242960b09f5187a723445f40bf135977a4",
+            "sha256:aa18d8ca4edab237dcec5c23c1dc7e9433f23a7d156df5a592e353c6fc9b74ad",
+        ),
+        "demos/config-change-investigation-demo/artifacts/run_manifest.json": (
+            "sha256:c7ee82071fa0ae47742c3241b20dd97e811df618757d008b99624b1afb686229",
+            "sha256:c0db824d16bd1e23cb413e9d56ad6e1effa6168aea6c9ef3f8976118ff5a1d6e",
+        ),
+        "demos/cloud-iam-change-investigation-demo/artifacts/run_manifest.json": (
+            "sha256:96c39405358a7ecd940e84742df41dc5636e829824a21103657e0aa4123cab66",
+            "sha256:820e9a4beca0aeaf92485b5fd7177b1e3c7f6bd7cbe469cb0afc39e2ac51cce7",
+        ),
+    }
+
+    for artifact_path, (input_digest, config_digest) in expected.items():
+        manifest = _load_json(artifact_path)
+        assert manifest["input_digest"] == input_digest
+        assert manifest["config_digest"] == config_digest
+
+
 def test_cci_003_traces_to_investigation_summary_schema() -> None:
     """Reviewer trace for issue #76: CCI-003 -> investigation_summary schema."""
     schema = _load_json("schemas/investigation_summary.schema.json")
