@@ -3,6 +3,12 @@
   "demo_id": "dedup",
   "input_digest": "sha256:06c005b433bdc28f08cd6fdc7028c0242960b09f5187a723445f40bf135977a4",
   "config_digest": "sha256:aa18d8ca4edab237dcec5c23c1dc7e9433f23a7d156df5a592e353c6fc9b74ad",
+  "input_file_digests": {
+    "demos/rule-evaluation-and-dedup-demo/data/raw/sample_rule_hits.json": "sha256:c2a22e98d3e89c979086396349d2c9d43b01cb92a5e752194631331bb2c1b636"
+  },
+  "config_file_digests": {
+    "demos/rule-evaluation-and-dedup-demo/config/dedup.yaml": "sha256:91941274d97723cd6184ced52fc8ccbf1658eb744cc2601a12ea4c8d24d21d11"
+  },
   "artifact_schema_versions": {
     "dedup_explanations": "dedup-explanations/v1",
     "dedup_rule_hits": "dedup-rule-hits/v1",

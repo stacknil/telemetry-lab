@@ -38,6 +38,12 @@ Every primary run writes a manifest with `execution_mode` set to `synthetic-loca
   "demo_id": "window",
   "input_digest": "sha256:...",
   "config_digest": "sha256:...",
+  "input_file_digests": {
+    "data/raw/sample_events.jsonl": "sha256:..."
+  },
+  "config_file_digests": {
+    "configs/default.yaml": "sha256:..."
+  },
   "artifact_schema_versions": {
     "run_manifest": "run-manifest/v1",
     "telemetry_summary": "telemetry-summary/v1"
@@ -46,7 +52,18 @@ Every primary run writes a manifest with `execution_mode` set to `synthetic-loca
 }
 ```
 
-The digest fields are local reproducibility fingerprints over committed synthetic inputs and configs. UTF-8 text inputs are canonicalized across LF and CRLF checkouts before hashing. They are not signatures and they do not imply live telemetry coverage.
+The aggregate `input_digest` and `config_digest` fields retain the v1.2
+contract: labels are sorted before hashing and UTF-8 text inputs are
+canonicalized across LF and CRLF checkouts. The per-file `*_file_digests` maps
+are a separate provenance contract: each value hashes the exact shipped bytes
+(`read_bytes()`, including line endings), each key is a normalized
+repository-relative POSIX path, and keys are emitted in lexical order. YAML is
+not parsed and reserialized for either per-file digest. These fingerprints are
+not signatures and do not imply live telemetry coverage.
+
+The per-file maps are emitted by current writers but remain optional in the
+schema so older v1 manifests remain readable. Consumers that need file-level
+provenance should require and validate the maps explicitly.
 
 ## Boundaries
 

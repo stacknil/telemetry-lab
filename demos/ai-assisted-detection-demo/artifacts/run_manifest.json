@@ -3,6 +3,13 @@
   "demo_id": "ai-assisted",
   "input_digest": "sha256:e45f71682c89734e625119a3edd166591f1a0cdf6e3b24c7b87c23d809154b55",
   "config_digest": "sha256:183924db1f5800b56ec2794198d65489c49c0824823b52ef373bb30011886408",
+  "input_file_digests": {
+    "demos/ai-assisted-detection-demo/data/raw/sample_security_events.jsonl": "sha256:d988424118333f9167e7252228252da6e3f68a38c8ed76dde825622482e8d8a7"
+  },
+  "config_file_digests": {
+    "demos/ai-assisted-detection-demo/config/llm_case_output_schema.json": "sha256:595019f2dc07c27be4f2258d55ab7a7c90daef4146c4c597f1dc8372bd58194e",
+    "demos/ai-assisted-detection-demo/config/rules.yaml": "sha256:e333c7118c678b7de664778827aaf9b437f3307350cf8330add123b44ae3824d"
+  },
   "artifact_schema_versions": {
     "ai_audit_traces": "ai-assisted-detection-audit/v1",
     "case_bundles": "case-bundles/v1",
