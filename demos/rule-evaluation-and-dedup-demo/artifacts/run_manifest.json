@@ -4,10 +4,10 @@
   "input_digest": "sha256:06c005b433bdc28f08cd6fdc7028c0242960b09f5187a723445f40bf135977a4",
   "config_digest": "sha256:aa18d8ca4edab237dcec5c23c1dc7e9433f23a7d156df5a592e353c6fc9b74ad",
   "input_file_digests": {
-    "demos/rule-evaluation-and-dedup-demo/data/raw/sample_rule_hits.json": "sha256:c2a22e98d3e89c979086396349d2c9d43b01cb92a5e752194631331bb2c1b636"
+    "demos/rule-evaluation-and-dedup-demo/data/raw/sample_rule_hits.json": "sha256:a73d288a898bf0fe33e6455e17254be05d313d28e41981f792ebc7d81654309d"
   },
   "config_file_digests": {
-    "demos/rule-evaluation-and-dedup-demo/config/dedup.yaml": "sha256:91941274d97723cd6184ced52fc8ccbf1658eb744cc2601a12ea4c8d24d21d11"
+    "demos/rule-evaluation-and-dedup-demo/config/dedup.yaml": "sha256:861ab0f793577c705f031ea0a0b58e9b90d569279cf6f1b947d091d49e6e2747"
   },
   "artifact_schema_versions": {
     "dedup_explanations": "dedup-explanations/v1",

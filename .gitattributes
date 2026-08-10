@@ -1,0 +1,4 @@
+/configs/** text eol=lf
+/data/raw/** text eol=lf
+/demos/**/config/** text eol=lf
+/demos/**/data/raw/** text eol=lf

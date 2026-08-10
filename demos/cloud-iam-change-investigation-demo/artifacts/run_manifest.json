@@ -4,10 +4,10 @@
   "input_digest": "sha256:96c39405358a7ecd940e84742df41dc5636e829824a21103657e0aa4123cab66",
   "config_digest": "sha256:820e9a4beca0aeaf92485b5fd7177b1e3c7f6bd7cbe469cb0afc39e2ac51cce7",
   "input_file_digests": {
-    "demos/cloud-iam-change-investigation-demo/data/raw/synthetic_cloudtrail_like_events.jsonl": "sha256:5db8b530df044f314170629cfc5125cd8c4b78f73c8b54373d462fab714bc5a7"
+    "demos/cloud-iam-change-investigation-demo/data/raw/synthetic_cloudtrail_like_events.jsonl": "sha256:8e2249afefa8560f9907eabc91c8c25b70d2cb1b565c4066aab1873d40b92ff3"
   },
   "config_file_digests": {
-    "demos/cloud-iam-change-investigation-demo/config/investigation.yaml": "sha256:8a6416e7c2196a8ed0dd9b0e077d37ff04897045f7ab4b702bcefe12bf622f44"
+    "demos/cloud-iam-change-investigation-demo/config/investigation.yaml": "sha256:b1732f0263fdb6d48119ef8d4de3614651806d248bb76e5e6f22aadedbc48a35"
   },
   "artifact_schema_versions": {
     "cloud_iam_findings": "cloud-iam-findings/v1",

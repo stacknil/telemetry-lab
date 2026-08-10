@@ -7,7 +7,7 @@
     "data/raw/sample_events.jsonl": "sha256:6872d0676edc12d572875bec549fcb8b4cf813dbfc332ae4f014842d985a1e97"
   },
   "config_file_digests": {
-    "configs/default.yaml": "sha256:9a05890eeedccf86daf4148f053e539274b70cf4c65517234f065e2548c72453"
+    "configs/default.yaml": "sha256:89242ab3940666dc9d0f3bb6bb996b93a5c17908b8edb0844e539390bf555129"
   },
   "artifact_schema_versions": {
     "run_manifest": "run-manifest/v1",
