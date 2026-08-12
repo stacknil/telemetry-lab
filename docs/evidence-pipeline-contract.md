@@ -15,7 +15,7 @@ The contract is intentionally local and file-based:
 
 | Schema | Demo artifact | What it locks |
 | --- | --- | --- |
-| `schemas/run_manifest.schema.json` | `data/processed/run_manifest.json`, `data/processed/richer_sample/run_manifest.json`, `demos/ai-assisted-detection-demo/artifacts/run_manifest.json`, `demos/rule-evaluation-and-dedup-demo/artifacts/run_manifest.json`, `demos/config-change-investigation-demo/artifacts/run_manifest.json`, `demos/cloud-iam-change-investigation-demo/artifacts/run_manifest.json` | synthetic-local run provenance, tool version, demo ID, input/config digests, and artifact schema versions |
+| `schemas/run_manifest.v2.schema.json` | `data/processed/run_manifest.json`, `data/processed/richer_sample/run_manifest.json`, `demos/ai-assisted-detection-demo/artifacts/run_manifest.json`, `demos/rule-evaluation-and-dedup-demo/artifacts/run_manifest.json`, `demos/config-change-investigation-demo/artifacts/run_manifest.json`, `demos/cloud-iam-change-investigation-demo/artifacts/run_manifest.json` | synthetic-local run provenance, aggregate digests, required exact-byte per-file digests, and artifact schema versions |
 | `schemas/telemetry_summary.schema.json` | `data/processed/summary.json`, `data/processed/richer_sample/summary.json` | telemetry-window run counts, rule counts, cooldown, and generated artifact references |
 | `schemas/rule_hits.schema.json` | `demos/ai-assisted-detection-demo/artifacts/rule_hits.json` | deterministic rule-hit fields before case grouping |
 | `schemas/case_bundles.schema.json` | `demos/ai-assisted-detection-demo/artifacts/case_bundles.json` | bounded case bundles passed to JSON-only drafting |
@@ -34,6 +34,7 @@ The contract is intentionally local and file-based:
 
 - Schema files use JSON Schema Draft 2020-12.
 - Every primary demo run writes `run_manifest.json` with `execution_mode: synthetic-local`.
+- `schemas/run_manifest.schema.json` remains the frozen strict v1 consumer contract; current manifests use the separately versioned v2 schema.
 - Contracted wrapper fields reject unknown properties unless the field intentionally preserves raw source evidence.
 - Timestamps use RFC 3339 / JSON Schema `date-time` strings.
 - Severity values are limited to `low`, `medium`, `high`, and `critical`.

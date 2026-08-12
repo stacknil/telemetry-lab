@@ -1,0 +1,8 @@
+/configs/** text eol=lf
+/data/raw/** text eol=lf
+/data/processed/run_manifest.json text eol=lf
+/data/processed/**/run_manifest.json text eol=lf
+/demos/**/config/** text eol=lf
+/demos/**/data/raw/** text eol=lf
+/demos/**/artifacts/run_manifest.json text eol=lf
+/demos/**/artifacts/*.md text eol=lf

@@ -19,7 +19,14 @@ from .io import (
     write_json,
     write_table,
 )
-from .manifest import RUN_MANIFEST_SCHEMA_VERSION, build_run_manifest, write_run_manifest
+from .manifest import (
+    RUN_MANIFEST_SCHEMA_VERSION,
+    build_run_manifest,
+    find_manifest_repository_root,
+    normalize_repository_relative_path,
+    repository_relative_path,
+    write_run_manifest,
+)
 from .preprocess import normalize_events
 from .rules import apply_rules
 from .schema import DEFAULT_TIMESTAMP_COLUMN, REQUIRED_EVENT_COLUMNS
@@ -240,10 +247,29 @@ def run_window_demo_command(args: argparse.Namespace) -> None:
     plot_paths = plot_outputs(features, alerts, output_dir)
     summary_path = output_dir / "summary.json"
     manifest_path = output_dir / "run_manifest.json"
+    manifest_repository_root = (
+        config_path.parent.parent
+        if config_path.parent.name == "configs"
+        else find_manifest_repository_root(config_path)
+    )
     manifest = build_run_manifest(
         demo_id="window",
         input_files={Path(input_path).name: input_path},
         config_files={Path(config_path).name: config_path},
+        input_file_paths={
+            _window_manifest_path(
+                input_path,
+                repository_root=manifest_repository_root,
+                external_kind="input",
+            ): input_path
+        },
+        config_file_paths={
+            _window_manifest_path(
+                config_path,
+                repository_root=manifest_repository_root,
+                external_kind="config",
+            ): config_path
+        },
         artifact_schema_versions={
             "run_manifest": RUN_MANIFEST_SCHEMA_VERSION,
             "telemetry_summary": "telemetry-summary/v1",
@@ -275,6 +301,26 @@ def run_window_demo_command(args: argparse.Namespace) -> None:
     for plot_path in plot_paths:
         print(f"     - {plot_path.name}")
     print(f"[OK] Saved run manifest to {_display_path(manifest_path)}")
+
+
+def _window_manifest_path(
+    path: Path,
+    *,
+    repository_root: Path | None,
+    external_kind: str,
+) -> str:
+    discovered_root = find_manifest_repository_root(path)
+    candidate_roots = dict.fromkeys(
+        root for root in (repository_root, discovered_root) if root is not None
+    )
+    for candidate_root in candidate_roots:
+        try:
+            return repository_relative_path(path, candidate_root)
+        except ValueError:
+            continue
+    return normalize_repository_relative_path(
+        Path("external") / external_kind / path.name
+    )
 
 
 def summarize_command(args: argparse.Namespace) -> None:

@@ -77,8 +77,14 @@ def test_default_pipeline_reproduces_sample_outputs(tmp_path, capsys) -> None:
     assert generated_manifest["input_digest"].startswith("sha256:")
     assert generated_manifest["config_digest"].startswith("sha256:")
     assert generated_manifest["artifact_schema_versions"]["run_manifest"] == (
-        "run-manifest/v1"
+        "run-manifest/v2"
     )
+    assert list(generated_manifest["input_file_digests"]) == [
+        "data/raw/sample_events.jsonl"
+    ]
+    assert list(generated_manifest["config_file_digests"]) == [
+        "external/config/default.yaml"
+    ]
 
     for file_name in (
         "event_count_timeline.png",

@@ -361,7 +361,9 @@ def test_reviewer_artifact_diff_contract_covers_release_changes() -> None:
     assert "Include reviewer-facing artifact diffs in every release" in roadmap
     assert "Schema Compatibility Matrix" in schema_matrix
     assert "`schemas/run_manifest.schema.json`" in schema_matrix
+    assert "`schemas/run_manifest.v2.schema.json`" in schema_matrix
     assert "`run-manifest/v1`" in schema_matrix
+    assert "`run-manifest/v2`" in schema_matrix
     assert "`additive-compatible`" in schema_matrix
     assert "`execution_mode`" in schema_matrix
     assert "`synthetic-local`" in schema_matrix

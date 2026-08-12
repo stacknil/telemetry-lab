@@ -10,7 +10,12 @@ from typing import Any
 import yaml
 
 from ..io import ensure_output_directory, ensure_output_file_path
-from ..manifest import RUN_MANIFEST_SCHEMA_VERSION, build_run_manifest, write_run_manifest
+from ..manifest import (
+    RUN_MANIFEST_SCHEMA_VERSION,
+    build_run_manifest,
+    repository_relative_file_map,
+    write_run_manifest,
+)
 from ..time_utils import parse_utc_timestamp
 
 SCOPE_FIELDS = ("entity", "source", "target", "host")
@@ -23,6 +28,7 @@ REQUIRED_HIT_FIELDS = (
     "window_end",
     "message",
 )
+MANIFEST_PATH_PREFIX = "demos/rule-evaluation-and-dedup-demo"
 
 
 def default_demo_root() -> Path:
@@ -86,6 +92,16 @@ def run_demo(
             demo_id="dedup",
             input_files={input_path.relative_to(demo_root).as_posix(): input_path},
             config_files={config_path.relative_to(demo_root).as_posix(): config_path},
+            input_file_paths=repository_relative_file_map(
+                [input_path],
+                repository_root=demo_root,
+                path_prefix=MANIFEST_PATH_PREFIX,
+            ),
+            config_file_paths=repository_relative_file_map(
+                [config_path],
+                repository_root=demo_root,
+                path_prefix=MANIFEST_PATH_PREFIX,
+            ),
             artifact_schema_versions={
                 "dedup_explanations": "dedup-explanations/v1",
                 "dedup_rule_hits": "dedup-rule-hits/v1",

@@ -12,7 +12,12 @@ from typing import Any
 import yaml
 
 from ..io import ensure_output_directory, ensure_output_file_path
-from ..manifest import RUN_MANIFEST_SCHEMA_VERSION, build_run_manifest, write_run_manifest
+from ..manifest import (
+    RUN_MANIFEST_SCHEMA_VERSION,
+    build_run_manifest,
+    repository_relative_file_map,
+    write_run_manifest,
+)
 from ..time_utils import parse_utc_timestamp
 from .llm import DemoStructuredCaseLlm
 
@@ -42,6 +47,7 @@ Set human_verification to required."""
 AUDIT_SCHEMA_VERSION = "ai-assisted-detection-audit/v1"
 DEFAULT_OUTPUT_SCHEMA_VERSION = "ai-assisted-case-summary/v1"
 RAW_RESPONSE_EXCERPT_LIMIT = 240
+MANIFEST_PATH_PREFIX = "demos/ai-assisted-detection-demo"
 
 ACTION_LANGUAGE_PATTERNS = (
     re.compile(
@@ -278,6 +284,16 @@ def run_demo(
                 rules_config_path.relative_to(demo_root).as_posix(): rules_config_path,
                 output_schema_path.relative_to(demo_root).as_posix(): output_schema_path,
             },
+            input_file_paths=repository_relative_file_map(
+                [input_path],
+                repository_root=demo_root,
+                path_prefix=MANIFEST_PATH_PREFIX,
+            ),
+            config_file_paths=repository_relative_file_map(
+                [rules_config_path, output_schema_path],
+                repository_root=demo_root,
+                path_prefix=MANIFEST_PATH_PREFIX,
+            ),
             artifact_schema_versions={
                 "ai_audit_traces": AUDIT_SCHEMA_VERSION,
                 "case_bundles": "case-bundles/v1",

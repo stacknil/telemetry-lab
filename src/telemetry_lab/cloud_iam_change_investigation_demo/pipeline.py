@@ -9,7 +9,12 @@ from typing import Any
 import yaml
 
 from ..io import ensure_output_directory, ensure_output_file_path
-from ..manifest import RUN_MANIFEST_SCHEMA_VERSION, build_run_manifest, write_run_manifest
+from ..manifest import (
+    RUN_MANIFEST_SCHEMA_VERSION,
+    build_run_manifest,
+    repository_relative_file_map,
+    write_run_manifest,
+)
 from ..time_utils import parse_utc_timestamp
 
 CLOUDTRAIL_REQUIRED_FIELDS = (
@@ -33,6 +38,7 @@ REQUIRED_RULE_IDS = (
     "security_group_ingress_opened_after_identity_change",
 )
 SEVERITY_ORDER = {"low": 1, "medium": 2, "high": 3, "critical": 4}
+MANIFEST_PATH_PREFIX = "demos/cloud-iam-change-investigation-demo"
 CLOUD_IAM_CONFIG_FIELDS = frozenset(
     (
         "input_path",
@@ -120,6 +126,16 @@ def run_demo(
             demo_id="cloud-iam",
             input_files={input_path.relative_to(demo_root).as_posix(): input_path},
             config_files={config_path.relative_to(demo_root).as_posix(): config_path},
+            input_file_paths=repository_relative_file_map(
+                [input_path],
+                repository_root=demo_root,
+                path_prefix=MANIFEST_PATH_PREFIX,
+            ),
+            config_file_paths=repository_relative_file_map(
+                [config_path],
+                repository_root=demo_root,
+                path_prefix=MANIFEST_PATH_PREFIX,
+            ),
             artifact_schema_versions={
                 "cloud_iam_findings": "cloud-iam-findings/v1",
                 "cloud_iam_summary": "cloud-iam-summary/v1",

@@ -2,14 +2,27 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import subprocess
 import sys
 from pathlib import Path
 
-from telemetry_lab.manifest import digest_files
+from telemetry_lab.manifest import digest_file_bytes, digest_files
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SCRIPT_PATH = REPO_ROOT / "scripts" / "regenerate_artifacts.py"
+LF_GENERATED_OUTPUTS = (
+    "data/processed/run_manifest.json",
+    "data/processed/richer_sample/run_manifest.json",
+    "demos/ai-assisted-detection-demo/artifacts/case_report.md",
+    "demos/ai-assisted-detection-demo/artifacts/run_manifest.json",
+    "demos/rule-evaluation-and-dedup-demo/artifacts/dedup_report.md",
+    "demos/rule-evaluation-and-dedup-demo/artifacts/run_manifest.json",
+    "demos/config-change-investigation-demo/artifacts/investigation_report.md",
+    "demos/config-change-investigation-demo/artifacts/run_manifest.json",
+    "demos/cloud-iam-change-investigation-demo/artifacts/investigation_report.md",
+    "demos/cloud-iam-change-investigation-demo/artifacts/run_manifest.json",
+)
 
 
 def _load_regeneration_script():
@@ -40,6 +53,22 @@ def test_regenerate_artifacts_check_matches_committed_outputs() -> None:
     assert exit_code == 0
 
 
+def test_generated_lf_outputs_are_pinned_for_clean_clone_rewrites() -> None:
+    result = subprocess.run(
+        ["git", "check-attr", "eol", "--", *LF_GENERATED_OUTPUTS],
+        cwd=REPO_ROOT,
+        text=True,
+        capture_output=True,
+        check=True,
+    )
+
+    assert result.stdout.splitlines() == [
+        f"{path}: eol: lf" for path in LF_GENERATED_OUTPUTS
+    ]
+    for path in LF_GENERATED_OUTPUTS:
+        assert b"\r\n" not in (REPO_ROOT / path).read_bytes(), path
+
+
 def test_window_regeneration_hashes_the_shipped_config_bytes(tmp_path) -> None:
     script = _load_regeneration_script()
     config_path = REPO_ROOT / "configs" / "default.yaml"
@@ -58,6 +87,14 @@ def test_window_regeneration_hashes_the_shipped_config_bytes(tmp_path) -> None:
     assert manifest["config_digest"] == digest_files(
         {config_path.name: config_path}
     )
+    assert manifest["input_file_digests"] == {
+        "data/raw/sample_events.jsonl": digest_file_bytes(
+            REPO_ROOT / "data" / "raw" / "sample_events.jsonl"
+        )
+    }
+    assert manifest["config_file_digests"] == {
+        "configs/default.yaml": digest_file_bytes(config_path)
+    }
 
 
 def test_regenerate_artifacts_reports_mismatched_strict_artifact(tmp_path) -> None:

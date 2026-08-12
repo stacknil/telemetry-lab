@@ -3,11 +3,19 @@
   "demo_id": "config-change",
   "input_digest": "sha256:c7ee82071fa0ae47742c3241b20dd97e811df618757d008b99624b1afb686229",
   "config_digest": "sha256:c0db824d16bd1e23cb413e9d56ad6e1effa6168aea6c9ef3f8976118ff5a1d6e",
+  "input_file_digests": {
+    "demos/config-change-investigation-demo/data/raw/config_changes.jsonl": "sha256:0e9d62ccb1eb71d3982247ff48f750e5583978740077ff4baafecb36368e22a0",
+    "demos/config-change-investigation-demo/data/raw/follow_on_events.jsonl": "sha256:8a90e2ec607a2bae0d34c8118ac339f6786cd3e506d1ddbb3afa1bd732c2c4b6",
+    "demos/config-change-investigation-demo/data/raw/policy_denials.jsonl": "sha256:a6819ac16ab7746de78ae1e5873b286d5f7221c6bfdd639576aa8b326fcea724"
+  },
+  "config_file_digests": {
+    "demos/config-change-investigation-demo/config/investigation.yaml": "sha256:4be25d2c89ff351d637def0bf8938f76c5a1779691c0ae25ab2e9ab8ad5a63cc"
+  },
   "artifact_schema_versions": {
     "config_change_events": "config-change-events/v1",
     "config_investigation_hits": "config-investigation-hits/v1",
     "investigation_summary": "investigation-summary/v1",
-    "run_manifest": "run-manifest/v1"
+    "run_manifest": "run-manifest/v2"
   },
   "execution_mode": "synthetic-local"
 }

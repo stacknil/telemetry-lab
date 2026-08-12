@@ -3,12 +3,19 @@
   "demo_id": "ai-assisted",
   "input_digest": "sha256:e45f71682c89734e625119a3edd166591f1a0cdf6e3b24c7b87c23d809154b55",
   "config_digest": "sha256:183924db1f5800b56ec2794198d65489c49c0824823b52ef373bb30011886408",
+  "input_file_digests": {
+    "demos/ai-assisted-detection-demo/data/raw/sample_security_events.jsonl": "sha256:848a15c0118467e45f275db8942debf343cf730b04d98e6e9456b19aac8f5cb3"
+  },
+  "config_file_digests": {
+    "demos/ai-assisted-detection-demo/config/llm_case_output_schema.json": "sha256:404fc3435b43639075c2034d6822aa1bcbb016b25f26143a7d1b6f58c3ce7ac0",
+    "demos/ai-assisted-detection-demo/config/rules.yaml": "sha256:b58eb095eab63b38e0c88141a70ee751f3b27d360c56fb779fd5c6f1c1476925"
+  },
   "artifact_schema_versions": {
     "ai_audit_traces": "ai-assisted-detection-audit/v1",
     "case_bundles": "case-bundles/v1",
     "case_summaries": "ai-assisted-case-summary/v1",
     "rule_hits": "rule-hits/v1",
-    "run_manifest": "run-manifest/v1"
+    "run_manifest": "run-manifest/v2"
   },
   "execution_mode": "synthetic-local"
 }

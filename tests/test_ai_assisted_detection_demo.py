@@ -282,6 +282,24 @@ def test_default_case_report_includes_reviewer_run_summary(tmp_path) -> None:
     assert "- audit_records: 3" in report_text
 
 
+def test_standalone_demo_manifest_paths_stay_within_demo_root(tmp_path) -> None:
+    demo_root = _copy_demo_root(tmp_path)
+    artifacts_dir = tmp_path / "artifacts"
+
+    run_demo(demo_root=demo_root, artifacts_dir=artifacts_dir)
+
+    manifest = json.loads(
+        (artifacts_dir / "run_manifest.json").read_text(encoding="utf-8")
+    )
+    assert list(manifest["input_file_digests"]) == [
+        "demos/ai-assisted-detection-demo/data/raw/sample_security_events.jsonl"
+    ]
+    assert list(manifest["config_file_digests"]) == [
+        "demos/ai-assisted-detection-demo/config/llm_case_output_schema.json",
+        "demos/ai-assisted-detection-demo/config/rules.yaml",
+    ]
+
+
 def test_malformed_attack_metadata_is_rejected_and_recorded(tmp_path) -> None:
     demo_root = _copy_demo_root(tmp_path)
     rules_path = demo_root / "config" / "rules.yaml"
