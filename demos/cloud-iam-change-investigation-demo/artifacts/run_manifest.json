@@ -13,7 +13,7 @@
     "cloud_iam_findings": "cloud-iam-findings/v1",
     "cloud_iam_summary": "cloud-iam-summary/v1",
     "cloudtrail_normalized_events": "cloudtrail-normalized-events/v1",
-    "run_manifest": "run-manifest/v1"
+    "run_manifest": "run-manifest/v2"
   },
   "execution_mode": "synthetic-local"
 }

@@ -1,19 +1,22 @@
 # Schema Compatibility Matrix
 
-This matrix records reviewer-facing JSON and JSONL schema contracts for the v1.2 Architecture Cohesion Release. It is a local reviewer contract, not a production SIEM schema registry.
+This matrix records reviewer-facing JSON and JSONL schema contracts, including post-v1.2 version boundaries. It is a local reviewer contract, not a production SIEM schema registry.
 
 ## Compatibility Labels
 
 - `unchanged-v1`: schema and artifact shape are unchanged from v1.1.
 - `additive-compatible`: v1.2 adds a reviewer artifact or reference without removing existing fields.
+- `frozen-v1`: the published strict v1 schema remains unchanged for legacy consumers.
+- `versioned-change`: current writers moved to a new schema version because strict old validators reject the new shape.
 - `semantic-change`: field meaning changed and downstream consumers should inspect behavior.
 - `breaking-artifact-change`: artifact path or required field removal.
 
 ## Matrix
 
-| Schema | Version label | Artifact paths | v1.1 to v1.2 compatibility |
+| Schema | Version label | Artifact paths | Compatibility posture |
 | --- | --- | --- | --- |
-| `schemas/run_manifest.schema.json` | `run-manifest/v1` | `data/processed/run_manifest.json`; `data/processed/richer_sample/run_manifest.json`; each `demos/*/artifacts/run_manifest.json` | `additive-compatible`: new per-run provenance artifact |
+| `schemas/run_manifest.schema.json` | `run-manifest/v1` | Legacy v1.2 manifests | `frozen-v1`: unchanged strict schema; it intentionally rejects v2 manifests |
+| `schemas/run_manifest.v2.schema.json` | `run-manifest/v2` | `data/processed/run_manifest.json`; `data/processed/richer_sample/run_manifest.json`; each `demos/*/artifacts/run_manifest.json` | `versioned-change`: requires exact-byte per-file maps; legacy aggregate fields and values are preserved |
 | `schemas/telemetry_summary.schema.json` | `telemetry-summary/v1` | `data/processed/summary.json`; `data/processed/richer_sample/summary.json` | `additive-compatible`: `generated_artifacts` now includes `run_manifest.json` |
 | `schemas/rule_hits.schema.json` | `rule-hits/v1` | `demos/ai-assisted-detection-demo/artifacts/rule_hits.json` | `unchanged-v1` |
 | `schemas/case_bundles.schema.json` | `case-bundles/v1` | `demos/ai-assisted-detection-demo/artifacts/case_bundles.json` | `unchanged-v1` |
@@ -45,7 +48,7 @@ Every primary run writes a manifest with `execution_mode` set to `synthetic-loca
     "configs/default.yaml": "sha256:..."
   },
   "artifact_schema_versions": {
-    "run_manifest": "run-manifest/v1",
+    "run_manifest": "run-manifest/v2",
     "telemetry_summary": "telemetry-summary/v1"
   },
   "execution_mode": "synthetic-local"
@@ -57,13 +60,20 @@ contract: labels are sorted before hashing and UTF-8 text inputs are
 canonicalized across LF and CRLF checkouts. The per-file `*_file_digests` maps
 are a separate provenance contract: each value hashes the exact shipped bytes
 (`read_bytes()`, including line endings), each key is a normalized
-repository-relative POSIX path, and keys are emitted in lexical order. YAML is
-not parsed and reserialized for either per-file digest. These fingerprints are
-not signatures and do not imply live telemetry coverage.
+repository-relative POSIX path, and keys are emitted in lexical order. Bundled
+demo copies retain their canonical `demos/<demo>/...` identity. Window inputs
+outside a telemetry-lab checkout use the explicit `external/input/...` or
+`external/config/...` namespace instead of exposing or impersonating a local
+repository path. YAML is not parsed and reserialized for either per-file
+digest. Each file is read once per manifest build so aggregate and per-file
+values derive from the same byte snapshot. These fingerprints are not
+signatures and do not imply live telemetry coverage.
 
-The per-file maps are emitted by current writers but remain optional in the
-schema so older v1 manifests remain readable. Consumers that need file-level
-provenance should require and validate the maps explicitly.
+The strict v1 schema is preserved at `schemas/run_manifest.schema.json`.
+Current writers identify `run-manifest/v2`, whose per-file maps are required.
+Consumers must select the matching schema version; a strict v1 validator is
+expected to reject a v2 manifest. The aggregate digest algorithm and all six
+committed aggregate values remain unchanged from v1.2.
 
 ## Boundaries
 

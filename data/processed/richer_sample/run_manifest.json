@@ -10,7 +10,7 @@
     "configs/richer_sample.yaml": "sha256:c6a703ee805faed5d97c36727689c624942f6171d21f7ea1a047a01ccdac1398"
   },
   "artifact_schema_versions": {
-    "run_manifest": "run-manifest/v1",
+    "run_manifest": "run-manifest/v2",
     "telemetry_summary": "telemetry-summary/v1"
   },
   "execution_mode": "synthetic-local"

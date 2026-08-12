@@ -65,6 +65,7 @@ The current schema contract covers:
 - `schemas/cloud_iam_summary.schema.json`
 - `schemas/telemetry_summary.schema.json`
 - `schemas/run_manifest.schema.json`
+- `schemas/run_manifest.v2.schema.json`
 
 ### Stable Reviewer-Visible Artifacts
 

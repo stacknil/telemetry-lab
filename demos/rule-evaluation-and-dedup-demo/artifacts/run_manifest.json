@@ -12,7 +12,7 @@
   "artifact_schema_versions": {
     "dedup_explanations": "dedup-explanations/v1",
     "dedup_rule_hits": "dedup-rule-hits/v1",
-    "run_manifest": "run-manifest/v1"
+    "run_manifest": "run-manifest/v2"
   },
   "execution_mode": "synthetic-local"
 }

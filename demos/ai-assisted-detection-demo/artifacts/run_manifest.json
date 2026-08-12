@@ -15,7 +15,7 @@
     "case_bundles": "case-bundles/v1",
     "case_summaries": "ai-assisted-case-summary/v1",
     "rule_hits": "rule-hits/v1",
-    "run_manifest": "run-manifest/v1"
+    "run_manifest": "run-manifest/v2"
   },
   "execution_mode": "synthetic-local"
 }

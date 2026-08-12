@@ -10,7 +10,7 @@
     "configs/default.yaml": "sha256:89242ab3940666dc9d0f3bb6bb996b93a5c17908b8edb0844e539390bf555129"
   },
   "artifact_schema_versions": {
-    "run_manifest": "run-manifest/v1",
+    "run_manifest": "run-manifest/v2",
     "telemetry_summary": "telemetry-summary/v1"
   },
   "execution_mode": "synthetic-local"

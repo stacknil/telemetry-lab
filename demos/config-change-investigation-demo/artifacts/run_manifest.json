@@ -15,7 +15,7 @@
     "config_change_events": "config-change-events/v1",
     "config_investigation_hits": "config-investigation-hits/v1",
     "investigation_summary": "investigation-summary/v1",
-    "run_manifest": "run-manifest/v1"
+    "run_manifest": "run-manifest/v2"
   },
   "execution_mode": "synthetic-local"
 }
