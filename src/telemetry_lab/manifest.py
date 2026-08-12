@@ -11,7 +11,7 @@ from . import __version__
 from .io import ensure_output_file_path
 
 EXECUTION_MODE = "synthetic-local"
-RUN_MANIFEST_SCHEMA_VERSION = "run-manifest/v1"
+RUN_MANIFEST_SCHEMA_VERSION = "run-manifest/v2"
 TEXT_DIGEST_SUFFIXES = {
     ".csv",
     ".json",
@@ -37,7 +37,7 @@ def build_run_manifest(
 
     ``input_files`` and ``config_files`` intentionally remain the inputs to the
     existing aggregate digest contract.  The optional ``*_file_paths`` maps are
-    keyed by canonical repository-relative paths and are hashed from exact file
+    keyed by canonical relative manifest paths and are hashed from exact file
     bytes for per-file provenance.
     """
 
@@ -47,13 +47,35 @@ def build_run_manifest(
     config_provenance_files = (
         config_files if config_file_paths is None else config_file_paths
     )
+    _require_matching_file_sets(
+        "input",
+        aggregate_files=input_files,
+        provenance_files=input_provenance_files,
+    )
+    _require_matching_file_sets(
+        "config",
+        aggregate_files=config_files,
+        provenance_files=config_provenance_files,
+    )
+    file_snapshots = _snapshot_file_bytes(
+        input_files,
+        config_files,
+        input_provenance_files,
+        config_provenance_files,
+    )
     return {
         "tool_version": __version__,
         "demo_id": demo_id,
-        "input_digest": digest_files(input_files),
-        "config_digest": digest_files(config_files),
-        "input_file_digests": digest_file_map(input_provenance_files),
-        "config_file_digests": digest_file_map(config_provenance_files),
+        "input_digest": _digest_files(input_files, file_snapshots),
+        "config_digest": _digest_files(config_files, file_snapshots),
+        "input_file_digests": _digest_file_map(
+            input_provenance_files,
+            file_snapshots,
+        ),
+        "config_file_digests": _digest_file_map(
+            config_provenance_files,
+            file_snapshots,
+        ),
         "artifact_schema_versions": dict(sorted(artifact_schema_versions.items())),
         "execution_mode": EXECUTION_MODE,
     }
@@ -70,6 +92,13 @@ def write_run_manifest(manifest: Mapping[str, Any], path: Path) -> Path:
 
 
 def digest_files(files: Mapping[str, Path]) -> str:
+    return _digest_files(files)
+
+
+def _digest_files(
+    files: Mapping[str, Path],
+    file_snapshots: Mapping[Path, bytes] | None = None,
+) -> str:
     if not files:
         raise ValueError("Run manifest digest requires at least one file.")
 
@@ -80,19 +109,27 @@ def digest_files(files: Mapping[str, Path]) -> str:
             raise FileNotFoundError(f"Run manifest input file not found: {file_path}")
         digest.update(label.encode("utf-8"))
         digest.update(b"\0")
-        digest.update(_read_digest_bytes(file_path))
+        payload = _file_bytes(file_path, file_snapshots)
+        digest.update(_normalize_digest_bytes(file_path, payload))
         digest.update(b"\0")
     return f"sha256:{digest.hexdigest()}"
 
 
 def digest_file_map(files: Mapping[str, Path]) -> dict[str, str]:
-    """Hash each file's exact shipped bytes under canonical relative paths.
+    """Hash each file's exact bytes under canonical relative manifest paths.
 
     This contract deliberately does not parse or normalize text.  Path keys
-    are normalized to POSIX repository-relative form and emitted in lexical
-    order so the serialized map is deterministic.
+    are normalized to relative POSIX form and emitted in lexical order so the
+    serialized map is deterministic.
     """
 
+    return _digest_file_map(files)
+
+
+def _digest_file_map(
+    files: Mapping[str, Path],
+    file_snapshots: Mapping[Path, bytes] | None = None,
+) -> dict[str, str]:
     if not files:
         raise ValueError("Run manifest per-file digest requires at least one file.")
 
@@ -106,7 +143,7 @@ def digest_file_map(files: Mapping[str, Path]) -> dict[str, str]:
         normalized_files[normalized_label] = _require_manifest_file(path)
 
     return {
-        label: digest_file_bytes(path)
+        label: _digest_file_bytes(path, file_snapshots)
         for label, path in sorted(normalized_files.items())
     }
 
@@ -114,21 +151,36 @@ def digest_file_map(files: Mapping[str, Path]) -> dict[str, str]:
 def digest_file_bytes(path: Path) -> str:
     """Return the SHA-256 digest of a file's exact bytes."""
 
+    return _digest_file_bytes(path)
+
+
+def _digest_file_bytes(
+    path: Path,
+    file_snapshots: Mapping[Path, bytes] | None = None,
+) -> str:
     file_path = _require_manifest_file(path)
-    return f"sha256:{sha256(file_path.read_bytes()).hexdigest()}"
+    return f"sha256:{sha256(_file_bytes(file_path, file_snapshots)).hexdigest()}"
 
 
 def repository_relative_file_map(
     files: Iterable[Path],
     *,
     repository_root: Path,
+    path_prefix: str | Path | None = None,
 ) -> dict[str, Path]:
     """Map files to normalized repository-relative paths in lexical order."""
 
+    normalized_prefix = (
+        normalize_repository_relative_path(path_prefix)
+        if path_prefix is not None
+        else None
+    )
     file_map: dict[str, Path] = {}
     for path in files:
         file_path = _require_manifest_file(path)
         relative_path = repository_relative_path(file_path, repository_root)
+        if normalized_prefix is not None:
+            relative_path = f"{normalized_prefix}/{relative_path}"
         if relative_path in file_map:
             raise ValueError(f"Duplicate repository-relative path: {relative_path}")
         file_map[relative_path] = file_path
@@ -174,19 +226,65 @@ def normalize_repository_relative_path(value: str | Path) -> str:
     return "/".join(normalized_parts)
 
 
-def resolve_manifest_repository_root(path: Path, *, fallback: Path) -> Path:
-    """Find the repository root, with a bounded fallback for isolated demos."""
+def find_manifest_repository_root(path: Path) -> Path | None:
+    """Find the nearest telemetry-lab repository root, if present."""
 
     candidate = Path(path).resolve()
     start = candidate if candidate.is_dir() else candidate.parent
     for parent in (start, *start.parents):
-        if (parent / "pyproject.toml").is_file() and (parent / "src").is_dir():
+        if (parent / "pyproject.toml").is_file() and (
+            parent / "src" / "telemetry_lab"
+        ).is_dir():
             return parent
-    return Path(fallback).resolve()
+    return None
 
 
-def _read_digest_bytes(file_path: Path) -> bytes:
-    payload = file_path.read_bytes()
+def _require_matching_file_sets(
+    kind: str,
+    *,
+    aggregate_files: Mapping[str, Path],
+    provenance_files: Mapping[str, Path],
+) -> None:
+    aggregate_paths = _resolved_file_counts(aggregate_files)
+    provenance_paths = _resolved_file_counts(provenance_files)
+    if aggregate_paths != provenance_paths:
+        raise ValueError(
+            f"Run manifest {kind} aggregate and per-file digests must reference "
+            "the same files."
+        )
+
+
+def _resolved_file_counts(files: Mapping[str, Path]) -> dict[Path, int]:
+    counts: dict[Path, int] = {}
+    for path in files.values():
+        resolved_path = _require_manifest_file(path).resolve()
+        counts[resolved_path] = counts.get(resolved_path, 0) + 1
+    return counts
+
+
+def _snapshot_file_bytes(
+    *file_maps: Mapping[str, Path],
+) -> dict[Path, bytes]:
+    snapshots: dict[Path, bytes] = {}
+    for files in file_maps:
+        for path in files.values():
+            file_path = _require_manifest_file(path)
+            resolved_path = file_path.resolve()
+            if resolved_path not in snapshots:
+                snapshots[resolved_path] = file_path.read_bytes()
+    return snapshots
+
+
+def _file_bytes(
+    file_path: Path,
+    file_snapshots: Mapping[Path, bytes] | None,
+) -> bytes:
+    if file_snapshots is None:
+        return file_path.read_bytes()
+    return file_snapshots[file_path.resolve()]
+
+
+def _normalize_digest_bytes(file_path: Path, payload: bytes) -> bytes:
     if file_path.suffix.lower() not in TEXT_DIGEST_SUFFIXES:
         return payload
     try:

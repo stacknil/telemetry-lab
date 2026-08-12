@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/stacknil/telemetry-lab/schemas/run_manifest.schema.json",
-  "title": "Telemetry lab run manifest",
-  "description": "Schema for per-run synthetic-local provenance manifests across telemetry-lab demos.",
+  "$id": "https://github.com/stacknil/telemetry-lab/schemas/run_manifest.v2.schema.json",
+  "title": "Telemetry lab run manifest v2",
+  "description": "Schema for per-run synthetic-local provenance manifests with exact-byte per-file digests.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -10,6 +10,8 @@
     "demo_id",
     "input_digest",
     "config_digest",
+    "input_file_digests",
+    "config_file_digests",
     "artifact_schema_versions",
     "execution_mode"
   ],
@@ -36,9 +38,23 @@
       "type": "string",
       "pattern": "^sha256:[0-9a-f]{64}$"
     },
+    "input_file_digests": {
+      "$ref": "#/$defs/fileDigestMap"
+    },
+    "config_file_digests": {
+      "$ref": "#/$defs/fileDigestMap"
+    },
     "artifact_schema_versions": {
       "type": "object",
       "minProperties": 1,
+      "required": [
+        "run_manifest"
+      ],
+      "properties": {
+        "run_manifest": {
+          "const": "run-manifest/v2"
+        }
+      },
       "additionalProperties": {
         "type": "string",
         "pattern": "^[a-z0-9][a-z0-9._-]*/v[0-9]+$"
@@ -47,6 +63,20 @@
     "execution_mode": {
       "type": "string",
       "const": "synthetic-local"
+    }
+  },
+  "$defs": {
+    "fileDigestMap": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "type": "string",
+        "pattern": "^(?![A-Za-z]:)(?!.*\\\\)(?!.*(?:^|/)\\.\\.?(?:/|$))[^/]+(?:/[^/]+)*$"
+      },
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^sha256:[0-9a-f]{64}$"
+      }
     }
   }
 }

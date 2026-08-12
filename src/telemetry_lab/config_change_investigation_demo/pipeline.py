@@ -44,6 +44,7 @@ FOLLOW_ON_REQUIRED_FIELDS = (
     "event_type",
     "details",
 )
+MANIFEST_PATH_PREFIX = "demos/config-change-investigation-demo"
 CONFIG_INPUT_PATH_FIELDS = (
     "config_changes",
     "policy_denials",
@@ -128,11 +129,13 @@ def run_demo(
                     follow_on_events_path,
                     policy_denials_path,
                 ],
-                repository_root=demo_root.parent.parent,
+                repository_root=demo_root,
+                path_prefix=MANIFEST_PATH_PREFIX,
             ),
             config_file_paths=repository_relative_file_map(
                 [config_path],
-                repository_root=demo_root.parent.parent,
+                repository_root=demo_root,
+                path_prefix=MANIFEST_PATH_PREFIX,
             ),
             artifact_schema_versions={
                 "config_change_events": "config-change-events/v1",

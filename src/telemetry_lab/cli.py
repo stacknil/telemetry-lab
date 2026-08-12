@@ -22,9 +22,9 @@ from .io import (
 from .manifest import (
     RUN_MANIFEST_SCHEMA_VERSION,
     build_run_manifest,
+    find_manifest_repository_root,
     normalize_repository_relative_path,
     repository_relative_path,
-    resolve_manifest_repository_root,
     write_run_manifest,
 )
 from .preprocess import normalize_events
@@ -250,7 +250,7 @@ def run_window_demo_command(args: argparse.Namespace) -> None:
     manifest_repository_root = (
         config_path.parent.parent
         if config_path.parent.name == "configs"
-        else resolve_manifest_repository_root(config_path, fallback=Path.cwd())
+        else find_manifest_repository_root(config_path)
     )
     manifest = build_run_manifest(
         demo_id="window",
@@ -260,14 +260,14 @@ def run_window_demo_command(args: argparse.Namespace) -> None:
             _window_manifest_path(
                 input_path,
                 repository_root=manifest_repository_root,
-                fallback_path=run_config["input_path"],
+                external_kind="input",
             ): input_path
         },
         config_file_paths={
             _window_manifest_path(
                 config_path,
                 repository_root=manifest_repository_root,
-                fallback_path=f"configs/{config_path.name}",
+                external_kind="config",
             ): config_path
         },
         artifact_schema_versions={
@@ -306,16 +306,21 @@ def run_window_demo_command(args: argparse.Namespace) -> None:
 def _window_manifest_path(
     path: Path,
     *,
-    repository_root: Path,
-    fallback_path: str,
+    repository_root: Path | None,
+    external_kind: str,
 ) -> str:
-    try:
-        return repository_relative_path(path, repository_root)
-    except ValueError:
-        fallback = Path(fallback_path)
-        if fallback.is_absolute():
-            fallback = Path("external") / path.name
-        return normalize_repository_relative_path(fallback)
+    discovered_root = find_manifest_repository_root(path)
+    candidate_roots = dict.fromkeys(
+        root for root in (repository_root, discovered_root) if root is not None
+    )
+    for candidate_root in candidate_roots:
+        try:
+            return repository_relative_path(path, candidate_root)
+        except ValueError:
+            continue
+    return normalize_repository_relative_path(
+        Path("external") / external_kind / path.name
+    )
 
 
 def summarize_command(args: argparse.Namespace) -> None:

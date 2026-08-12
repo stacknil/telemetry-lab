@@ -47,6 +47,7 @@ Set human_verification to required."""
 AUDIT_SCHEMA_VERSION = "ai-assisted-detection-audit/v1"
 DEFAULT_OUTPUT_SCHEMA_VERSION = "ai-assisted-case-summary/v1"
 RAW_RESPONSE_EXCERPT_LIMIT = 240
+MANIFEST_PATH_PREFIX = "demos/ai-assisted-detection-demo"
 
 ACTION_LANGUAGE_PATTERNS = (
     re.compile(
@@ -285,11 +286,13 @@ def run_demo(
             },
             input_file_paths=repository_relative_file_map(
                 [input_path],
-                repository_root=demo_root.parent.parent,
+                repository_root=demo_root,
+                path_prefix=MANIFEST_PATH_PREFIX,
             ),
             config_file_paths=repository_relative_file_map(
                 [rules_config_path, output_schema_path],
-                repository_root=demo_root.parent.parent,
+                repository_root=demo_root,
+                path_prefix=MANIFEST_PATH_PREFIX,
             ),
             artifact_schema_versions={
                 "ai_audit_traces": AUDIT_SCHEMA_VERSION,
