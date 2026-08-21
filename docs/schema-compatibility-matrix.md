@@ -70,10 +70,41 @@ values derive from the same byte snapshot. These fingerprints are not
 signatures and do not imply live telemetry coverage.
 
 The strict v1 schema is preserved at `schemas/run_manifest.schema.json`.
-Current writers identify `run-manifest/v2`, whose per-file maps are required.
-Consumers must select the matching schema version; a strict v1 validator is
-expected to reject a v2 manifest. The aggregate digest algorithm and all six
-committed aggregate values remain unchanged from v1.2.
+Current writers continue to emit only `run-manifest/v2`; this reader-side
+routing contract does not add dual-write behavior or change committed
+artifacts. A strict v1 validator is expected to reject a v2 manifest. The
+aggregate digest algorithm and all six committed aggregate values remain
+unchanged from v1.2.
+
+### Exact schema selection
+
+`telemetry_lab.run_manifest_contract.RUN_MANIFEST_SCHEMA_REGISTRY` is the
+authoritative reader mapping:
+
+| Embedded marker | Selected schema |
+| --- | --- |
+| `run-manifest/v1` | `schemas/run_manifest.schema.json` |
+| `run-manifest/v2` | `schemas/run_manifest.v2.schema.json` |
+
+`select_run_manifest_schema()` reads only
+`artifact_schema_versions.run_manifest` and requires an exact registry key.
+Missing objects or markers, non-string and blank markers, unknown versions,
+case changes, and surrounding whitespace all fail closed. There is no
+fallback to v1, v2, or the newest schema. Schema-shape validation happens only
+after this selection, so a marker cannot silently choose a different contract
+because its payload happens to fit that schema.
+
+Validate either historical v1 input or current v2 input from a checkout with:
+
+```bash
+python scripts/validate_run_manifest.py path/to/run_manifest.json
+```
+
+The command reports the selected marker and repository-relative schema path on
+success. It returns a nonzero status for invalid JSON, unreadable files,
+version-selection failures, or schema validation failures. Representative v1
+and v2 inputs live under `tests/fixtures/run_manifests/`; the compatibility
+test requires each fixture to validate only against its selected schema.
 
 ## Boundaries
 

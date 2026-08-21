@@ -75,12 +75,19 @@ Run:
 
 ```bash
 python scripts/regenerate_artifacts.py --check
+python scripts/validate_run_manifest.py data/processed/run_manifest.json
+python -m pytest tests/test_run_manifest_contract.py
 python -m pytest tests/test_evidence_pipeline_schemas.py
 ```
 
 The regeneration check compares byte-stable CSV, JSON, JSONL, and Markdown artifacts with fresh pipeline output. It also regenerates PNG visual snapshots to verify that the plotting path still runs, but it does not byte-compare those images because Matplotlib rendering can vary across platforms.
 
-The schema test validates each schema file and checks that every committed JSON artifact and JSONL record listed in the schema matrix conforms to it.
+The run-manifest validator selects v1 or v2 only from the exact embedded marker
+and then validates against that schema; it never falls back to a default or
+newest version. Its compatibility test covers representative v1 and v2
+fixtures plus missing, malformed, and unknown markers. The evidence-pipeline
+schema test validates each schema file and checks that every committed JSON
+artifact and JSONL record listed in the schema matrix conforms to it.
 
 ## Compatibility Matrix
 
