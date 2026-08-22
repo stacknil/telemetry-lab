@@ -10,6 +10,31 @@ the local, file-based artifacts listed in [`docs/reviewer-pack.md`](reviewer-pac
 and the schema-covered evidence artifacts in
 [`docs/evidence-pipeline-contract.md`](evidence-pipeline-contract.md).
 
+## Executable Triage Report
+
+Use the standalone comparator when a regeneration mismatch needs more context:
+
+```bash
+python scripts/artifact_contract_diff.py \
+  --expected path/to/committed-artifacts \
+  --actual path/to/regenerated-artifacts \
+  --json-out artifact-diff.json
+```
+
+The human summary and strict
+[`artifact-contract-diff/v1`](../schemas/artifact_contract_diff.schema.json)
+report expose missing, extra, and changed relative paths. JSON and JSONL entries
+add record counts, top-level keys, exact schema/version markers, and run-manifest
+digest fields when present. CSV, Markdown, text, JSON, and JSONL normalize CRLF
+and CR to LF before comparison. Existing binary files are presence-only, so the
+tool does not turn renderer-dependent PNG bytes into a reproducibility claim.
+
+The report is deterministic: it contains no timestamp, artifact body, or
+absolute checkout path. Exit status is `0` for no differences, `1` for contract
+differences, and `2` for invalid or unreadable input. This tool explains a
+mismatch; it does not replace `python scripts/regenerate_artifacts.py --check`,
+accept regenerated output, or infer compatibility labels automatically.
+
 ## Required Release Diff Sections
 
 Each release artifact diff must include:

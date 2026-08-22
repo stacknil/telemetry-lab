@@ -16,7 +16,7 @@ This directory separates the current reviewer route from supporting design notes
 - [`v0.6-to-v1-artifact-diff.md`](v0.6-to-v1-artifact-diff.md): additive artifact contract and compatibility diff from the fourth demo to the fifth
 - [`evidence-pipeline-contract.md`](evidence-pipeline-contract.md): JSON/JSONL schema contracts for reviewer-facing evidence artifacts
 - [`schema-compatibility-matrix.md`](schema-compatibility-matrix.md): schema versions, artifact paths, and compatibility labels
-- [`reviewer-artifact-diff.md`](reviewer-artifact-diff.md): release diff contract for reviewer-facing artifact changes
+- [`reviewer-artifact-diff.md`](reviewer-artifact-diff.md): release diff contract and executable structured triage report for reviewer-facing artifact changes
 - [`vocabulary.md`](vocabulary.md): cross-demo vocabulary for evidence workflow terms and bounded correlation
 - [`architecture.md`](architecture.md): local file-based workflow diagram
 - [`roadmap.md`](roadmap.md): v1 reviewer contract stabilization phase

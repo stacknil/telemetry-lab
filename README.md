@@ -23,7 +23,7 @@ Latest tagged release: [v1.2 — architecture cohesion release](https://github.c
 - [`docs/v0.6-to-v1-artifact-diff.md`](docs/v0.6-to-v1-artifact-diff.md): fourth-to-fifth-demo artifact contract and compatibility diff
 - [`docs/evidence-pipeline-contract.md`](docs/evidence-pipeline-contract.md): JSON/JSONL schema contracts for reviewer-facing evidence artifacts
 - [`docs/schema-compatibility-matrix.md`](docs/schema-compatibility-matrix.md): schema versions, artifact paths, and v1.1-to-v1.2 compatibility notes
-- [`docs/reviewer-artifact-diff.md`](docs/reviewer-artifact-diff.md): release artifact diff contract for reviewer-facing outputs
+- [`docs/reviewer-artifact-diff.md`](docs/reviewer-artifact-diff.md): release artifact diff contract and executable structured triage report for reviewer-facing outputs
 - [`docs/vocabulary.md`](docs/vocabulary.md): cross-demo vocabulary for events, hits, signals, bounded correlation, findings, summaries, reports, and audit traces
 - [`docs/README.md`](docs/README.md): current route, supporting docs, and historical release evidence
 
@@ -106,6 +106,7 @@ Other demo entrypoints:
 Useful inspection commands:
 
 - `telemetry-lab summarize --input data/raw/sample_events.jsonl`
+- `python scripts/artifact_contract_diff.py --expected <expected-artifacts> --actual <actual-artifacts> --json-out artifact-diff.json`
 
 For CSV inputs, pass a `.csv` file to `--input`; use `--timestamp-col` when the timestamp column is not named `timestamp`.
 
