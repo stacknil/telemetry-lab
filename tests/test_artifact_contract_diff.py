@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import importlib.util
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -8,7 +10,13 @@ from pathlib import Path
 import pytest
 from jsonschema import Draft202012Validator
 
-from telemetry_lab.artifact_contract_diff import compare_artifact_trees
+from telemetry_lab import artifact_contract_diff as artifact_diff
+from telemetry_lab.artifact_contract_diff import (
+    ArtifactContractDiffError,
+    ArtifactDifference,
+    ArtifactSnapshot,
+    compare_artifact_trees,
+)
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -28,6 +36,19 @@ def artifact_roots(tmp_path: Path) -> tuple[Path, Path]:
 def _write_json(path: Path, value: object, *, newline: str = "\n") -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_bytes((json.dumps(value, sort_keys=True) + newline).encode("utf-8"))
+
+
+def _load_cli_script():
+    spec = importlib.util.spec_from_file_location(
+        "artifact_contract_diff_cli",
+        SCRIPT_PATH,
+    )
+    assert spec is not None
+    assert spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
 
 
 def test_compare_artifact_trees_normalizes_text_and_keeps_binary_presence_only(
@@ -58,6 +79,21 @@ def test_compare_artifact_trees_normalizes_text_and_keeps_binary_presence_only(
         "differences": [],
         "presence_only_paths": ["plot.png"],
     }
+
+
+def test_compare_artifact_trees_does_not_parse_identical_json(
+    artifact_roots: tuple[Path, Path], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    expected, actual = artifact_roots
+    _write_json(expected / "summary.json", {"count": 1})
+    _write_json(actual / "summary.json", {"count": 1})
+
+    def fail_if_parsed(_text: str) -> object:
+        raise AssertionError("identical JSON should be accepted from its normalized digest")
+
+    monkeypatch.setattr(artifact_diff.json, "loads", fail_if_parsed)
+
+    assert compare_artifact_trees(expected, actual).has_differences is False
 
 
 def test_compare_artifact_trees_reports_missing_and_extra_paths_in_stable_order(
@@ -200,6 +236,175 @@ def test_compare_artifact_trees_exposes_run_manifest_digest_change(
     ]
     assert difference["expected"]["structure"]["run_manifest_digests"] == base
     assert difference["actual"]["structure"]["run_manifest_digests"] == changed
+
+
+@pytest.mark.parametrize(
+    "invalid_digests",
+    [
+        {"input_digest": "not-a-sha256"},
+        {"input_file_digests": ["not", "a", "mapping"]},
+        {"config_file_digests": {"../outside.yaml": "sha256:" + "0" * 64}},
+        {"input_file_digests": {"C:/Users/example/input.jsonl": "sha256:" + "0" * 64}},
+    ],
+)
+def test_artifact_contract_diff_cli_rejects_invalid_run_manifest_digest_fields(
+    artifact_roots: tuple[Path, Path],
+    tmp_path: Path,
+    invalid_digests: object,
+) -> None:
+    expected, actual = artifact_roots
+    _write_json(expected / "run_manifest.json", {"input_digest": "sha256:" + "0" * 64})
+    _write_json(actual / "run_manifest.json", invalid_digests)
+    report_path = tmp_path / "artifact-diff.json"
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(SCRIPT_PATH),
+            "--expected",
+            str(expected),
+            "--actual",
+            str(actual),
+            "--json-out",
+            str(report_path),
+        ],
+        cwd=REPO_ROOT,
+        text=True,
+        capture_output=True,
+    )
+
+    assert result.returncode == 2
+    assert "[ERROR] invalid run-manifest digest field" in result.stderr
+    assert not report_path.exists()
+
+
+@pytest.mark.parametrize("root_name", ["expected", "actual"])
+def test_artifact_contract_diff_cli_refuses_output_inside_an_input_tree(
+    artifact_roots: tuple[Path, Path], root_name: str
+) -> None:
+    expected, actual = artifact_roots
+    _write_json(expected / "summary.json", {"count": 1})
+    _write_json(actual / "summary.json", {"count": 1})
+    root = expected if root_name == "expected" else actual
+    report_path = root / "reports" / "artifact-diff.json"
+    report_path.parent.mkdir()
+    original = b'{"keep":"artifact"}\n'
+    report_path.write_bytes(original)
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(SCRIPT_PATH),
+            "--expected",
+            str(expected),
+            "--actual",
+            str(actual),
+            "--json-out",
+            str(report_path),
+        ],
+        cwd=REPO_ROOT,
+        text=True,
+        capture_output=True,
+    )
+
+    assert result.returncode == 2
+    assert "JSON report must be outside both artifact roots" in result.stderr
+    assert report_path.read_bytes() == original
+
+
+def test_json_report_write_is_atomic_on_replace_failure(
+    artifact_roots: tuple[Path, Path],
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    expected, actual = artifact_roots
+    _write_json(expected / "summary.json", {"count": 1})
+    _write_json(actual / "summary.json", {"count": 2})
+    report = compare_artifact_trees(expected, actual)
+    report_path = tmp_path / "artifact-diff.json"
+    original = b'{"keep":"previous-report"}\n'
+    report_path.write_bytes(original)
+    cli = _load_cli_script()
+
+    def fail_replace(_source: object, _destination: object) -> None:
+        raise OSError("simulated replace failure")
+
+    monkeypatch.setattr(cli.os, "replace", fail_replace)
+
+    with pytest.raises(ArtifactContractDiffError, match="cannot write JSON report"):
+        cli._write_json_report(report, report_path)
+
+    assert report_path.read_bytes() == original
+    assert list(tmp_path.glob(".artifact-diff.json.*.tmp")) == []
+
+
+def test_report_schema_rejects_cross_field_status_contradictions(
+    artifact_roots: tuple[Path, Path]
+) -> None:
+    expected, actual = artifact_roots
+    _write_json(expected / "missing.json", {"status": "old"})
+    schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
+    validator = Draft202012Validator(schema)
+    report = compare_artifact_trees(expected, actual).to_dict()
+
+    invalid_reports = [dict(report, status="unchanged")]
+    wrong_missing_reason = json.loads(json.dumps(report))
+    wrong_missing_reason["differences"][0]["change_reasons"] = ["content-changed"]
+    invalid_reports.append(wrong_missing_reason)
+
+    _write_json(actual / "missing.json", {"status": "new"})
+    changed_report = compare_artifact_trees(expected, actual).to_dict()
+    invalid_reports.append(dict(changed_report, differences=[]))
+    wrong_changed_reason = json.loads(json.dumps(changed_report))
+    wrong_changed_reason["differences"][0]["change_reasons"] = [
+        "missing-from-actual"
+    ]
+    invalid_reports.append(wrong_changed_reason)
+    changed_binary = json.loads(json.dumps(changed_report))
+    changed_binary["differences"][0]["artifact_kind"] = "binary"
+    invalid_reports.append(changed_binary)
+
+    for invalid_report in invalid_reports:
+        assert list(validator.iter_errors(invalid_report))
+
+
+def test_artifact_difference_rejects_invalid_status_reason_pair() -> None:
+    snapshot = ArtifactSnapshot(
+        comparison_digest="sha256:" + "0" * 64,
+        comparison_size_bytes=1,
+    )
+
+    with pytest.raises(ArtifactContractDiffError, match="missing difference"):
+        ArtifactDifference(
+            path="artifact.json",
+            status="missing",
+            artifact_kind="json",
+            change_reasons=("content-changed",),
+            expected=snapshot,
+        )
+
+
+@pytest.mark.skipif(not hasattr(os, "mkfifo"), reason="requires POSIX mkfifo")
+def test_compare_artifact_trees_rejects_special_files(
+    artifact_roots: tuple[Path, Path]
+) -> None:
+    expected, actual = artifact_roots
+    os.mkfifo(expected / "blocked.json")
+
+    with pytest.raises(ArtifactContractDiffError, match="non-regular artifact"):
+        compare_artifact_trees(expected, actual)
+
+
+def test_compare_artifact_trees_bounds_changed_structured_artifacts(
+    artifact_roots: tuple[Path, Path], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    expected, actual = artifact_roots
+    _write_json(expected / "summary.json", {"value": "old"})
+    _write_json(actual / "summary.json", {"value": "new"})
+    monkeypatch.setattr(artifact_diff, "MAX_STRUCTURED_ARTIFACT_BYTES", 8)
+
+    with pytest.raises(ArtifactContractDiffError, match="summary limit"):
+        compare_artifact_trees(expected, actual)
 
 
 def test_artifact_contract_diff_cli_writes_deterministic_schema_valid_report(
