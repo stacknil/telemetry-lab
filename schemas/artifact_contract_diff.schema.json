@@ -28,21 +28,58 @@
     },
     "differences": {
       "type": "array",
+      "maxItems": 20000,
       "items": {
         "$ref": "#/$defs/difference"
       }
     },
     "presence_only_paths": {
       "type": "array",
+      "maxItems": 10000,
       "uniqueItems": true,
       "items": {
         "$ref": "#/$defs/relativePath"
       }
     }
   },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "unchanged"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "differences": {
+            "maxItems": 0
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "changed"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "differences": {
+            "minItems": 1
+          }
+        }
+      }
+    }
+  ],
   "$defs": {
     "relativePath": {
       "type": "string",
+      "maxLength": 1024,
       "pattern": "^(?![A-Za-z]:)(?!.*\\\\)(?!.*(?:^|/)\\.\\.?(?:/|$))[^/]+(?:/[^/]+)*$"
     },
     "digest": {
@@ -64,31 +101,38 @@
       "properties": {
         "expected_files": {
           "type": "integer",
-          "minimum": 0
+          "minimum": 0,
+          "maximum": 10000
         },
         "actual_files": {
           "type": "integer",
-          "minimum": 0
+          "minimum": 0,
+          "maximum": 10000
         },
         "unchanged_files": {
           "type": "integer",
-          "minimum": 0
+          "minimum": 0,
+          "maximum": 10000
         },
         "missing_files": {
           "type": "integer",
-          "minimum": 0
+          "minimum": 0,
+          "maximum": 10000
         },
         "extra_files": {
           "type": "integer",
-          "minimum": 0
+          "minimum": 0,
+          "maximum": 10000
         },
         "changed_files": {
           "type": "integer",
-          "minimum": 0
+          "minimum": 0,
+          "maximum": 10000
         },
         "presence_only_files": {
           "type": "integer",
-          "minimum": 0
+          "minimum": 0,
+          "maximum": 10000
         }
       }
     },
@@ -158,6 +202,13 @@
             "required": [
               "expected"
             ],
+            "properties": {
+              "change_reasons": {
+                "const": [
+                  "missing-from-actual"
+                ]
+              }
+            },
             "not": {
               "required": [
                 "actual"
@@ -177,6 +228,13 @@
             "required": [
               "actual"
             ],
+            "properties": {
+              "change_reasons": {
+                "const": [
+                  "extra-in-actual"
+                ]
+              }
+            },
             "not": {
               "required": [
                 "expected"
@@ -196,7 +254,34 @@
             "required": [
               "expected",
               "actual"
-            ]
+            ],
+            "properties": {
+              "artifact_kind": {
+                "enum": [
+                  "json",
+                  "jsonl",
+                  "text"
+                ]
+              },
+              "change_reasons": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "prefixItems": [
+                  {
+                    "const": "content-changed"
+                  }
+                ],
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "structure-changed",
+                    "schema-version-changed",
+                    "run-manifest-digest-changed"
+                  ]
+                }
+              }
+            }
           }
         }
       ]
@@ -248,19 +333,24 @@
         },
         "top_level_keys": {
           "type": "array",
+          "maxItems": 4096,
           "uniqueItems": true,
           "items": {
-            "type": "string"
+            "type": "string",
+            "maxLength": 1024
           }
         },
         "schema_versions": {
           "type": "object",
+          "maxProperties": 4096,
           "additionalProperties": {
             "type": "array",
             "minItems": 1,
+            "maxItems": 4096,
             "uniqueItems": true,
             "items": {
-              "type": "string"
+              "type": "string",
+              "maxLength": 1024
             }
           }
         },
@@ -289,6 +379,7 @@
     },
     "fileDigestMap": {
       "type": "object",
+      "maxProperties": 10000,
       "propertyNames": {
         "$ref": "#/$defs/relativePath"
       },

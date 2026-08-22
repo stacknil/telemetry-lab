@@ -106,7 +106,7 @@ Other demo entrypoints:
 Useful inspection commands:
 
 - `telemetry-lab summarize --input data/raw/sample_events.jsonl`
-- `python scripts/artifact_contract_diff.py --expected <expected-artifacts> --actual <actual-artifacts> --json-out artifact-diff.json`
+- `python scripts/artifact_contract_diff.py --expected path/to/expected-artifacts --actual path/to/actual-artifacts --json-out artifact-diff.json`
 
 For CSV inputs, pass a `.csv` file to `--input`; use `--timestamp-col` when the timestamp column is not named `timestamp`.
 

@@ -35,6 +35,30 @@ differences, and `2` for invalid or unreadable input. This tool explains a
 mismatch; it does not replace `python scripts/regenerate_artifacts.py --check`,
 accept regenerated output, or infer compatibility labels automatically.
 
+Write `--json-out` outside both compared roots. The CLI rejects an output path
+inside either tree and atomically replaces an existing external report only
+after the new JSON has been written successfully.
+
+### Report Semantics
+
+| Field | Contract |
+| --- | --- |
+| `status` | `unchanged` requires an empty `differences` array; `changed` requires at least one difference. |
+| `summary.*_files` | `expected_files = unchanged_files + missing_files + changed_files + presence_only_files`; the corresponding actual count substitutes `extra_files` for `missing_files`. |
+| `unchanged_files` | Counts comparable text/JSON/JSONL files only. It does not include binaries checked for presence. |
+| `differences[].status` | `missing` has only an expected snapshot, `extra` has only an actual snapshot, and `changed` has both. |
+| `change_reasons` | Missing/extra use their single path reason. Changed comparable artifacts start with `content-changed` and may add structure, schema-version, or run-manifest-digest reasons. |
+| `comparison_digest` | SHA-256 of the comparison bytes. Text-like artifacts use strict UTF-8 with CRLF and lone CR normalized to LF. |
+| `comparison_size_bytes` | Length of those normalized comparison bytes, not necessarily the on-disk byte size. |
+| `structure` | For changed, missing, or extra JSON/JSONL, records the container, record count, union of top-level keys, and validated schema/digest markers when present. |
+| `presence_only_paths` | Sorted binary paths present in both trees. Their bytes are intentionally not compared or summarized. |
+
+The local triage contract is bounded: each root may contain at most 10,000
+files; structured summaries accept at most 64 MiB per changed JSON/JSONL file,
+4,096 structural keys or schema markers, and 10,000 entries per run-manifest
+digest map. Invalid digest shapes, unsafe embedded paths, symlinks, special
+files, or exceeded limits fail closed with exit `2` and no JSON report.
+
 ## Required Release Diff Sections
 
 Each release artifact diff must include:
