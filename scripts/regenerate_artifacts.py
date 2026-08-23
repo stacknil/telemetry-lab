@@ -19,6 +19,11 @@ SRC_ROOT = REPO_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
+from telemetry_lab.artifact_contract_diff import (  # noqa: E402
+    TEXT_ARTIFACT_SUFFIXES,
+    normalize_artifact_text_bytes,
+)
+
 
 @dataclass(frozen=True)
 class ArtifactSet:
@@ -172,7 +177,7 @@ def compare_artifact_set(
 
 
 def artifacts_match(committed_path: Path, generated_path: Path) -> bool:
-    if committed_path.suffix.lower() in {".csv", ".json", ".jsonl", ".md", ".txt"}:
+    if committed_path.suffix.lower() in TEXT_ARTIFACT_SUFFIXES:
         return _normalized_text(committed_path) == _normalized_text(generated_path)
     return committed_path.read_bytes() == generated_path.read_bytes()
 
@@ -419,8 +424,8 @@ def _slug(value: str) -> str:
     return "".join(char if char.isalnum() else "-" for char in value.lower()).strip("-")
 
 
-def _normalized_text(path: Path) -> str:
-    return path.read_bytes().decode("utf-8").replace("\r\n", "\n")
+def _normalized_text(path: Path) -> bytes:
+    return normalize_artifact_text_bytes(path.read_bytes())
 
 
 @contextmanager
