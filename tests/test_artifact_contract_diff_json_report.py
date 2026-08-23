@@ -220,6 +220,9 @@ def test_report_schema_rejects_cross_field_contradictions(
     wrong_missing_reason = json.loads(json.dumps(missing))
     wrong_missing_reason["differences"][0]["change_reasons"] = ["content-changed"]
     invalid_payloads.append(wrong_missing_reason)
+    missing_structure = json.loads(json.dumps(missing))
+    del missing_structure["differences"][0]["expected"]["structure"]
+    invalid_payloads.append(missing_structure)
 
     _write_json(actual / "finding.json", {"status": "new"})
     changed = compare_artifact_trees(expected, actual).to_dict()
@@ -232,6 +235,9 @@ def test_report_schema_rejects_cross_field_contradictions(
     changed_binary = json.loads(json.dumps(changed))
     changed_binary["differences"][0]["artifact_kind"] = "binary"
     invalid_payloads.append(changed_binary)
+    structured_text = json.loads(json.dumps(changed))
+    structured_text["differences"][0]["artifact_kind"] = "text"
+    invalid_payloads.append(structured_text)
 
     for payload in invalid_payloads:
         assert list(validator.iter_errors(payload))
