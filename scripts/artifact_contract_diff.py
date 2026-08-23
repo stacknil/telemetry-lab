@@ -1,7 +1,10 @@
 from __future__ import annotations
 
 import argparse
+import json
+import os
 import sys
+import tempfile
 from pathlib import Path
 from typing import Sequence
 
@@ -20,13 +23,88 @@ from telemetry_lab.artifact_contract_diff import (  # noqa: E402
 
 def main(argv: Sequence[str] | None = None) -> int:
     args = _parser().parse_args(argv)
+    expected = Path(args.expected)
+    actual = Path(args.actual)
     try:
-        report = compare_artifact_trees(Path(args.expected), Path(args.actual))
+        json_out = (
+            _resolve_path(Path(args.json_out), "JSON report")
+            if args.json_out
+            else None
+        )
+        if json_out is not None:
+            expected_boundary = _resolve_path(expected, "expected artifact root")
+            actual_boundary = _resolve_path(actual, "actual artifact root")
+            _validate_report_destination(
+                json_out,
+                expected_boundary,
+                actual_boundary,
+            )
+        report = compare_artifact_trees(expected, actual)
+        if json_out is not None:
+            _write_json_report(report, json_out)
     except ArtifactContractDiffError as exc:
         print(f"[ERROR] {exc}", file=sys.stderr)
         return 2
     _print_summary(report)
     return 1 if report.has_differences else 0
+
+
+def _write_json_report(report: ArtifactContractDiffReport, path: Path) -> None:
+    temporary_path: Path | None = None
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with tempfile.NamedTemporaryFile(
+            mode="w",
+            encoding="utf-8",
+            newline="\n",
+            prefix=f".{path.name}.",
+            suffix=".tmp",
+            dir=path.parent,
+            delete=False,
+        ) as handle:
+            temporary_path = Path(handle.name)
+            json.dump(report.to_dict(), handle, indent=2, sort_keys=True)
+            handle.write("\n")
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary_path, path)
+        temporary_path = None
+    except (OSError, TypeError, ValueError) as exc:
+        raise ArtifactContractDiffError("cannot write JSON report") from exc
+    finally:
+        if temporary_path is not None:
+            try:
+                temporary_path.unlink(missing_ok=True)
+            except OSError:
+                pass
+
+
+def _resolve_path(path: Path, label: str) -> Path:
+    try:
+        return path.resolve(strict=False)
+    except OSError as exc:
+        raise ArtifactContractDiffError(f"cannot resolve {label}") from exc
+
+
+def _validate_report_destination(
+    report_path: Path,
+    expected_root: Path,
+    actual_root: Path,
+) -> None:
+    if _is_within(report_path, expected_root) or _is_within(
+        report_path, actual_root
+    ):
+        raise ArtifactContractDiffError(
+            "JSON report must be outside both artifact roots"
+        )
+
+
+def _is_within(path: Path, root: Path) -> bool:
+    try:
+        path.relative_to(root)
+    except ValueError:
+        return False
+    return True
 
 
 def _print_summary(report: ArtifactContractDiffReport) -> None:
@@ -52,10 +130,14 @@ def _print_summary(report: ArtifactContractDiffReport) -> None:
 
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Explain shallow contract differences between two artifact trees."
+        description="Explain bounded contract differences between two artifact trees."
     )
     parser.add_argument("--expected", required=True, help="Expected artifact directory")
     parser.add_argument("--actual", required=True, help="Actual artifact directory")
+    parser.add_argument(
+        "--json-out",
+        help="Optional path for a deterministic artifact-contract-diff/v1 report",
+    )
     return parser
 
 

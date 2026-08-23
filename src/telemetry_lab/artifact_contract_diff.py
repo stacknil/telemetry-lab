@@ -9,6 +9,7 @@ import stat
 from collections import Counter
 from collections.abc import Iterable, Iterator, Mapping
 from contextlib import contextmanager
+from copy import deepcopy
 from dataclasses import dataclass, replace
 from hashlib import sha256
 from pathlib import Path
@@ -18,6 +19,7 @@ from typing import Any, BinaryIO, Final, Literal, TypeAlias
 TEXT_ARTIFACT_SUFFIXES: Final = frozenset(
     {".csv", ".json", ".jsonl", ".md", ".txt"}
 )
+REPORT_SCHEMA_VERSION: Final = "artifact-contract-diff/v1"
 MAX_FILES: Final = 10_000
 MAX_STRUCTURED_BYTES: Final = 64 * 1024 * 1024
 MAX_STRUCTURE_ITEMS: Final = 4_096
@@ -75,6 +77,15 @@ class ArtifactSnapshot:
         if self.comparison_size_bytes < 0:
             raise ArtifactContractDiffError("invalid comparison size")
 
+    def to_dict(self) -> dict[str, Any]:
+        result: dict[str, Any] = {
+            "comparison_digest": self.comparison_digest,
+            "comparison_size_bytes": self.comparison_size_bytes,
+        }
+        if self.structure is not None:
+            result["structure"] = deepcopy(dict(self.structure))
+        return result
+
 
 @dataclass(frozen=True)
 class ArtifactDifference:
@@ -120,6 +131,19 @@ class ArtifactDifference:
             raise ArtifactContractDiffError("difference status is invalid")
         if not valid:
             raise ArtifactContractDiffError(f"{self.status} difference is inconsistent")
+
+    def to_dict(self) -> dict[str, Any]:
+        result: dict[str, Any] = {
+            "path": self.path,
+            "status": self.status,
+            "artifact_kind": self.artifact_kind,
+            "change_reasons": list(self.change_reasons),
+        }
+        if self.expected is not None:
+            result["expected"] = self.expected.to_dict()
+        if self.actual is not None:
+            result["actual"] = self.actual.to_dict()
+        return result
 
 
 @dataclass(frozen=True)
@@ -177,6 +201,23 @@ class ArtifactContractDiffReport:
     @property
     def has_differences(self) -> bool:
         return bool(self.differences)
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "report_schema_version": REPORT_SCHEMA_VERSION,
+            "status": "changed" if self.has_differences else "unchanged",
+            "summary": {
+                "expected_files": self.expected_files,
+                "actual_files": self.actual_files,
+                "unchanged_files": self.unchanged_files,
+                "missing_files": self.missing_files,
+                "extra_files": self.extra_files,
+                "changed_files": self.changed_files,
+                "presence_only_files": len(self.presence_only_paths),
+            },
+            "differences": [difference.to_dict() for difference in self.differences],
+            "presence_only_paths": list(self.presence_only_paths),
+        }
 
 
 def normalize_artifact_text_bytes(content: bytes) -> bytes:
