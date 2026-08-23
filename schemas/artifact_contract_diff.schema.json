@@ -1,0 +1,257 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/stacknil/telemetry-lab/schemas/artifact_contract_diff.schema.json",
+  "title": "Telemetry lab artifact contract diff v1",
+  "description": "Deterministic bounded comparison of two local reviewer artifact trees.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "report_schema_version",
+    "status",
+    "summary",
+    "differences",
+    "presence_only_paths"
+  ],
+  "properties": {
+    "report_schema_version": {"const": "artifact-contract-diff/v1"},
+    "status": {"enum": ["unchanged", "changed"]},
+    "summary": {"$ref": "#/$defs/summary"},
+    "differences": {
+      "type": "array",
+      "maxItems": 20000,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/difference"}
+    },
+    "presence_only_paths": {
+      "type": "array",
+      "maxItems": 10000,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/relativePath"}
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"const": "unchanged"}}},
+      "then": {"properties": {"differences": {"maxItems": 0}}}
+    },
+    {
+      "if": {"properties": {"status": {"const": "changed"}}},
+      "then": {"properties": {"differences": {"minItems": 1}}}
+    }
+  ],
+  "$defs": {
+    "relativePath": {
+      "type": "string",
+      "maxLength": 1024,
+      "pattern": "^(?![A-Za-z]:)(?!.*\\\\)(?!.*(?:^|/)\\.\\.?(?:/|$))[^/]+(?:/[^/]+)*$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "metadataString": {"type": "string", "maxLength": 1024},
+    "count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 10000
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "expected_files",
+        "actual_files",
+        "unchanged_files",
+        "missing_files",
+        "extra_files",
+        "changed_files",
+        "presence_only_files"
+      ],
+      "properties": {
+        "expected_files": {"$ref": "#/$defs/count"},
+        "actual_files": {"$ref": "#/$defs/count"},
+        "unchanged_files": {"$ref": "#/$defs/count"},
+        "missing_files": {"$ref": "#/$defs/count"},
+        "extra_files": {"$ref": "#/$defs/count"},
+        "changed_files": {"$ref": "#/$defs/count"},
+        "presence_only_files": {"$ref": "#/$defs/count"}
+      }
+    },
+    "changeReason": {
+      "enum": [
+        "missing-from-actual",
+        "extra-in-actual",
+        "content-changed",
+        "structure-changed",
+        "schema-version-changed",
+        "run-manifest-digest-changed"
+      ]
+    },
+    "difference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "status", "artifact_kind", "change_reasons"],
+      "properties": {
+        "path": {"$ref": "#/$defs/relativePath"},
+        "status": {"enum": ["missing", "extra", "changed"]},
+        "artifact_kind": {"enum": ["json", "jsonl", "text", "binary"]},
+        "change_reasons": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/changeReason"}
+        },
+        "expected": {"$ref": "#/$defs/snapshot"},
+        "actual": {"$ref": "#/$defs/snapshot"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"status": {"const": "missing"}}},
+          "then": {
+            "required": ["expected"],
+            "properties": {
+              "change_reasons": {"const": ["missing-from-actual"]}
+            },
+            "not": {"required": ["actual"]}
+          }
+        },
+        {
+          "if": {"properties": {"status": {"const": "extra"}}},
+          "then": {
+            "required": ["actual"],
+            "properties": {
+              "change_reasons": {"const": ["extra-in-actual"]}
+            },
+            "not": {"required": ["expected"]}
+          }
+        },
+        {
+          "if": {"properties": {"status": {"const": "changed"}}},
+          "then": {
+            "required": ["expected", "actual"],
+            "properties": {
+              "artifact_kind": {"enum": ["json", "jsonl", "text"]},
+              "change_reasons": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "prefixItems": [{"const": "content-changed"}],
+                "items": {
+                  "enum": [
+                    "structure-changed",
+                    "schema-version-changed",
+                    "run-manifest-digest-changed"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {"artifact_kind": {"enum": ["json", "jsonl"]}}
+          },
+          "then": {
+            "properties": {
+              "expected": {"$ref": "#/$defs/structuredSnapshot"},
+              "actual": {"$ref": "#/$defs/structuredSnapshot"}
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {"artifact_kind": {"enum": ["text", "binary"]}}
+          },
+          "then": {
+            "properties": {
+              "expected": {"$ref": "#/$defs/plainSnapshot"},
+              "actual": {"$ref": "#/$defs/plainSnapshot"}
+            }
+          }
+        }
+      ]
+    },
+    "snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["comparison_digest", "comparison_size_bytes"],
+      "properties": {
+        "comparison_digest": {"$ref": "#/$defs/digest"},
+        "comparison_size_bytes": {"type": "integer", "minimum": 0},
+        "structure": {"$ref": "#/$defs/structure"}
+      }
+    },
+    "structuredSnapshot": {
+      "allOf": [
+        {"$ref": "#/$defs/snapshot"},
+        {"required": ["structure"]}
+      ]
+    },
+    "plainSnapshot": {
+      "allOf": [
+        {"$ref": "#/$defs/snapshot"},
+        {"not": {"required": ["structure"]}}
+      ]
+    },
+    "structure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["container", "record_count", "top_level_keys"],
+      "properties": {
+        "container": {
+          "enum": [
+            "object",
+            "array",
+            "jsonl",
+            "string",
+            "number",
+            "boolean",
+            "null"
+          ]
+        },
+        "record_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 67108864
+        },
+        "top_level_keys": {
+          "type": "array",
+          "maxItems": 4096,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/metadataString"}
+        },
+        "schema_versions": {
+          "type": "object",
+          "minProperties": 1,
+          "maxProperties": 4096,
+          "propertyNames": {"$ref": "#/$defs/metadataString"},
+          "additionalProperties": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 4096,
+            "uniqueItems": true,
+            "items": {"$ref": "#/$defs/metadataString"}
+          }
+        },
+        "run_manifest_digests": {"$ref": "#/$defs/runManifestDigests"}
+      }
+    },
+    "runManifestDigests": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": false,
+      "properties": {
+        "input_digest": {"$ref": "#/$defs/digest"},
+        "config_digest": {"$ref": "#/$defs/digest"},
+        "input_file_digests": {"$ref": "#/$defs/fileDigestMap"},
+        "config_file_digests": {"$ref": "#/$defs/fileDigestMap"}
+      }
+    },
+    "fileDigestMap": {
+      "type": "object",
+      "maxProperties": 10000,
+      "propertyNames": {"$ref": "#/$defs/relativePath"},
+      "additionalProperties": {"$ref": "#/$defs/digest"}
+    }
+  }
+}

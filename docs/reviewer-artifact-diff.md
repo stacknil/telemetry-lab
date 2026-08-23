@@ -21,6 +21,16 @@ python scripts/artifact_contract_diff.py \
   --actual path/to/regenerated-artifacts
 ```
 
+Add a strict machine-readable projection when automation or an attached review
+artifact needs the same semantics:
+
+```bash
+python scripts/artifact_contract_diff.py \
+  --expected path/to/committed-artifacts \
+  --actual path/to/regenerated-artifacts \
+  --json-out path/outside-both-trees/artifact-diff.json
+```
+
 The output lists missing, extra, and changed relative paths in stable order.
 CSV, Markdown, text, JSON, and JSONL use strict UTF-8 and normalize CRLF and
 lone CR to LF before comparison. A binary path that exists in both trees is
@@ -33,6 +43,14 @@ markers, and validated run-manifest digest fields. Those summaries distinguish
 plain content changes from structure, schema-version, and provenance-digest
 changes. Identical JSON and JSONL are not parsed after their normalized bytes
 match. Artifact bodies are never printed.
+
+The optional JSON output conforms to
+[`artifact-contract-diff/v1`](../schemas/artifact_contract_diff.schema.json).
+It contains no timestamp, checkout root, or artifact body, so repeated runs on
+the same trees are byte-identical. The destination must resolve outside both
+input roots. A new report is written in the destination directory and atomically
+replaces an older report only after serialization and file synchronization
+succeed; a comparison or write failure leaves an existing report unchanged.
 
 Exit status is `0` when comparable artifacts are unchanged, `1` when the tool
 finds contract differences, and `2` when an input cannot be compared safely.
@@ -47,6 +65,19 @@ MiB of normalized content, 4,096 top-level keys, 4,096 schema markers, and
 linked entries, special files, unsafe relative paths or metadata, malformed
 digest fields, unreadable files, invalid JSON/JSONL, exceeded limits, and
 invalid UTF-8 text fail closed with exit `2`.
+
+### JSON Report Semantics
+
+| Field | Contract |
+| --- | --- |
+| `status` | `unchanged` requires no differences; `changed` requires at least one. |
+| `summary` | Counts expected, actual, unchanged, missing, extra, changed, and presence-only files. Core report invariants reconcile these counts. |
+| `differences[].status` | `missing` has only an expected snapshot, `extra` has only an actual snapshot, and `changed` has both. |
+| `change_reasons` | Missing and extra use one path reason. Changed comparable artifacts begin with `content-changed` and may add structure, schema-version, or run-manifest-digest reasons. |
+| `comparison_digest` | SHA-256 of comparison bytes; text-like artifacts use normalized strict UTF-8 bytes. |
+| `comparison_size_bytes` | Length of the comparison bytes, which may differ from the on-disk size after newline normalization. |
+| `structure` | Present only for summarized JSON/JSONL snapshots. |
+| `presence_only_paths` | Sorted binary paths present in both trees; their bytes are not compared or reported. |
 
 ## Required Release Diff Sections
 
