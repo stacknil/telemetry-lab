@@ -27,6 +27,13 @@ lone CR to LF before comparison. A binary path that exists in both trees is
 checked for presence only; renderer-dependent bytes are not treated as a
 reproducibility contract.
 
+For changed, missing, or extra JSON and JSONL, the comparator builds a bounded
+summary of the container, record count, top-level keys, safe schema/version
+markers, and validated run-manifest digest fields. Those summaries distinguish
+plain content changes from structure, schema-version, and provenance-digest
+changes. Identical JSON and JSONL are not parsed after their normalized bytes
+match. Artifact bodies are never printed.
+
 Exit status is `0` when comparable artifacts are unchanged, `1` when the tool
 finds contract differences, and `2` when an input cannot be compared safely.
 The output contains no artifact bodies, timestamps, or absolute checkout paths.
@@ -34,9 +41,12 @@ This tool explains a mismatch; it does not replace
 `python scripts/regenerate_artifacts.py --check`, accept regenerated output, or
 assign a release compatibility label.
 
-Each root is limited to 10,000 files. Symlink or reparse-point roots, linked
-entries, special files, unsafe relative paths, unreadable files, and invalid
-UTF-8 text fail closed with exit `2`.
+Each root is limited to 10,000 files. A structured summary accepts at most 64
+MiB of normalized content, 4,096 top-level keys, 4,096 schema markers, and
+10,000 entries per run-manifest digest map. Symlink or reparse-point roots,
+linked entries, special files, unsafe relative paths or metadata, malformed
+digest fields, unreadable files, invalid JSON/JSONL, exceeded limits, and
+invalid UTF-8 text fail closed with exit `2`.
 
 ## Required Release Diff Sections
 
