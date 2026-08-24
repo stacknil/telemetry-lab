@@ -102,6 +102,10 @@ accepting either tree as authoritative:
 python scripts/artifact_contract_diff.py --expected path/to/committed --actual path/to/regenerated
 ```
 
+Add `--json-out path/to/artifact-diff.json` for a deterministic
+[`artifact-contract-diff/v1`](schemas/artifact_contract_diff.schema.json)
+report. Keep that report path outside both compared trees.
+
 See [`docs/reviewer-artifact-diff.md`](docs/reviewer-artifact-diff.md#executable-human-triage)
 for comparison semantics, limits, and exit codes.
 
