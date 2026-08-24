@@ -6,6 +6,9 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
+from telemetry_lab.artifact_contract_diff import compare_artifact_trees
 from telemetry_lab.manifest import digest_file_bytes, digest_files
 
 
@@ -117,3 +120,21 @@ def test_regenerate_artifacts_reports_mismatched_strict_artifact(tmp_path) -> No
 
     assert len(differences) == 1
     assert differences[0].reason == "content differs"
+
+
+@pytest.mark.parametrize("committed_newline", [b"\n", b"\r\n", b"\r"])
+def test_regeneration_and_triage_share_text_normalization(
+    tmp_path: Path, committed_newline: bytes
+) -> None:
+    script = _load_regeneration_script()
+    committed_root = tmp_path / "committed"
+    generated_root = tmp_path / "generated"
+    committed_root.mkdir()
+    generated_root.mkdir()
+    committed_path = committed_root / "artifact.json"
+    generated_path = generated_root / "artifact.json"
+    committed_path.write_bytes(b'{"status":"same"}' + committed_newline)
+    generated_path.write_bytes(b'{"status":"same"}\n')
+
+    assert script.artifacts_match(committed_path, generated_path)
+    assert not compare_artifact_trees(committed_root, generated_root).has_differences

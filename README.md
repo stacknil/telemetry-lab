@@ -95,6 +95,16 @@ For the same reviewer-friendly gate with labeled steps, run:
 telemetry-lab verify
 ```
 
+When regeneration reports a mismatch, compare two artifact trees without
+accepting either tree as authoritative:
+
+```bash
+python scripts/artifact_contract_diff.py --expected path/to/committed --actual path/to/regenerated
+```
+
+See [`docs/reviewer-artifact-diff.md`](docs/reviewer-artifact-diff.md#executable-human-triage)
+for comparison semantics, limits, and exit codes.
+
 Other demo entrypoints:
 
 - `telemetry-lab run ai-assisted`

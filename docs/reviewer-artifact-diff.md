@@ -10,6 +10,34 @@ the local, file-based artifacts listed in [`docs/reviewer-pack.md`](reviewer-pac
 and the schema-covered evidence artifacts in
 [`docs/evidence-pipeline-contract.md`](evidence-pipeline-contract.md).
 
+## Executable Human Triage
+
+Use the standalone comparator when a regeneration mismatch needs path-level
+context:
+
+```bash
+python scripts/artifact_contract_diff.py \
+  --expected path/to/committed-artifacts \
+  --actual path/to/regenerated-artifacts
+```
+
+The output lists missing, extra, and changed relative paths in stable order.
+CSV, Markdown, text, JSON, and JSONL use strict UTF-8 and normalize CRLF and
+lone CR to LF before comparison. A binary path that exists in both trees is
+checked for presence only; renderer-dependent bytes are not treated as a
+reproducibility contract.
+
+Exit status is `0` when comparable artifacts are unchanged, `1` when the tool
+finds contract differences, and `2` when an input cannot be compared safely.
+The output contains no artifact bodies, timestamps, or absolute checkout paths.
+This tool explains a mismatch; it does not replace
+`python scripts/regenerate_artifacts.py --check`, accept regenerated output, or
+assign a release compatibility label.
+
+Each root is limited to 10,000 files. Symlink or reparse-point roots, linked
+entries, special files, unsafe relative paths, unreadable files, and invalid
+UTF-8 text fail closed with exit `2`.
+
 ## Required Release Diff Sections
 
 Each release artifact diff must include:
