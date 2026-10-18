@@ -69,6 +69,10 @@ artifact a bounded evidence summary rather than an incident verdict: it does
 not claim `vault-gateway` was cleared, only that no additional evidence was
 attached under the demo's bounded correlation rules.
 
+When both attachment arrays are empty, `bounded_correlation_reason` explicitly
+states that no policy denials or follow-on events were attached for that target
+and window.
+
 ## Verification
 
 Run:
