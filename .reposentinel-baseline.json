@@ -1,0 +1,118 @@
+{
+  "findings": [
+    {
+      "entropy": 4.6044,
+      "file": "docs/case-study-process-evidence-to-telemetry.md",
+      "fingerprint": "1358d78ca55b527498492960521acec52584c42f5d1b2a52c507b5f7ac9cb66f",
+      "kind": "high_entropy",
+      "line": 13,
+      "token": "com/stacknil/systems-foundations/commit/1d31d4287036cf2bbd3aeb8059d7d332bedef598"
+    },
+    {
+      "entropy": 4.623,
+      "file": "docs/case-study-process-evidence-to-telemetry.md",
+      "fingerprint": "7b67ddb3d13c7fe8e78c64d9751e67e7438c25275de2e13d9a006d21248bbcc4",
+      "kind": "high_entropy",
+      "line": 13,
+      "token": "com/stacknil/systems-foundations/tree/1d31d4287036cf2bbd3aeb8059d7d332bedef598"
+    },
+    {
+      "entropy": 4.5691,
+      "file": "docs/case-study-process-evidence-to-telemetry.md",
+      "fingerprint": "e326d821d4d481fcdd1be3aabbe3febd2728c7bfe30fa1db96230900de5fcd2b",
+      "kind": "high_entropy",
+      "line": 14,
+      "token": "com/stacknil/telemetry-lab/commit/98ae3ffd1edb47d90eb42b3a8625be830582997e"
+    },
+    {
+      "entropy": 4.5054,
+      "file": "docs/case-study-process-evidence-to-telemetry.md",
+      "fingerprint": "fad997b38c9d10c524a2615b0156bee1d2510381a22457a2e0fc24ad0d348d21",
+      "kind": "high_entropy",
+      "line": 14,
+      "token": "com/stacknil/telemetry-lab/tree/98ae3ffd1edb47d90eb42b3a8625be830582997e"
+    },
+    {
+      "entropy": 4.9063,
+      "file": "docs/case-study-process-evidence-to-telemetry.md",
+      "fingerprint": "f3df4778627a417f4770aecd227736da393547a2298c78bd747b4b2e70229673",
+      "kind": "high_entropy",
+      "line": 22,
+      "token": "com/stacknil/systems-foundations/blob/1d31d4287036cf2bbd3aeb8059d7d332bedef598/projects/linux-process-observe/README"
+    },
+    {
+      "entropy": 4.7306,
+      "file": "docs/case-study-process-evidence-to-telemetry.md",
+      "fingerprint": "761e58664d40c4dbb78b680933c070f7a00c9a9d84b18c48c199ab9a9cbdeb42",
+      "kind": "high_entropy",
+      "line": 22,
+      "token": "com/stacknil/telemetry-lab/blob/98ae3ffd1edb47d90eb42b3a8625be830582997e/README"
+    },
+    {
+      "entropy": 4.9063,
+      "file": "docs/case-study-process-evidence-to-telemetry.md",
+      "fingerprint": "d5592af821eb50bf6b2af3859a8b9bee992505383f52ed7385e0f4942f51f5ee",
+      "kind": "high_entropy",
+      "line": 37,
+      "token": "com/stacknil/systems-foundations/blob/1d31d4287036cf2bbd3aeb8059d7d332bedef598/projects/linux-process-observe/README"
+    },
+    {
+      "entropy": 4.6193,
+      "file": "docs/case-study-process-evidence-to-telemetry.md",
+      "fingerprint": "8fe1fa22f167eed85878a7ee67f2e1de2a3406ac1aaebe43a2e59a48198e11b1",
+      "kind": "high_entropy",
+      "line": 45,
+      "token": "com/stacknil/telemetry-lab/blob/98ae3ffd1edb47d90eb42b3a8625be830582997e/configs/default"
+    },
+    {
+      "entropy": 4.7306,
+      "file": "docs/case-study-process-evidence-to-telemetry.md",
+      "fingerprint": "6f8b2910aa2bf88ff386698b592e1bbfa8006eafd5a89836c29c1f06233fa33c",
+      "kind": "high_entropy",
+      "line": 52,
+      "token": "com/stacknil/telemetry-lab/blob/98ae3ffd1edb47d90eb42b3a8625be830582997e/README"
+    },
+    {
+      "entropy": 4.7027,
+      "file": "docs/case-study-process-evidence-to-telemetry.md",
+      "fingerprint": "c04d4893d5f9603b82af58d174beb0fc19d8d4411887b615adc82deaa6b702a3",
+      "kind": "high_entropy",
+      "line": 70,
+      "token": "com/stacknil/systems-foundations/blob/1d31d4287036cf2bbd3aeb8059d7d332bedef598/projects/linux-process-observe/tests/golden/diff/telemetry_events"
+    },
+    {
+      "entropy": 4.9063,
+      "file": "docs/case-study-process-evidence-to-telemetry.md",
+      "fingerprint": "70db7ae7cf31ba9365be66f28ee6b783edb58942dc515dd62e4be0d536220bd7",
+      "kind": "high_entropy",
+      "line": 98,
+      "token": "com/stacknil/systems-foundations/blob/1d31d4287036cf2bbd3aeb8059d7d332bedef598/projects/linux-process-observe/README"
+    },
+    {
+      "entropy": 4.7004,
+      "file": "docs/case-study-process-evidence-to-telemetry.md",
+      "fingerprint": "d8a75be2fdd3e3debe77418ec66d3c249e9c5dc9d195c3fa12fe67bb9e5d6f6d",
+      "kind": "high_entropy",
+      "line": 99,
+      "token": "com/stacknil/systems-foundations/tree/1d31d4287036cf2bbd3aeb8059d7d332bedef598/projects/linux-process-observe/tests/golden"
+    },
+    {
+      "entropy": 4.7306,
+      "file": "docs/case-study-process-evidence-to-telemetry.md",
+      "fingerprint": "d8d50aa9e1361897cf73c213cd043e5f4d810b3f735d13dc571eb4f41bf476bc",
+      "kind": "high_entropy",
+      "line": 101,
+      "token": "com/stacknil/telemetry-lab/blob/98ae3ffd1edb47d90eb42b3a8625be830582997e/README"
+    },
+    {
+      "entropy": 4.5543,
+      "file": "docs/case-study-process-evidence-to-telemetry.md",
+      "fingerprint": "1731131ab31a11c33376425d3b990ac850d9b6261580de7b2532be3d3f9570e6",
+      "kind": "high_entropy",
+      "line": 102,
+      "token": "com/stacknil/telemetry-lab/blob/98ae3ffd1edb47d90eb42b3a8625be830582997e/docs/event-time-model"
+    }
+  ],
+  "generated_at": "2026-10-19T16:04:40Z",
+  "schema_version": 1
+}
