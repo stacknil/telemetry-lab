@@ -53,6 +53,6 @@ Follow-on events:
 - Trigger reason: Break-glass mode was enabled on a sensitive service.
 - Attached policy denials: 0
 - Attached follow-on events: 0
-- Bounded correlation: Attached evidence shares target_system 'vault-gateway' and falls within 15 minutes after the triggering change.
+- Bounded correlation: No policy denials or follow-on events were attached for target_system 'vault-gateway' within 15 minutes after the triggering change.
 
 No nearby supporting evidence fell inside the bounded correlation window.

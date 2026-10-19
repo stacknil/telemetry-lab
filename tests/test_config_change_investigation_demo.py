@@ -9,6 +9,8 @@ import yaml
 
 from telemetry_lab.config_change_investigation_demo import default_demo_root, run_demo
 from telemetry_lab.config_change_investigation_demo.pipeline import (
+    build_investigation_report,
+    build_investigation_summary,
     build_investigations,
     evaluate_risky_config_changes,
     load_jsonl,
@@ -102,6 +104,54 @@ def test_build_investigations_uses_bounded_system_and_time_correlation() -> None
     )
     assert all(
         event["event_id"] != "fo-005" for event in vault["attached_follow_on_events"]
+    )
+
+
+def test_bounded_reason_explicitly_reports_zero_evidence() -> None:
+    demo_root, config, changes, _, _ = _load_demo_inputs()
+    hits = evaluate_risky_config_changes(changes, config["rules"])
+    hit = next(item for item in hits if item["investigation_id"] == "CCI-003")
+    investigations = build_investigations([hit], [], [], correlation_minutes=15)
+    investigation = investigations[0]
+    expected_reason = (
+        "No policy denials or follow-on events were attached for target_system "
+        "'vault-gateway' within 15 minutes after the triggering change."
+    )
+
+    assert investigation["evidence_counts"] == {"policy_denials": 0, "follow_on_events": 0}
+    assert investigation["severity"] == "high"
+    assert investigation["bounded_correlation_reason"] == expected_reason
+    summary = build_investigation_summary(investigations, correlation_minutes=15)
+    assert summary[0]["bounded_correlation_reason"] == expected_reason
+    report = build_investigation_report(changes, [hit], investigations, correlation_minutes=15)
+    assert f"- Bounded correlation: {expected_reason}" in report
+    assert "No nearby supporting evidence fell inside the bounded correlation window." in report
+    assert "Attached evidence shares" not in report
+    example = _load_json_file(
+        demo_root.parents[1] / "docs/reviewer-pack-v0.6.0/bounded-case-no-evidence-example.json"
+    )
+    assert example["investigation"]["bounded_correlation_reason"] == expected_reason
+
+
+@pytest.mark.parametrize(
+    "with_denials,with_follow_on", [(True, False), (False, True), (True, True)]
+)
+def test_bounded_reason_preserves_nonempty_wording(
+    with_denials: bool, with_follow_on: bool
+) -> None:
+    _, config, changes, denials, follow_on = _load_demo_inputs()
+    hits = evaluate_risky_config_changes(changes, config["rules"])
+    hit = next(item for item in hits if item["investigation_id"] == "CCI-001")
+    investigation = build_investigations(
+        [hit],
+        denials if with_denials else [],
+        follow_on if with_follow_on else [],
+        correlation_minutes=15,
+    )[0]
+
+    assert investigation["bounded_correlation_reason"] == (
+        "Attached evidence shares target_system 'identity-proxy' and falls within "
+        "15 minutes after the triggering change."
     )
 
 

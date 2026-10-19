@@ -22,7 +22,7 @@
     },
     "trigger_reason": "Break-glass mode was enabled on a sensitive service.",
     "correlation_window_minutes": 15,
-    "bounded_correlation_reason": "Attached evidence shares target_system 'vault-gateway' and falls within 15 minutes after the triggering change.",
+    "bounded_correlation_reason": "No policy denials or follow-on events were attached for target_system 'vault-gateway' within 15 minutes after the triggering change.",
     "evidence_counts": {
       "policy_denials": 0,
       "follow_on_events": 0

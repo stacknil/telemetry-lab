@@ -435,6 +435,17 @@ def build_investigations(
             and change_time <= event["timestamp"] <= window_end
         ]
 
+        if attached_denials or attached_follow_on:
+            bounded_reason = (
+                f"Attached evidence shares target_system '{target_system}' and falls within "
+                f"{correlation_minutes} minutes after the triggering change."
+            )
+        else:
+            bounded_reason = (
+                "No policy denials or follow-on events were attached for target_system "
+                f"'{target_system}' within {correlation_minutes} minutes after the triggering change."
+            )
+
         investigations.append(
             {
                 "investigation_id": str(hit["investigation_id"]),
@@ -445,10 +456,7 @@ def build_investigations(
                 "triggering_change": dict(change_event),
                 "trigger_reason": str(hit["reason"]),
                 "correlation_window_minutes": correlation_minutes,
-                "bounded_correlation_reason": (
-                    f"Attached evidence shares target_system '{target_system}' and falls within "
-                    f"{correlation_minutes} minutes after the triggering change."
-                ),
+                "bounded_correlation_reason": bounded_reason,
                 "attached_policy_denials": attached_denials,
                 "attached_follow_on_events": attached_follow_on,
                 "evidence_counts": {
