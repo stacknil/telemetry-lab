@@ -2,6 +2,10 @@
 
 *A bounded, file-based producer–consumer integration case study · 19 October 2026*
 
+Later work: the [20 October executable integration suite](process-evidence-integration.md)
+adds offline regression tests and a separate producer-to-consumer reproduction runner.
+Its tests and fresh-environment results are separate from the historical observations below.
+
 ## The engineering question
 
 Can a saved Linux process/socket evidence workflow produce an event stream that a separate telemetry application can consume **without changing either implementation or silently upgrading evidence into security conclusions**?
