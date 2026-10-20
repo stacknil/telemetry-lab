@@ -6,7 +6,8 @@ it does not rerun or replace that historical experiment's private receipts.
 
 ## Versions and fixture
 
-- Producer: [systems-foundations at `1d31d4287036cf2bbd3aeb8059d7d332bedef598`](https://github.com/stacknil/systems-foundations/tree/1d31d4287036cf2bbd3aeb8059d7d332bedef598),
+- Producer: [systems-foundations](https://github.com/stacknil/systems-foundations),
+  pinned at `1d31d4287036cf2bbd3aeb8059d7d332bedef598`,
   `projects/linux-process-observe`.
 - Consumer: this suite is based on `de542cb3cadba776c8e759f786152f9222fdfdb7`.
   Reproduce from the reviewed integration revision containing this guide.
