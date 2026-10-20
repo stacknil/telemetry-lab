@@ -102,3 +102,7 @@ The pinned implementations, synthetic fixtures and producer goldens are public. 
 - [Consumer event-time model](https://github.com/stacknil/telemetry-lab/blob/98ae3ffd1edb47d90eb42b3a8625be830582997e/docs/event-time-model.md)
 
 *Prepared from the retained 19 October 2026 integration evidence. No engineering tests or demos were rerun for the documentation review.*
+
+Later work: the [20 October executable integration suite](process-evidence-integration.md)
+adds offline regression tests and a separate producer-to-consumer reproduction runner.
+Its tests and fresh-environment results are separate from the historical observations above.

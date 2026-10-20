@@ -6,3 +6,4 @@
 /demos/**/data/raw/** text eol=lf
 /demos/**/artifacts/run_manifest.json text eol=lf
 /demos/**/artifacts/*.md text eol=lf
+/tests/fixtures/process_evidence/telemetry_events.jsonl text eol=lf

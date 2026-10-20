@@ -1,0 +1,8 @@
+{
+  "repository": "https://github.com/stacknil/systems-foundations",
+  "commit": "1d31d4287036cf2bbd3aeb8059d7d332bedef598",
+  "path": "projects/linux-process-observe/tests/golden/diff/telemetry_events.jsonl",
+  "sha256": "1977b98518497c9a07da6393499cb49e6d0be9140ac5bcd708c2a1cd31a3ad51",
+  "bytes": 4108,
+  "description": "Unmodified public synthetic producer golden; canonical Git blob with LF newlines, not a private execution receipt."
+}
