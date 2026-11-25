@@ -10,7 +10,7 @@ it does not rerun or replace that historical experiment's private receipts.
   pinned at `1d31d4287036cf2bbd3aeb8059d7d332bedef598`,
   `projects/linux-process-observe`.
 - Consumer: this suite is based on `de542cb3cadba776c8e759f786152f9222fdfdb7`.
-  For the reproduced consumer, check out [the #97 merge](https://github.com/stacknil/telemetry-lab/commit/ee7ed4469b226c7ffcc7678bb35fd97fc200214e).
+  For the reproduced consumer, check out `ee7ed44` ([PR #97](https://github.com/stacknil/telemetry-lab/pull/97)).
   The historical case used `98ae3ffd1edb47d90eb42b3a8625be830582997e`.
 - Offline input: [`tests/fixtures/process_evidence/telemetry_events.jsonl`](../tests/fixtures/process_evidence/telemetry_events.jsonl),
   an unmodified, public synthetic producer golden, with [provenance](../tests/fixtures/process_evidence/provenance.json).
