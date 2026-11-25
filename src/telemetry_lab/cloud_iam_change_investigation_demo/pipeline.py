@@ -8,7 +8,7 @@ from typing import Any
 
 import yaml
 
-from ..io import ensure_output_directory, ensure_output_file_path
+from ..io import ensure_output_directory, ensure_output_file_path, load_jsonl
 from ..manifest import (
     RUN_MANIFEST_SCHEMA_VERSION,
     build_run_manifest,
@@ -162,23 +162,6 @@ def load_yaml(path: Path) -> dict[str, Any]:
     if not isinstance(payload, dict):
         raise ValueError("YAML config must deserialize into a mapping.")
     return payload
-
-
-def load_jsonl(path: Path) -> list[dict[str, Any]]:
-    records: list[dict[str, Any]] = []
-    with path.open("r", encoding="utf-8") as handle:
-        for line_number, line in enumerate(handle, start=1):
-            raw = line.strip()
-            if not raw:
-                continue
-            try:
-                payload = json.loads(raw)
-            except json.JSONDecodeError as exc:
-                raise ValueError(f"Invalid JSONL at line {line_number} in {path}") from exc
-            if not isinstance(payload, dict):
-                raise ValueError("Expected JSON object records in JSONL input.")
-            records.append(payload)
-    return records
 
 
 def validate_demo_config(config: Mapping[str, Any]) -> dict[str, Any]:
