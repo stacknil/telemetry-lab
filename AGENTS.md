@@ -12,7 +12,7 @@
 
 - Install: `python -m pip install -e .`
 - Test: `pytest`
-- Demo run: `python -m telemetry_window_demo.cli run --config configs/default.yaml`
+- Demo run: `telemetry-lab run window --config configs/default.yaml`
 
 ## Review guidelines
 

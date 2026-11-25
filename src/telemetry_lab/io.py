@@ -31,6 +31,23 @@ ALERT_TABLE_DATETIME_COLUMNS = ("alert_time", "window_start", "window_end")
 ALERT_TABLE_TEXT_COLUMNS = ("rule_name", "severity")
 
 
+def load_jsonl(path: Path) -> list[dict[str, Any]]:
+    records: list[dict[str, Any]] = []
+    with path.open("r", encoding="utf-8") as handle:
+        for line_number, line in enumerate(handle, start=1):
+            raw = line.strip()
+            if not raw:
+                continue
+            try:
+                payload = json.loads(raw)
+            except json.JSONDecodeError as exc:
+                raise ValueError(f"Invalid JSONL at line {line_number} in {path}") from exc
+            if not isinstance(payload, dict):
+                raise ValueError("Expected JSON object records in JSONL input.")
+            records.append(payload)
+    return records
+
+
 def load_config(path: str | Path) -> dict[str, Any]:
     config_path = Path(path)
     _require_existing_file(config_path, display_name="Config file")
