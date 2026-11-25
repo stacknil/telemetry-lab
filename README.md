@@ -8,6 +8,10 @@ Current focus: v1.2 Architecture Cohesion for the five-demo matrix. v1.2 resolve
 
 Latest tagged release: [v1.2 — architecture cohesion release](https://github.com/stacknil/telemetry-lab/releases/tag/v1.2).
 
+## Reproduce the process evidence integration
+
+[Run the two-repository check](docs/process-evidence-integration.md) to turn a pinned synthetic process snapshot pair into seven events and feed them through the window demo twice. The merged #97 revision passed 23 integration tests, four producer commands, seven golden contracts and four schema validations in a clean checkout. Both consumer runs yielded one window and zero alerts.
+
 ## Reviewer Start
 
 - [`docs/reviewer-brief.md`](docs/reviewer-brief.md): scope, value, evidence, and boundaries
